@@ -1,5 +1,6 @@
 /// <reference types="vite/client"/>
 import appCss from "~/styles.css?url";
+import {addSeo} from "~/lib/utils/seo";
 import {I18nextProvider} from "react-i18next";
 import i18nInstance from "~/lib/client/i18n/i18n";
 import {authOptions} from "~/lib/client/react-query";
@@ -21,7 +22,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         meta: [
             { charSet: "UTF-8" },
             { name: "viewport", content: "width=device-width, initial-scale=1" },
-            { title: "Famiglia-Recipes" },
+            ...addSeo({
+                image: "logo512.png",
+                title: "Famiglia-Recipes",
+                description: `A simple, modern web app designed for families to easily share and manage recipes.`,
+            }),
         ],
         links: [{ rel: "stylesheet", href: appCss }],
     }),

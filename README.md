@@ -18,7 +18,7 @@ This app is built with a focus on simplicity and ease of use.
 
 ## Tech Stack
 
-- **Backend:** Node.js
+- **Backend:** [Bun](https://bun.com/)
 - **Framework:** [TanStack Start](https://tanstack.com/start/v0)
 - **Frontend:** [React](https://react.dev/), [TanStack Router](https://tanstack.com/router/latest), [TanStack Query](https://tanstack.com/query/latest)
 - **Database:** [Drizzle ORM](https://orm.drizzle.team/) with [Turso](https://turso.tech/) (libSQL)
@@ -33,8 +33,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 ### Prerequisites
 
-- Node.js (v20 or higher)
-- npm or your favorite package manager
+- Bun (v1.3+)
 
 ### Installation
 
@@ -46,7 +45,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 2. **Install dependencies:**
    ```bash
-   npm install
+   bun install
    ```
 
 3. **Set up environment variables:**
@@ -62,12 +61,12 @@ Follow these instructions to get a copy of the project up and running on your lo
    The application uses a _register key_ for new user registrations.
    Run the following script to generate a new key and hash, then add them to your `.env` file.
    ```bash
-    npm run key:generate -- "your_register_key_here"
+    bun run key:generate -- "your_register_key_here"
    ```
 
 5. **Run the development server:**
    ```bash
-   npm run dev
+   bun run dev
    ```
    The application will be available at `http://localhost:3000`.
 

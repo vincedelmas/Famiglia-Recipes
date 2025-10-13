@@ -1,5 +1,6 @@
 node_modules
 package-lock.json
+bun.lock
 yarn.lock
 
 .DS_Store
@@ -12,7 +13,7 @@ dist
 .vinxi
 .wrangler
 .netlify
-dist
+
 /build/
 /api/
 /server/build
@@ -32,3 +33,4 @@ logs/
 /scripts
 ecosystem.config.cjs
 deploy.sh
+

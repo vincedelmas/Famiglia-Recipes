@@ -1,6 +1,7 @@
 import {toast} from "sonner";
 import {useState} from "react";
 import {cn} from "~/lib/utils/helpers";
+import {addSeo} from "~/lib/utils/seo";
 import {useTranslation} from "react-i18next";
 import {useAuth} from "~/lib/client/hooks/use-auth";
 import {Badge} from "~/lib/client/components/ui/badge";
@@ -19,7 +20,18 @@ import {ChefHat, CircleCheck, Clock, Heart, History, Pen, Trash2, Users} from "l
 
 export const Route = createFileRoute("/_private/details/$recipeId")({
     loader: ({ context: { queryClient }, params: { recipeId } }) => {
-        return queryClient.ensureQueryData(recipeDetailsOptions(parseInt(recipeId)))
+        return queryClient.ensureQueryData(recipeDetailsOptions(Number(recipeId)));
+    },
+    head: ({ loaderData }) => {
+        return {
+            meta: [
+                ...addSeo({
+                    description: "View this delicious recipe",
+                    title: loaderData?.title || "Recipe Details",
+                    image: loaderData?.coverImage || "logo512.png",
+                }),
+            ],
+        }
     },
     component: RecipeDetailsPage,
 })
@@ -34,7 +46,7 @@ function RecipeDetailsPage() {
     const updateFavorite = useFavoriteRecipe();
     const deleteRecipeMutation = useDeleteRecipe();
     const [multi, setMulti] = useState(1);
-    const { data: recipe } = useSuspenseQuery(recipeDetailsOptions(parseInt(recipeId)));
+    const recipe = useSuspenseQuery(recipeDetailsOptions(Number(recipeId))).data;
 
     const onDeleteRecipe = async () => {
         if (!window.confirm("Do you really want to delete this recipe?")) return;
