@@ -6,9 +6,11 @@
 import path from "path";
 
 
-const CLIENT_DIR = "./dist/client";
 const PORT = Number(process.env.PORT ?? 3000);
-const SERVER_ENTRY = "./dist/server/server.js";
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+const CLIENT_DIR = path.resolve(__dirname, "dist/client");
+const SERVER_ENTRY = path.resolve(__dirname, "dist/server/server.js");
 
 
 const startServer = async () => {
