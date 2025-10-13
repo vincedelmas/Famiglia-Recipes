@@ -4,10 +4,11 @@
  **/
 
 import path from "path";
+import {fileURLToPath} from "bun";
 
 
 const PORT = Number(process.env.PORT ?? 3000);
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const CLIENT_DIR = path.resolve(__dirname, "dist/client");
 const SERVER_ENTRY = path.resolve(__dirname, "dist/server/server.js");
