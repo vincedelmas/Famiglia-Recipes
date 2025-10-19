@@ -13,6 +13,7 @@ import {useNProgress} from "~/lib/client/hooks/use-nprogress";
 import {ReactQueryDevtoolsPanel} from "@tanstack/react-query-devtools";
 import {TanStackRouterDevtoolsPanel} from "@tanstack/react-router-devtools";
 import {createRootRouteWithContext, HeadContent, Outlet, Scripts} from "@tanstack/react-router";
+import {ReactNode, useEffect, useState} from "react";
 
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
@@ -37,6 +38,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootComponent() {
     useNProgress();
+    const [devTools, setDevtools] = useState<null | ReactNode>(null);
+
+    useEffect(() => {
+        if (import.meta.env.DEV) {
+            Promise.all([
+                import("@tanstack/react-devtools").then((m) => m.TanStackDevtools),
+                import("@tanstack/react-query-devtools").then((m) => m.ReactQueryDevtoolsPanel),
+                import("@tanstack/react-router-devtools").then((m) => m.TanStackRouterDevtoolsPanel),
+            ]).then(([TanStackDevtools, ReactQueryDevtoolsPanel, TanStackRouterDevtoolsPanel]) => {
+                setDevtools(
+                    <TanStackDevtools
+                        eventBusConfig={{ debug: false, connectToServerBus: true }}
+                        plugins={[
+                            { name: "TanStack Query", render: <ReactQueryDevtoolsPanel/> },
+                            { name: "TanStack Router", render: <TanStackRouterDevtoolsPanel/> },
+                        ]}
+                    />
+                );
+            });
+        }
+    }, []);
 
     return (
         <html lang="en" className="dark" suppressHydrationWarning>
@@ -56,27 +78,9 @@ function RootComponent() {
                     <Footer/>
                 </I18nextProvider>
             </div>
-
-            {import.meta.env.DEV &&
-                <TanStackDevtools
-                    eventBusConfig={{
-                        debug: false,
-                        connectToServerBus: true,
-                    }}
-                    plugins={[
-                        {
-                            name: "TanStack Query",
-                            render: <ReactQueryDevtoolsPanel/>,
-                        },
-                        {
-                            name: "TanStack Router",
-                            render: <TanStackRouterDevtoolsPanel/>,
-                        },
-                    ]}
-                />
-            }
         </div>
-
+        
+        {devTools}
         <Scripts/>
         </body>
         </html>

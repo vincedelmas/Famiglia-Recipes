@@ -1,4 +1,3 @@
-import mammoth from "mammoth";
 import {asc, inArray} from "drizzle-orm";
 import {db} from "~/lib/server/database/db";
 import {HEIGHT, WIDTH} from "~/lib/utils/constants";
@@ -116,6 +115,7 @@ export const uploadRecipeForParsing = createServerFn({ method: "POST" })
                 try {
                     const arrayBuffer = await file.arrayBuffer();
                     const buffer = Buffer.from(arrayBuffer);
+                    const { default: mammoth } = await import("mammoth");
                     const result = await mammoth.extractRawText({ buffer: buffer });
                     textContent = result.value;
                 }

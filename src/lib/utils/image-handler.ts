@@ -1,5 +1,4 @@
 import path from "path";
-import sharp from "sharp";
 import crypto from "crypto";
 import {serverEnv} from "~/env/server";
 import {promises as fsPromises} from "node:fs";
@@ -39,6 +38,9 @@ export const saveUploadedImage = createServerOnlyFn(() => async ({ file, resize 
 
 
 const processAndSaveImage = createServerOnlyFn(() => async ({ buffer, resize }: ProcessAndSaveImageOptions) => {
+    const { default: sharp } = await import("sharp");
+    sharp.cache({ files: 0, memory: 0 });
+
     const randomHex = crypto.randomBytes(8).toString("hex");
     const fileName = `${randomHex}.jpg`;
 

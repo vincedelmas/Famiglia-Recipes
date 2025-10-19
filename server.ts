@@ -60,7 +60,17 @@ const startServer = async () => {
 };
 
 
-startServer().catch((err) => {
+startServer().then(() => {
+    setInterval(() => {
+        const m = process.memoryUsage();
+        console.log("MEM", {
+            rssMB: (m.rss / 1024 / 1024).toFixed(1),
+            heapUsedMB: (m.heapUsed / 1024 / 1024).toFixed(1),
+            heapTotalMB: (m.heapTotal / 1024 / 1024).toFixed(1),
+            externalMB: (m.external / 1024 / 1024).toFixed(1),
+        });
+    }, 10000);
+}).catch((err) => {
     console.error('[ERROR] Failed to start server:', err);
     process.exit(1);
 })

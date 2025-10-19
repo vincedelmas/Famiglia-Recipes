@@ -6,9 +6,9 @@ import {devtools} from "@tanstack/devtools-vite";
 import {tanstackStart} from "@tanstack/react-start/plugin/vite";
 
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
     plugins: [
-        devtools(),
+        mode === "development" && devtools(),
         tsConfigPaths({ projects: ["./tsconfig.json"] }),
         tanstackStart({
             spa: {
@@ -26,4 +26,4 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
-})
+}));

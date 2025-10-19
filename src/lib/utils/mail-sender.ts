@@ -1,5 +1,4 @@
 import {z} from "zod";
-import nodemailer from "nodemailer";
 import {serverEnv} from "~/env/server";
 import {render} from "@react-email/render";
 import {Options} from "nodemailer/lib/mailer";
@@ -20,6 +19,8 @@ interface EmailOptions {
 
 // Password Reset and Verification Email
 export const sendEmail = createServerOnlyFn(() => async (options: EmailOptions) => {
+    const { default: nodemailer } = await import("nodemailer");
+
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -49,6 +50,8 @@ export const sendEmail = createServerOnlyFn(() => async (options: EmailOptions) 
 
 // Error email to Admin
 export const sendAdminErrorMail = createServerOnlyFn(() => async (error: Error | z.ZodError, message: string) => {
+    const { default: nodemailer } = await import("nodemailer");
+
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
