@@ -1,10 +1,10 @@
 import React from "react";
 import {Minus, Plus} from "lucide-react";
 import {useTranslation} from "react-i18next";
-import {Input} from "~/lib/client/components/ui/input";
-import {Button} from "~/lib/client/components/ui/button";
-import {Control, useFieldArray} from "react-hook-form";
 import {RecipeFormValues} from "~/lib/utils/schemas";
+import {Input} from "~/lib/client/components/ui/input";
+import {Control, useFieldArray} from "react-hook-form";
+import {Button} from "~/lib/client/components/ui/button";
 import {FormControl, FormField, FormItem, FormMessage} from "~/lib/client/components/ui/form";
 
 
@@ -51,7 +51,7 @@ export const DynamicIngredientList = ({ control }: DynIngListProps) => {
                                         onKeyDown={handleOnEnter}
                                         placeholder={t("quantity")}
                                         onChange={(ev) => {
-                                            const value = parseInt(ev.target.value, 10);
+                                            const value = Number(ev.target.value);
                                             field.onChange(isNaN(value) ? "" : value);
                                         }}
                                     />

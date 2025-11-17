@@ -4,16 +4,13 @@ import {addSeo} from "~/lib/utils/seo";
 import {I18nextProvider} from "react-i18next";
 import i18nInstance from "~/lib/client/i18n/i18n";
 import {authOptions} from "~/lib/client/react-query";
+import {ReactNode, useEffect, useState} from "react";
 import {type QueryClient} from "@tanstack/react-query";
 import {Toaster} from "~/lib/client/components/ui/sonner";
 import {Navbar} from "~/lib/client/components/app/Navbar";
 import {Footer} from "~/lib/client/components/app/Footer";
-import {TanStackDevtools} from "@tanstack/react-devtools";
 import {useNProgress} from "~/lib/client/hooks/use-nprogress";
-import {ReactQueryDevtoolsPanel} from "@tanstack/react-query-devtools";
-import {TanStackRouterDevtoolsPanel} from "@tanstack/react-router-devtools";
 import {createRootRouteWithContext, HeadContent, Outlet, Scripts} from "@tanstack/react-router";
-import {ReactNode, useEffect, useState} from "react";
 
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
@@ -79,7 +76,7 @@ function RootComponent() {
                 </I18nextProvider>
             </div>
         </div>
-        
+
         {devTools}
         <Scripts/>
         </body>

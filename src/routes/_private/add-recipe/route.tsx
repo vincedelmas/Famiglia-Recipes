@@ -51,7 +51,7 @@ function AddRecipePage() {
         <PageTitle title={t("add-recipe")} subtitle={t("ar-subtitle")}>
             <RecipeForm
                 labels={labels}
-                type={"Creation"}
+                type="Creation"
                 onSubmit={onSubmit}
                 initValues={initValues}
                 pendingState={addRecipe.isPending}

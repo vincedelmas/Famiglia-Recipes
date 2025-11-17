@@ -21,7 +21,7 @@ import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "~/
 interface RecipeFormProps {
     labels: LabelType[];
     pendingState: boolean;
-    type: "Creation" | "Edit";
+    type: "Creation" | "Edition";
     initValues: RecipeFormValues;
     onSubmit: (data: RecipeFormValues) => void;
 }
@@ -47,12 +47,17 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
         <div>
             {type === "Creation" &&
                 <div className="mt-8 mb-7">
-                    <div className="font-medium text-sm">{t("ai-parsing")}</div>
+                    <div className="font-medium text-sm">
+                        {t("ai-parsing")}
+                    </div>
                     <UploadDialog form={form}/>
                 </div>
             }
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className={cn("space-y-7 w-[750px] max-sm:w-full", type === "Edit" && "mt-8")}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className={cn("space-y-7 w-[750px] max-sm:w-full", type === "Edition" && "mt-8")}
+                >
                     <FormField
                         name="image"
                         control={form.control}
@@ -62,9 +67,9 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                                 <FormControl>
                                     <ImageCropper
                                         aspect={RATIO}
-                                        cropShape={"rect"}
+                                        cropShape="rect"
                                         fileName={field.name}
-                                        resultClassName={"h-[150px]"}
+                                        resultClassName="h-[150px]"
                                         onCropApplied={field.onChange}
                                     />
                                 </FormControl>

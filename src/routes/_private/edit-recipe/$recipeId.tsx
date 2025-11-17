@@ -29,9 +29,11 @@ function EditRecipePage() {
         comment: apiData.recipe.comment || "",
         labels: apiData.recipe.recipeLabels.map((ing) => ing.name),
         steps: apiData.recipe.steps.map((ing) => ({ content: ing.description })),
-        ingredients: apiData.recipe.ingredients.map((ing) => ({ quantity: ing.proportion, description: ing.ingredient })),
+        ingredients: apiData.recipe.ingredients.map(
+            (ing) => ({ quantity: Number(ing.proportion), description: ing.ingredient })
+        ),
     };
-
+    
     const onSubmit = async (submittedData: RecipeFormValues) => {
         const formData = new FormData();
 
@@ -51,7 +53,7 @@ function EditRecipePage() {
     return (
         <PageTitle title={t("edit-recipe")} subtitle={t("edit-recipe-subtitle")}>
             <RecipeForm
-                type={"Edit"}
+                type="Edition"
                 onSubmit={onSubmit}
                 labels={apiData.labels}
                 initValues={initValues}
