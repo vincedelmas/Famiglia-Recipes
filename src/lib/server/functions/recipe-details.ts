@@ -55,7 +55,7 @@ export const deleteRecipe = createServerFn({ method: "POST" })
             throw new FormattedError("Unauthorized");
         }
 
-        const recipeToDelete = await db
+        const recipeToDelete = db
             .select({ image: recipe.image })
             .from(recipe)
             .where(eq(recipe.id, recipeId))
@@ -77,7 +77,7 @@ export const favoriteRecipe = createServerFn({ method: "POST" })
     .middleware([authMiddleware])
     .validator((data) => z.coerce.number().int().positive().parse(data))
     .handler(async ({ data: recipeId, context: { currentUser } }) => {
-        const existingFavorite = await db
+        const existingFavorite = db
             .select()
             .from(favorites)
             .where(and(eq(favorites.userId, currentUser.id), eq(favorites.recipeId, recipeId)))
@@ -116,7 +116,7 @@ export const addComment = createServerFn({ method: "POST" })
             throw new FormattedError("Comment cannot be empty");
         }
 
-        const recipeResults = await db
+        const recipeResults = db
             .select()
             .from(recipeTable)
             .where(eq(recipeTable.id, recipeId))
@@ -166,7 +166,7 @@ export const deleteComment = createServerFn({ method: "POST" })
     .middleware([authMiddleware])
     .validator((data) => z.coerce.number().int().positive().parse(data))
     .handler(async ({ data: commentId, context: { currentUser } }) => {
-        const checkComment = await db
+        const checkComment = db
             .select()
             .from(comment)
             .where(eq(comment.id, commentId))

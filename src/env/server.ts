@@ -5,11 +5,11 @@ import {createEnv} from "@t3-oss/env-core";
 export const serverEnv = createEnv({
     server: {
         // Database
-        DATABASE_URL: z.url().default("file:./instance/site.db"),
+        DATABASE_URL: z.string().default("./instance/site.db"),
 
         // Image Managements
         UPLOADS_DIR_NAME: z.string().default("static"),
-        IMAGE_UPLOADS_PATH: z.string().default("./public/static/recipe-images"),
+        BASE_UPLOADS_LOCATION: z.string().default("./public/static/recipe-images"),
 
         // Register Keys/Secrets
         REGISTER_KEY: z.string(),
@@ -28,5 +28,5 @@ export const serverEnv = createEnv({
         OPEN_ROUTER_MODEL_ID: z.string(),
     },
     runtimeEnv: process.env,
-    skipValidation: !!process.env.SKIP_VALIDATION,
+    skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });

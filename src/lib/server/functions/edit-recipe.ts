@@ -55,7 +55,7 @@ export const postEditRecipe = createServerFn({ method: "POST" })
             tryFormZodError(() => imageRecipeSchema.parse(formDataImage));
         }
 
-        const checkRecipe = await db
+        const checkRecipe = db
             .select()
             .from(recipeTable)
             .where(eq(recipeTable.id, parseInt(recipeData.id)))

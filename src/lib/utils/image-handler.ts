@@ -44,8 +44,8 @@ const processAndSaveImage = createServerOnlyFn(() => async ({ buffer, resize }: 
     const randomHex = crypto.randomBytes(8).toString("hex");
     const fileName = `${randomHex}.jpg`;
 
-    await fsPromises.mkdir(serverEnv.IMAGE_UPLOADS_PATH, { recursive: true });
-    const filePath = path.join(serverEnv.IMAGE_UPLOADS_PATH, fileName);
+    await fsPromises.mkdir(serverEnv.BASE_UPLOADS_LOCATION, { recursive: true });
+    const filePath = path.join(serverEnv.BASE_UPLOADS_LOCATION, fileName);
 
     const sharpInstance = sharp(buffer);
     if (resize) {
@@ -62,7 +62,7 @@ export const deleteImage = createServerOnlyFn(() => async (imageName: string | n
     if (!imageName || imageName === "default.png") return;
 
     try {
-        const imagePath = path.join(serverEnv.IMAGE_UPLOADS_PATH, imageName);
+        const imagePath = path.join(serverEnv.BASE_UPLOADS_LOCATION, imageName);
         await fsPromises.unlink(imagePath);
     }
     catch (err: any) {

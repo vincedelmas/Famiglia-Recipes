@@ -1,0 +1,18 @@
+services:
+  recipes:
+    image: recipes-app
+    container_name: recipes
+    build:
+      context: .
+    env_file:
+      - .env.docker
+    volumes:
+      - ../data/db:/app/instance
+      - ../data/images:/app/storage/images
+    restart: unless-stopped
+    networks:
+      - web_net
+
+networks:
+  web_net:
+    external: true

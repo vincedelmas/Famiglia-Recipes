@@ -3,7 +3,7 @@ import type {Config} from "drizzle-kit";
 
 
 export default {
-    out: "./.drizzle",
+    out: "./drizzle",
     schema: "./src/lib/server/database/schema/index.ts",
     strict: true,
     verbose: true,

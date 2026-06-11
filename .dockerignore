@@ -1,0 +1,16 @@
+.git
+.idea
+.tanstack
+.vinxi
+.cache
+node_modules
+dist
+logs
+instance
+*.db
+.env
+.DS_Store
+repomix-output.txt
+TODO.md
+tsconfig.tsbuildinfo
+public/static/recipe-images
