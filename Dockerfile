@@ -32,15 +32,11 @@ COPY --from=build /app/src /app/src
 COPY --from=build /app/drizzle /app/drizzle
 COPY --from=build /app/drizzle.config.ts /app/drizzle.config.ts
 COPY --from=build /app/tsconfig.json /app/tsconfig.json
+COPY docker/app-entrypoint.sh /usr/local/bin/app-entrypoint
+
+RUN chmod +x /usr/local/bin/app-entrypoint
 
 EXPOSE 3000
 
-CMD uploads_dir="${BASE_UPLOADS_LOCATION:-/app/storage/images}"; \
-    mkdir -p /app/instance "$uploads_dir"; \
-    echo "[INFO] Running database migrations..."; \
-    bun run dk migrate; \
-    echo "[SUCCESS] Database migrations complete"; \
-    if [ -d /app/public/static ]; then \
-        cp -rn /app/public/static/. "$uploads_dir"/ \
-    fi \
-    exec bun server.ts
+ENTRYPOINT ["app-entrypoint"]
+CMD ["bun", "server.ts"]
