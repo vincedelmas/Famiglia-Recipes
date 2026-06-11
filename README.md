@@ -78,7 +78,7 @@ Your `.env` file should contain the following variables:
 
 ```env
 # SQlite/libSQL database connection URL
-DATABASE_URL="file:./instance/site.db"
+DATABASE_URL="./instance/site.db"
 
 # Base URL for application
 VITE_BASE_URL="http://localhost:3000"
