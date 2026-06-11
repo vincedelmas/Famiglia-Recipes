@@ -60,7 +60,7 @@ docker compose down
 
 ## Migrations
 
-The container entrypoint runs database migrations on startup:
+The container startup command runs db migrations on startup:
 
 ```sh
 bun run dk migrate

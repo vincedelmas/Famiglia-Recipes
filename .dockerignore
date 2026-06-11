@@ -13,4 +13,5 @@ instance
 repomix-output.txt
 TODO.md
 tsconfig.tsbuildinfo
-public/static/recipe-images
+public/static/recipe-images/*
+!public/static/recipe-images/default.png
