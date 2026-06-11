@@ -1,13 +1,13 @@
 import {z} from "zod";
 
 
-export const ingredientSchema = z.object({
+const ingredientSchema = z.object({
     quantity: z.number("Quantity is required").nonnegative(),
     description: z.string().min(1, "Ingredient is required").trim(),
 });
 
 
-export const stepSchema = z.object({
+const stepSchema = z.object({
     content: z.string().min(1, "Step cannot be empty").trim(),
 });
 

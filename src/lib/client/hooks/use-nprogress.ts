@@ -1,38 +1,81 @@
-import {useEffect} from "react";
 import NProgress from "nprogress";
-import {useRouter} from "@tanstack/react-router";
+import {useEffect, useRef} from "react";
+import {useRouterState} from "@tanstack/react-router";
 
 
 NProgress.configure({ showSpinner: false, parent: "body" });
 
 
-export const useNProgress = () => {
-    const router = useRouter();
+interface ProgressOpts {
+    pendingMs?: number;
+    pendingMinMs?: number;
+}
+
+
+export const useNProgress = ({ pendingMs = 80, pendingMinMs = 200 }: ProgressOpts = {}) => {
+    const startedAtRef = useRef<number | undefined>(undefined);
+    const minTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+    const showTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+    const isPending = useRouterState({ select: (state) => state.status === "pending" });
 
     useEffect(() => {
-        const handleStart = ({ pathChanged }: { pathChanged: boolean }) => {
-            if (pathChanged) NProgress.start();
+        const clearShowTimer = () => {
+            clearTimeout(showTimerRef.current);
+            showTimerRef.current = undefined;
+        };
+
+        const clearMinTimer = () => {
+            clearTimeout(minTimerRef.current);
+            minTimerRef.current = undefined;
+        };
+
+        const complete = () => {
+            clearShowTimer();
+
+            if (!startedAtRef.current) return;
+
+            const elapsed = Date.now() - startedAtRef.current;
+            const remaining = Math.max(pendingMinMs - elapsed, 0);
+
+            if (remaining > 0) {
+                clearMinTimer();
+                minTimerRef.current = setTimeout(() => {
+                    NProgress.done();
+                    startedAtRef.current = undefined;
+                    minTimerRef.current = undefined;
+                }, remaining);
+            }
+            else {
+                NProgress.done();
+                startedAtRef.current = undefined;
+            }
+        };
+
+        if (isPending) {
+            clearMinTimer();
+            if (startedAtRef.current) return;
+
+            showTimerRef.current = setTimeout(() => {
+                NProgress.start();
+                startedAtRef.current = Date.now();
+            }, pendingMs);
         }
-
-        const handleComplete = () => {
-            NProgress.done()
-        };
-
-        const handleError = () => {
-            NProgress.done()
-        };
-
-        const unsubscribeError = router.subscribe("onResolved", handleError);
-        const unsubscribeStart = router.subscribe("onBeforeLoad", handleStart);
-        const unsubscribeComplete = router.subscribe("onLoad", handleComplete);
+        else {
+            complete();
+        }
 
         return () => {
-            unsubscribeStart();
-            unsubscribeComplete();
-            unsubscribeError();
+            clearShowTimer();
+        };
+    }, [isPending, pendingMs, pendingMinMs]);
+
+    useEffect(() => {
+        return () => {
+            clearTimeout(showTimerRef.current);
+            clearTimeout(minTimerRef.current);
             NProgress.done();
-        }
-    }, [router]);
+        };
+    }, []);
 
     return null;
 };

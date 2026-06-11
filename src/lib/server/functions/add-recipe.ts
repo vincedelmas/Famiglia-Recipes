@@ -28,7 +28,7 @@ export const getLabels = createServerFn({ method: "GET" })
 
 export const postAddRecipe = createServerFn({ method: "POST" })
     .middleware([authMiddleware])
-    .inputValidator((data: FormData) => {
+    .validator((data: FormData) => {
         if (!(data instanceof FormData)) throw new Error("Invalid FormData");
         return data;
     })
@@ -94,7 +94,7 @@ export const postAddRecipe = createServerFn({ method: "POST" })
 
 export const uploadRecipeForParsing = createServerFn({ method: "POST" })
     .middleware([authMiddleware])
-    .inputValidator((data: FormData) => {
+    .validator((data: FormData) => {
         if (!(data instanceof FormData)) throw new Error("Invalid FormData");
         return data;
     })
@@ -102,7 +102,11 @@ export const uploadRecipeForParsing = createServerFn({ method: "POST" })
         let fileForAI: File | null = null;
         let textContent: string | null = null;
 
-        const validatedData = uploadRecipeSchema.parse({ type: data.get("type"), content: data.get("content") });
+        const validatedData = uploadRecipeSchema.parse({
+            type: data.get("type"),
+            content: data.get("content"),
+        });
+
         if (validatedData.type === "text") {
             textContent = validatedData.content as string;
         }

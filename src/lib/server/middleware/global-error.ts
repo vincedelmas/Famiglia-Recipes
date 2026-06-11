@@ -2,16 +2,8 @@ import z from "zod";
 import {createMiddleware} from "@tanstack/react-start";
 import pinoLogger from "~/lib/server/core/pino-logger";
 import {sendAdminErrorMail} from "~/lib/utils/mail-sender";
+import {isNotFound, isRedirect} from "@tanstack/react-router";
 import {FormattedError, FormZodError} from "~/lib/utils/error-classes";
-
-
-function createCleanError(originalError: Error, message?: string) {
-    const cleanError = new Error(message ? message : originalError.message);
-    cleanError.name = originalError.name;
-    delete cleanError.stack;
-
-    return cleanError;
-}
 
 
 const isProduction = process.env.NODE_ENV === "production";
@@ -28,29 +20,34 @@ const isProduction = process.env.NODE_ENV === "production";
  **/
 export const errorMiddleware = createMiddleware({ type: "function" }).server(async ({ next }) => {
     try {
-        return await next();
-    }
-    catch (error: unknown) {
-        if (!isProduction) {
-            console.error("DEV Error:", error);
+        const results = await next();
+        if ("error" in results && results.error !== undefined && !isRedirect(results.error) && !isNotFound(results.error)) {
+            throw results.error;
         }
 
-        if (error instanceof FormattedError) {
-            pinoLogger.info({ err: error }, `FormattedError Caught: ${error.message}`);
-            if (isProduction && error.sendMail) {
-                await sendAdminErrorMail(error, "Specific Formatted Error Occurred");
+        return results;
+    }
+    catch (err: any) {
+        if (!isProduction) {
+            console.error("ServerFunc Error:", { err });
+        }
+
+        if (err instanceof FormattedError) {
+            pinoLogger.info({ err }, `FormattedError Caught: ${err.message}`);
+            if (isProduction && err.sendMail) {
+                await sendAdminErrorMail(err, "Specific Formatted Error Occurred");
             }
 
-            throw createCleanError(error);
+            throw err;
         }
 
-        if (error instanceof FormZodError) {
-            throw error;
+        if (err instanceof FormZodError) {
+            throw err;
         }
 
         let errorMessageForLog = "Unexpected Error";
-        const originalError = error instanceof Error ? error : new Error(String(error));
-        if (error instanceof z.ZodError) {
+        const originalError = err instanceof Error ? err : new Error(String(err));
+        if (err instanceof z.ZodError) {
             errorMessageForLog = "Unexpected Zod validation error";
             originalError.message = "A validation error occurred. Please try again later.";
         }
@@ -61,6 +58,6 @@ export const errorMiddleware = createMiddleware({ type: "function" }).server(asy
             await sendAdminErrorMail(originalError, errorMessageForLog);
         }
 
-        throw createCleanError(originalError, "An unexpected error occurred. Please try again later.");
+        throw new Error("An unexpected error occurred. Please try again later.");
     }
 });

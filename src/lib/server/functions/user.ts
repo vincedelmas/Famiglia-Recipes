@@ -7,7 +7,7 @@ import {getRequest} from "@tanstack/react-start/server";
 
 export const getCurrentUser = createServerFn({ method: "GET" }).handler(async () => {
     const { headers } = getRequest();
-    const session = await auth.api.getSession({ headers });
+    const session = await auth.api.getSession({ headers, query: { disableCookieCache: true } });
 
     if (!session?.user) {
         return null;
@@ -21,7 +21,7 @@ export const getCurrentUser = createServerFn({ method: "GET" }).handler(async ()
 
 
 export const validateKey = createServerFn({ method: "GET" })
-    .inputValidator((data: string) => data)
+    .validator((data: string) => data)
     .handler(async ({ data: submittedKey }) => {
         const salt = serverEnv.REGISTER_KEY_SALT;
         const keyHash = serverEnv.REGISTER_KEY_HASH;

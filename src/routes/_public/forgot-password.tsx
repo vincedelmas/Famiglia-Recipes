@@ -18,10 +18,14 @@ export const Route = createFileRoute("/_public/forgot-password")({
 function ForgotPasswordPage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const form = useForm<{ email: string }>({ defaultValues: { email: "" } });
+    const form = useForm<{ email: string }>({
+        defaultValues: {
+            email: "",
+        }
+    });
 
     const onSubmit = async (submitted: { email: string }) => {
-        await authClient.forgetPassword({
+        await authClient.requestPasswordReset({
             email: submitted.email,
             redirectTo: "/reset-password",
         }, {
@@ -30,14 +34,14 @@ function ForgotPasswordPage() {
             },
             onSuccess: async () => {
                 toast.success("An email was send to reset your password.")
-                await navigate({ to: "/" })
+                await navigate({ to: "/", replace: true })
             }
         });
     };
 
     return (
         <PageTitle title={t("fp-title")} subtitle={t("fp-subtitle")}>
-            <div className="mt-4 max-w-[300px]">
+            <div className="mt-4 max-w-75">
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField

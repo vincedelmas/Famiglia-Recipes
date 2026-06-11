@@ -14,7 +14,7 @@ import {label, recipe as recipeTable, recipe, recipeLabel} from "~/lib/server/da
 
 export const getEditRecipe = createServerFn({ method: "POST" })
     .middleware([authMiddleware])
-    .inputValidator((data) => tryOrNotFound(() => z.coerce.number().int().positive().parse(data)))
+    .validator((data) => tryOrNotFound(() => z.coerce.number().int().positive().parse(data)))
     .handler(async ({ data: recipeId }) => {
         const singleRecipe = await db.query.recipe.findFirst({
             where: eq(recipe.id, recipeId),
@@ -42,7 +42,7 @@ export const getEditRecipe = createServerFn({ method: "POST" })
 
 export const postEditRecipe = createServerFn({ method: "POST" })
     .middleware([authMiddleware])
-    .inputValidator((data: FormData) => {
+    .validator((data: FormData) => {
         if (!(data instanceof FormData)) throw new Error("Invalid FormData");
         return data;
     })

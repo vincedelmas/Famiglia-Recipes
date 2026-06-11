@@ -4,18 +4,20 @@ import {addSeo} from "~/lib/utils/seo";
 import {I18nextProvider} from "react-i18next";
 import i18nInstance from "~/lib/client/i18n/i18n";
 import {authOptions} from "~/lib/client/react-query";
-import {ReactNode, useEffect, useState} from "react";
 import {type QueryClient} from "@tanstack/react-query";
 import {Toaster} from "~/lib/client/components/ui/sonner";
 import {Navbar} from "~/lib/client/components/app/Navbar";
 import {Footer} from "~/lib/client/components/app/Footer";
 import {useNProgress} from "~/lib/client/hooks/use-nprogress";
 import {createRootRouteWithContext, HeadContent, Outlet, Scripts} from "@tanstack/react-router";
+import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
     ssr: false,
-    beforeLoad: async ({ context: { queryClient } }) => queryClient.prefetchQuery(authOptions),
+    beforeLoad: ({ context: { queryClient } }) => {
+        return queryClient.ensureQueryData(authOptions);
+    },
     head: () => ({
         meta: [
             { charSet: "UTF-8" },
@@ -35,27 +37,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootComponent() {
     useNProgress();
-    const [devTools, setDevtools] = useState<null | ReactNode>(null);
-
-    useEffect(() => {
-        if (import.meta.env.DEV) {
-            Promise.all([
-                import("@tanstack/react-devtools").then((m) => m.TanStackDevtools),
-                import("@tanstack/react-query-devtools").then((m) => m.ReactQueryDevtoolsPanel),
-                import("@tanstack/react-router-devtools").then((m) => m.TanStackRouterDevtoolsPanel),
-            ]).then(([TanStackDevtools, ReactQueryDevtoolsPanel, TanStackRouterDevtoolsPanel]) => {
-                setDevtools(
-                    <TanStackDevtools
-                        eventBusConfig={{ debug: false, connectToServerBus: true }}
-                        plugins={[
-                            { name: "TanStack Query", render: <ReactQueryDevtoolsPanel/> },
-                            { name: "TanStack Router", render: <TanStackRouterDevtoolsPanel/> },
-                        ]}
-                    />
-                );
-            });
-        }
-    }, []);
 
     return (
         <html lang="en" className="dark" suppressHydrationWarning>
@@ -65,11 +46,11 @@ function RootComponent() {
         <body>
 
         <div id="root">
-            <div className="flex flex-col min-h-[calc(100vh_-_64px)] mt-[64px]">
+            <div className="flex flex-col min-h-[calc(100vh-64px)] mt-16">
                 <I18nextProvider i18n={i18nInstance}>
                     <Toaster/>
                     <Navbar/>
-                    <main className="flex-1 w-[100%] max-w-[1320px] px-2 mx-auto">
+                    <main className="flex-1 w-full max-w-330 px-2 mx-auto">
                         <Outlet/>
                     </main>
                     <Footer/>
@@ -77,7 +58,10 @@ function RootComponent() {
             </div>
         </div>
 
-        {devTools}
+        {import.meta.env.DEV &&
+            <ReactQueryDevtools buttonPosition="bottom-left"/>
+        }
+
         <Scripts/>
         </body>
         </html>

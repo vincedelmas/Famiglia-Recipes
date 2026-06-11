@@ -38,7 +38,7 @@ export const saveUploadedImage = createServerOnlyFn(() => async ({ file, resize 
 
 
 const processAndSaveImage = createServerOnlyFn(() => async ({ buffer, resize }: ProcessAndSaveImageOptions) => {
-    const { default: sharp } = await import("sharp");
+    const sharp = (await import("sharp")).default;
     sharp.cache({ files: 0, memory: 0 });
 
     const randomHex = crypto.randomBytes(8).toString("hex");

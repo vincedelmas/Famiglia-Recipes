@@ -13,6 +13,14 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CLIENT_DIR = path.resolve(__dirname, "dist/client");
 const SERVER_ENTRY = path.resolve(__dirname, "dist/server/server.js");
 
+const UPLOADS_DIR_NAME = process.env.UPLOADS_DIR_NAME ?? "static";
+const BASE_UPLOADS_LOCATION = process.env.BASE_UPLOADS_LOCATION ?? "./public/static/";
+const UPLOADS_ROUTE = `/${UPLOADS_DIR_NAME}/*`;
+
+
+let isShuttingDown = false;
+let server: ReturnType<typeof Bun.serve>;
+
 
 const startServer = async () => {
     console.log("[INFO] Starting server...");
@@ -34,8 +42,8 @@ const startServer = async () => {
             const file = Bun.file(filepath);
             return new Response(file, {
                 headers: {
-                    "Content-Type": file.type || "application/octet-stream",
                     "Cache-Control": "public, max-age=31536000, immutable",
+                    "Content-Type": file.type || "application/octet-stream",
                 },
             })
         }
@@ -44,13 +52,42 @@ const startServer = async () => {
     console.log(`[SUCCESS] Registered ${Object.keys(routes).length} static routes`);
 
     // Start Bun server
-    const server = Bun.serve({
+    server = Bun.serve({
         port: PORT,
         routes: {
             ...routes,
-            "/*": (req: Request) => handler.fetch(req),
+            [UPLOADS_ROUTE]: async (req: Request) => {
+                const url = new URL(req.url);
+                const routePrefix = `/${UPLOADS_DIR_NAME}/`;
+                const relativePath = decodeURIComponent(url.pathname.slice(routePrefix.length));
+                const resolvedPath = path.resolve(BASE_UPLOADS_LOCATION, relativePath);
+                const uploadsRoot = path.resolve(BASE_UPLOADS_LOCATION);
+
+                if (!resolvedPath.startsWith(`${uploadsRoot}${path.sep}`) && resolvedPath !== uploadsRoot) {
+                    return new Response("Not Found", { status: 404 });
+                }
+
+                const file = Bun.file(resolvedPath);
+                if (!await file.exists()) {
+                    return new Response("Not Found", { status: 404 });
+                }
+
+                return new Response(file, {
+                    headers: {
+                        "Cache-Control": "public, max-age=31536000, immutable",
+                        "Content-Type": file.type || "application/octet-stream",
+                    },
+                });
+            },
+            "/*": (req: Request) => {
+                // Reject new requests during shutdown
+                if (isShuttingDown) {
+                    return new Response("Service Unavailable", { status: 503, headers: { "Retry-After": "5" } });
+                }
+                return handler.fetch(req);
+            },
         },
-        error(err: unknown) {
+        error(err) {
             console.error("[ERROR]", err);
             return new Response("Internal Server Error", { status: 500 });
         },
@@ -60,7 +97,29 @@ const startServer = async () => {
 };
 
 
+// Graceful shutdown handler
+const shutdown = async (signal: string) => {
+    console.log(`[INFO] Received ${signal}, starting graceful shutdown...`);
+    isShuttingDown = true;
+
+    // Give in-flight requests time to complete
+    const GRACE_PERIOD_MS = 2_000;
+
+    await new Promise((resolve) => setTimeout(resolve, GRACE_PERIOD_MS));
+
+    console.log("[INFO] Grace period complete, stopping server...");
+    void server.stop();
+
+    console.log("[SUCCESS] Server stopped gracefully");
+    process.exit(0);
+};
+
+
+process.on("SIGINT", () => shutdown("SIGINT"));
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+
+
 startServer().catch((err) => {
-    console.error('[ERROR] Failed to start server:', err);
+    console.error("[ERROR] Failed to start server:", err);
     process.exit(1);
 })

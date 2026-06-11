@@ -33,4 +33,6 @@ logs/
 /scripts
 ecosystem.config.cjs
 deploy.sh
-
+/tsconfig.tsbuildinfo
+**/routeTree.gen.ts
+/bun.lock

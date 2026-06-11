@@ -14,7 +14,6 @@ export const Route = createFileRoute("/_private/add-recipe")({
     component: AddRecipePage,
 });
 
-
 function AddRecipePage() {
     const navigate = useNavigate();
     const { t } = useTranslation();

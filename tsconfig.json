@@ -1,4 +1,14 @@
 {
+    "include": [
+        "**/*.ts",
+        "**/*.tsx"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "build",
+        "coverage"
+    ],
     "compilerOptions": {
         "strict": true,
         "esModuleInterop": true,
@@ -21,21 +31,10 @@
         "noEmit": true,
         "strictNullChecks": true,
         "forceConsistentCasingInFileNames": true,
-        "baseUrl": ".",
         "paths": {
             "~/*": [
                 "./src/*"
             ]
         }
-    },
-    "include": [
-        "**/*.ts",
-        "**/*.tsx"
-    ],
-    "exclude": [
-        "node_modules",
-        "dist",
-        "build",
-        "coverage"
-    ]
+    }
 }

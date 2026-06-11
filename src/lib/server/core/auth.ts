@@ -1,11 +1,11 @@
 import {clientEnv} from "~/env/client";
 import {serverEnv} from "~/env/server";
-import {betterAuth} from "better-auth";
 import {db} from "~/lib/server/database/db";
+import {betterAuth} from "better-auth/minimal";
 import {sendEmail} from "~/lib/utils/mail-sender";
 import {createServerOnlyFn} from "@tanstack/react-start";
-import {reactStartCookies} from "better-auth/react-start";
 import {drizzleAdapter} from "better-auth/adapters/drizzle";
+import {tanstackStartCookies} from "better-auth/tanstack-start";
 import {checkWerkzeugPassword, generatePasswordHash} from "~/lib/server/core/security";
 
 
@@ -76,11 +76,11 @@ const getAuthConfig = createServerOnlyFn(() => betterAuth({
     advanced: {
         cookiePrefix: "famiglia-recipes",
         database: {
-            useNumberId: true,
+            generateId: false,
         },
     },
     plugins: [
-        reactStartCookies(),
+        tanstackStartCookies(),
     ]
 }));
 

@@ -28,4 +28,5 @@ export const serverEnv = createEnv({
         OPEN_ROUTER_MODEL_ID: z.string(),
     },
     runtimeEnv: process.env,
+    skipValidation: !!process.env.SKIP_VALIDATION,
 });
