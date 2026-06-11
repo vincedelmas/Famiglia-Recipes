@@ -13,7 +13,5 @@ instance
 *.log
 coverage
 
-public/static/**
-!public/static/
-!public/static/*/
-!public/static/*/default.jpg
+public/static/recipe-images/*
+!public/static/recipe-images/default.png
