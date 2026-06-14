@@ -7,6 +7,14 @@ import {getAllRecipes} from "~/lib/server/functions/all-recipes";
 import {getComments, getDetails} from "~/lib/server/functions/recipe-details";
 
 
+type AllRecipesParams = {
+    q: string;
+    page: number;
+    labels: number[];
+    authors: number[];
+};
+
+
 export const authOptions = queryOptions({
     queryKey: ["currentUser"],
     queryFn: () => getCurrentUser(),
@@ -19,10 +27,9 @@ export const dashboardOptions = queryOptions({
     queryFn: () => getDashboard(),
 });
 
-
-export const allRecipesOptions = queryOptions({
-    queryKey: ["allRecipes"],
-    queryFn: () => getAllRecipes(),
+export const allRecipesOptions = (params: AllRecipesParams = { q: "", page: 1, labels: [], authors: [] }) => queryOptions({
+    queryKey: ["allRecipes", params],
+    queryFn: () => getAllRecipes({ data: params }),
 });
 
 

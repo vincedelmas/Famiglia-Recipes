@@ -1,28 +1,10 @@
 import {twMerge} from "tailwind-merge";
 import {type ClassValue, clsx} from "clsx";
-import {ApiData} from "~/routes/_private/all-recipes/route";
 
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
-
-
-export const groupRecipesAlphabetically = (recipes: ApiData["recipes"]) => {
-    return recipes.reduce<{ [letter: string]: ApiData["recipes"] }>((acc, recipe) => {
-        const firstLetter = recipe.title[0].toUpperCase();
-        if (!acc[firstLetter]) {
-            acc[firstLetter] = [];
-        }
-        acc[firstLetter].push(recipe);
-        return acc;
-    }, {});
-};
-
-
-export const normalizeStr = (str: string) => {
-    return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-};
 
 
 export const bgSelector = (username: string) => {
@@ -80,16 +62,14 @@ export const formatDateTime = (dateInput: string | number | Date, locales: strin
     if (isNaN(date.getTime())) return "--";
 
     const formatOptions: Intl.DateTimeFormatOptions = {
-        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        year: "numeric",
-        month: "short",
+        hour12: false,
         day: "numeric",
+        month: "short",
+        year: "numeric",
         hour: options.includeTime ? "numeric" : undefined,
         minute: options.includeTime ? "numeric" : undefined,
-        hour12: false,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
 
     return new Intl.DateTimeFormat(locales, formatOptions).format(date);
 };
-
-
