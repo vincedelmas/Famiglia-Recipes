@@ -85,7 +85,7 @@ VITE_BASE_URL="http://localhost:3000"
 
 # Path to uploads images
 UPLOADS_DIR_NAME="static"
-IMAGE_UPLOADS_PATH="./public/static/recipe-images"
+BASE_UPLOADS_LOCATION="./public/static/recipe-images"
 
 # Secret for session encryption (use a long random string)
 BETTER_AUTH_SECRET="your_strong_secret_here"

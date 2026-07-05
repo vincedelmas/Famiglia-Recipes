@@ -26,6 +26,6 @@ export const imageUrl = (name: string) =>
             return value;
         },
         fromDriver(value: string) {
-            return `${clientEnv.VITE_BASE_URL}/${serverEnv.UPLOADS_DIR_NAME}/recipe-images/${value}`;
+            return `${clientEnv.VITE_BASE_URL}/${serverEnv.UPLOADS_DIR_NAME}/${value}`;
         },
     })(name);
