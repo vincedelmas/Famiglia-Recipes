@@ -11,10 +11,7 @@
     ],
     "entry": [
         "server.ts",
-        "src/client.tsx",
-        "src/router.ts",
         "src/routeTree.gen.ts",
-        "src/start.ts",
         "src/styles.css",
         "src/routes/**/*.{ts,tsx}"
     ],
