@@ -50,9 +50,14 @@ function RootComponent() {
             <div className="flex min-h-dvh flex-col">
                 <I18nextProvider i18n={i18nInstance}>
                     <Toaster/>
-                    <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-card focus:p-3">Skip to content</a>
+                    <a
+                        href="#main-content"
+                        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-card focus:p-3"
+                    >
+                        Skip to content
+                    </a>
                     <Navbar/>
-                    <main id="main-content" className="mx-auto w-full max-w-[1320px] flex-1 px-5 pb-12 sm:px-8 lg:px-12">
+                    <main id="main-content" className="mx-auto w-full max-w-330 flex-1 px-5 pb-12 sm:px-8 lg:px-12">
                         <Outlet/>
                     </main>
                     <Footer/>
@@ -61,7 +66,9 @@ function RootComponent() {
         </div>
 
         {import.meta.env.DEV &&
-            <ReactQueryDevtools buttonPosition="bottom-left"/>
+            <ReactQueryDevtools
+                buttonPosition="bottom-left"
+            />
         }
 
         <Scripts/>

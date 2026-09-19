@@ -51,15 +51,17 @@ export const Navbar = () => {
                     </Link>)}
                 </div>}
                 <div className="flex items-center gap-3 sm:gap-5">
-                    <LanguageSwitcher/>
                     {currentUser ? <>
                         <Button className="hidden md:inline-flex" nativeButton={false} render={<Link to="/add-recipe"/>}><Plus data-icon="inline-start"/>{t("add-recipe-nav")}</Button>
-                        <div className="hidden items-center gap-2 border-l pl-4 lg:flex">
-                            <Avatar><AvatarFallback>{currentUser.name.charAt(0).toUpperCase()}</AvatarFallback></Avatar>
-                            <Button variant="ghost" size="icon" aria-label={t("ui.logout")} title={t("ui.logout")} disabled={signingOut} onClick={logoutUser}><LogOut/></Button>
+                        <div className="flex items-center gap-2 lg:border-l lg:pl-4">
+                            <LanguageSwitcher/>
+                            <div className="hidden items-center gap-2 lg:flex">
+                                <Avatar><AvatarFallback>{currentUser.name.charAt(0).toUpperCase()}</AvatarFallback></Avatar>
+                                <Button variant="ghost" size="icon" aria-label={t("ui.logout")} title={t("ui.logout")} disabled={signingOut} onClick={logoutUser}><LogOut/></Button>
+                            </div>
                         </div>
                         <Button variant="ghost" size="icon" className="lg:hidden" aria-expanded={menuOpen} aria-controls="family-menu" aria-label={t("ui.menu")} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X/> : <Menu/>}</Button>
-                    </> : <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex">{t("ui.family-cookbook")}<ArrowUpRight className="size-3.5"/></span>}
+                    </> : <><LanguageSwitcher/><span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex">{t("ui.family-cookbook")}<ArrowUpRight className="size-3.5"/></span></>}
                 </div>
             </nav>
             {currentUser && menuOpen && <div id="family-menu" className="border-t px-5 py-5 lg:hidden">

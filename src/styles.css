@@ -61,36 +61,127 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-
 @layer base {
-    * { @apply border-border outline-ring/50; }
-    html { @apply font-sans; scroll-behavior: smooth; scroll-padding-top: 7rem; }
-    body { @apply bg-background text-foreground; margin: 0; -webkit-font-smoothing: antialiased; }
-    button:not(:disabled), [role="button"]:not(:disabled) { cursor: pointer; }
-    ::selection { background: #dce4cf; color: #293d23; }
-    :focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; }
-    input, textarea, select { scroll-margin-top: 7rem; }
+    * {
+        @apply border-border outline-ring/50;
+    }
+
+    html {
+        @apply font-sans;
+        scroll-behavior: smooth;
+        scroll-padding-top: 7rem;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+        margin: 0;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    button:not(:disabled), [role="button"]:not(:disabled) {
+        cursor: pointer;
+    }
+
+    ::selection {
+        background: #dce4cf;
+        color: #293d23;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 4px;
+    }
+
+    input, textarea, select {
+        scroll-margin-top: 7rem;
+    }
 }
 
 @layer components {
-    .eyebrow { @apply text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground; }
-    .page-heading { @apply font-heading text-4xl leading-[1.1] tracking-[-0.045em] sm:text-5xl; font-weight: 450; }
-    .section-heading { @apply font-heading text-2xl tracking-[-0.035em] sm:text-3xl; font-weight: 450; }
-    .recipe-grid { @apply grid grid-cols-1 gap-x-6 gap-y-9 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4; }
-    .recipe-section { @apply mt-12 sm:mt-16; }
-    .section-top { @apply mb-6 flex flex-wrap items-end justify-between gap-4; }
-    .text-link { @apply inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline; }
-    .recipe-form-section { @apply rounded-2xl border bg-card p-5 sm:p-8; }
-    .recipe-form-section > legend { @apply float-left mb-6 w-full font-heading text-2xl tracking-tight; }
-    .recipe-form-section > legend + * { clear: both; }
-    .auth-panel { @apply mx-auto w-full max-w-md; }
-    .page-enter { animation: page-enter 450ms ease-out both; }
+    .eyebrow {
+        @apply text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground;
+    }
+
+    .page-heading {
+        @apply font-heading text-4xl leading-[1.1] tracking-[-0.045em] sm:text-5xl;
+        font-weight: 450;
+    }
+
+    .section-heading {
+        @apply font-heading text-2xl tracking-[-0.035em] sm:text-3xl;
+        font-weight: 450;
+    }
+
+    .recipe-grid {
+        @apply grid grid-cols-1 gap-x-6 gap-y-9 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+    }
+
+    .recipe-section {
+        @apply mt-12 sm:mt-16;
+    }
+
+    .section-top {
+        @apply mb-6 flex flex-wrap items-end justify-between gap-4;
+    }
+
+    .text-link {
+        @apply inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline;
+    }
+
+    .recipe-form-section {
+        @apply rounded-2xl border bg-card p-5 sm:p-8;
+    }
+
+    .recipe-form-section > legend {
+        @apply float-left mb-6 w-full font-heading text-2xl tracking-tight;
+    }
+
+    .recipe-form-section > legend + * {
+        clear: both;
+    }
+
+    .auth-panel {
+        @apply mx-auto w-full max-w-md;
+    }
+
+    .page-enter {
+        animation: page-enter 450ms ease-out both;
+    }
 }
 
-@keyframes page-enter { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+@keyframes page-enter {
+    from {
+        opacity: 0;
+        transform: translateY(9px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
-#nprogress { pointer-events: none; }
-#nprogress .bar { background: var(--primary); position: fixed; z-index: 1031; top: 0; left: 0; width: 100%; height: 2px; }
-.nprogress-custom-parent #nprogress .bar { position: absolute; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+#nprogress {
+    pointer-events: none;
+}
+
+#nprogress .bar {
+    background: var(--primary);
+    position: fixed;
+    z-index: 1031;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+}
+
+.nprogress-custom-parent #nprogress .bar {
+    position: absolute;
+}

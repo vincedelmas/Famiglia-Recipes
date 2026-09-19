@@ -1,28 +1,32 @@
 import {useTranslation} from "react-i18next";
 import {RecipeFormValues} from "~/lib/utils/schemas";
 import {toast} from "~/lib/client/components/ui/toast";
-import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
 import {PageTitle} from "~/lib/client/components/app/PageTitle";
 import {createFileRoute, useNavigate} from "@tanstack/react-router";
+import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
 import {RecipeForm} from "~/lib/client/components/recipe-form/RecipeForm";
 import {editRecipeOptions, useUpdateRecipe} from "~/lib/client/react-query";
 
 
 export const Route = createFileRoute("/_private/edit-recipe/$recipeId")({
-    context: ({ params: { recipeId } }) => {
-        return { editRecipeOptions: editRecipeOptions(Number(recipeId)) };
+    context: ({ params: { recipeId } }) => ({
+        editRecipeOptions: editRecipeOptions(Number(recipeId)),
+    }),
+    loader: ({ context }) => {
+        return context.queryClient.query(context.editRecipeOptions);
     },
     component: EditRecipePage,
 })
 
 
 function EditRecipePage() {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { t } = useTranslation();
     const { recipeId } = Route.useParams();
     const updateRecipeMutation = useUpdateRecipe();
-    const apiData = useSuspenseQuery(Route.useRouteContext().editRecipeOptions).data;
+    const { editRecipeOptions } = Route.useRouteContext();
+    const { data: apiData } = useSuspenseQuery(editRecipeOptions);
 
     const initValues: RecipeFormValues = {
         title: apiData.recipe.title,

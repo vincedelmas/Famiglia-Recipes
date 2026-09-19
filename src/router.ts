@@ -1,6 +1,6 @@
-import {toast} from "~/lib/client/components/ui/toast";
 import {routeTree} from "~/routeTree.gen";
 import {createRouter} from "@tanstack/react-router";
+import {toast} from "~/lib/client/components/ui/toast";
 import {NotFound} from "~/lib/client/components/app/NotFound";
 import {DefaultLoader} from "~/lib/client/components/app/DefaultLoader";
 import {MutationCache, QueryCache, QueryClient} from "@tanstack/react-query";
@@ -43,14 +43,14 @@ export function getRouter() {
 
     const router = createRouter({
         routeTree,
-        context: { queryClient },
         defaultPreload: false,
+        defaultPendingMs: 1000,
+        context: { queryClient },
+        defaultPendingMinMs: 500,
         defaultPreloadStaleTime: 0,
-        defaultErrorComponent: ErrorCatchBoundary,
         defaultNotFoundComponent: NotFound,
         defaultPendingComponent: DefaultLoader,
-        defaultPendingMs: 1000,
-        defaultPendingMinMs: 500,
+        defaultErrorComponent: ErrorCatchBoundary,
         scrollRestoration: true,
         defaultStructuralSharing: true,
     });

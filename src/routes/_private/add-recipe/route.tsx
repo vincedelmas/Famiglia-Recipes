@@ -1,25 +1,33 @@
-import {toast} from "~/lib/client/components/ui/toast";
 import {useTranslation} from "react-i18next";
 import {RecipeFormValues} from "~/lib/utils/schemas";
 import {useAddRecipe} from "~/lib/client/react-query";
-import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
+import {toast} from "~/lib/client/components/ui/toast";
 import {PageTitle} from "~/lib/client/components/app/PageTitle";
 import {createFileRoute, useNavigate} from "@tanstack/react-router";
 import {addRecipeOptions} from "~/lib/client/react-query/queryOptions";
+import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
 import {RecipeForm} from "~/lib/client/components/recipe-form/RecipeForm";
 
 
 export const Route = createFileRoute("/_private/add-recipe")({
-    context: () => ({ addRecipeOptions }),
+    context: () => ({
+        addRecipeOptions: addRecipeOptions,
+    }),
+    loader: ({ context }) => {
+        return context.queryClient.query(context.addRecipeOptions);
+    },
     component: AddRecipePage,
 });
 
+
 function AddRecipePage() {
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
     const { t } = useTranslation();
     const addRecipe = useAddRecipe();
-    const { data: labels } = useSuspenseQuery(Route.useRouteContext().addRecipeOptions);
+    const queryClient = useQueryClient();
+    const { addRecipeOptions } = Route.useRouteContext();
+    const { data: labels } = useSuspenseQuery(addRecipeOptions);
+
     const initValues: RecipeFormValues = {
         title: "",
         labels: [],
@@ -45,7 +53,12 @@ function AddRecipePage() {
                     queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
                     queryClient.invalidateQueries({ queryKey: ["allRecipes"] }),
                 ]);
-                toast.add({ type: "success", title: t("ui.recipe-created") });
+
+                toast.add({
+                    type: "success",
+                    title: t("ui.recipe-created"),
+                });
+
                 return navigate({ to: "/dashboard" });
             }
         });
