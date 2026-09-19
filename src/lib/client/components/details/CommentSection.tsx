@@ -60,10 +60,10 @@ export const CommentSection = ({ recipeId, currentUserId, recipeSubmitterId }: C
     }
 
     return <>
-        <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
             <div>
                 <h2 className="section-heading">
-                    Comments
+                    Comments{" "}
                     <span className="font-sans text-sm text-muted-foreground">
                         ({comments?.length || 0})
                     </span>
@@ -74,7 +74,7 @@ export const CommentSection = ({ recipeId, currentUserId, recipeSubmitterId }: C
                 </p>
             </div>
 
-            <Button variant="outline" onClick={onAddComment}>
+            <Button variant="outline" onClick={onAddComment} size="sm">
                 <Plus data-icon="inline-start"/>
                 Add a comment
             </Button>
