@@ -21,13 +21,13 @@
     "tab-file-upload": "File Upload",
     "tab-text-input": "Text Input",
     "label-choose-file": "Choose File",
-    "supported-formats": "Supported formats: PDF, DOC, DOCX, JPG, PNG, WEBP (max 20MB)",
+    "supported-formats": "Supported formats: PDF, DOCX, JPG, PNG, WEBP (max 20MB)",
     "file-selected-with-size": "Selected: {{fileName}} ({{size}} Mo)",
     "label-text-content": "Text Content",
     "placeholder-text": "Paste the recipe content here...",
     "max-char-info": "Maximum 10,000 characters",
     "error-file-size": "File size must be less than 20MB",
-    "error-file-type": "File type not supported. Please upload PDF, DOC, DOCX, JPG, PNG, or WEBP files.",
+    "error-file-type": "File type not supported. Please upload PDF, DOCX, JPG, PNG, or WEBP files.",
     "error-text-length": "Text must be less than {{max}} characters",
     "toast-success": "Check the form and save the recipe!",
     "upload": "Upload",
@@ -202,6 +202,8 @@
         "recipe-created": "Recipe added to the cookbook",
         "recipe-updated": "Recipe changes saved",
         "move-up": "Move {{item}} up",
-        "move-down": "Move {{item}} down"
-    }
+        "move-down": "Move {{item}} down",
+        "signout-error": "Couldn’t sign out. Please try again."
+    },
+    "error-file-empty": "The selected file is empty."
 }

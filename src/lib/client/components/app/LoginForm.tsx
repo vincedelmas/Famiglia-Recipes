@@ -96,7 +96,7 @@ export const LoginForm = () => {
                                         <FormItem>
                                             <div className="flex items-center justify-between">
                                                 <FormLabel>{t("password")}</FormLabel>
-                                                <Link to="/forgot-password" className="text-sm underline" tabIndex={-1}>
+                                                <Link to="/forgot-password" className="text-sm underline">
                                                     {t("forgot-password")}
                                                 </Link>
                                             </div>

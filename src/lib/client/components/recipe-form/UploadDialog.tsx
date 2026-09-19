@@ -2,7 +2,6 @@ import type React from "react";
 import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {useTranslation} from "react-i18next";
-import {RecipeFormValues} from "~/lib/utils/schemas";
 import {Input} from "~/lib/client/components/ui/input";
 import {toast} from "~/lib/client/components/ui/toast";
 import {Button} from "~/lib/client/components/ui/button";
@@ -10,22 +9,11 @@ import {useUploadMutation} from "~/lib/client/react-query";
 import {Textarea} from "~/lib/client/components/ui/textarea";
 import {AlertCircle, FileText, Loader2, Upload} from "lucide-react";
 import {Alert, AlertDescription} from "~/lib/client/components/ui/alert";
+import {RecipeFormValues, recipeImportFileSchema} from "~/lib/utils/schemas";
 import {Field, FieldGroup, FieldLabel} from "~/lib/client/components/ui/field";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "~/lib/client/components/ui/tabs";
+import {MAX_IMPORT_TEXT_LENGTH as MAX_TEXT_LENGTH, RECIPE_IMPORT_FILE_TYPES} from "~/lib/utils/constants";
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "~/lib/client/components/ui/dialog";
-
-
-const MAX_TEXT_LENGTH = 10_000;
-const MAX_FILE_SIZE = 20 * 1024 * 1024;
-
-const ACCEPTED_FILE_TYPES = {
-    "image/png": [".png"],
-    "image/webp": [".webp"],
-    "application/pdf": [".pdf"],
-    "application/msword": [".doc"],
-    "image/jpeg": [".jpg", ".jpeg"],
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
-};
 
 
 interface UploadDialogProps {
@@ -42,27 +30,12 @@ export default function UploadDialog({ form }: UploadDialogProps) {
     const [activeTab, setActiveTab] = useState("upload");
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-    const validateFile = (file: File) => {
-        const errors: string[] = []
-
-        if (file.size > MAX_FILE_SIZE) {
-            errors.push(t("error-file-size"));
-        }
-
-        const fileType = file.type;
-        const isValidType = Object.keys(ACCEPTED_FILE_TYPES).includes(fileType);
-
-        if (!isValidType) {
-            errors.push(t("error-file-type"));
-        }
-
-        return errors;
-    }
-
     const handleFileChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
         const file = ev.target.files?.[0];
         if (file) {
-            const fileErrors = validateFile(file);
+            const validation = recipeImportFileSchema.safeParse(file);
+            const fileErrors = validation.success ? [] : validation.error.issues.map(issue => t(issue.message));
+
             if (fileErrors.length > 0) {
                 setErrors(fileErrors);
                 setSelectedFile(null);
@@ -110,11 +83,10 @@ export default function UploadDialog({ form }: UploadDialogProps) {
                 setErrors([error.message]);
             },
             onSuccess: (data) => {
-                setErrors([]);
-                form.reset(data);
+                form.reset({ ...data, image: form.getValues("image") }, { keepDefaultValues: true });
                 setOpen(false);
-                setTextContent("");
-                setSelectedFile(null);
+
+                resetForm();
                 toast.add({ type: "success", title: t("toast-success") });
             },
         })
@@ -172,7 +144,7 @@ export default function UploadDialog({ form }: UploadDialogProps) {
                                     id="file-upload"
                                     onChange={handleFileChange}
                                     disabled={uploadMutation.isPending}
-                                    accept=".pdf,.docx,.doc,.jpg,.jpeg,.png,.webp"
+                                    accept={Object.values(RECIPE_IMPORT_FILE_TYPES).flat().join(",")}
                                 />
                                 <p className="text-sm text-muted-foreground">
                                     {t("supported-formats")}
@@ -229,7 +201,14 @@ export default function UploadDialog({ form }: UploadDialogProps) {
                 }
 
                 <DialogFooter>
-                    <Button variant="outline" onClick={() => setOpen(false)} disabled={uploadMutation.isPending}>
+                    <Button
+                        variant="outline"
+                        disabled={uploadMutation.isPending}
+                        onClick={() => {
+                            setOpen(false);
+                            resetForm();
+                        }}
+                    >
                         {t("cancel")}
                     </Button>
 

@@ -8,12 +8,7 @@ import {FormattedError} from "~/lib/utils/error-classes";
 import {authMiddleware} from "~/lib/server/middleware/auth-guard";
 import {deleteImage, saveUploadedImage} from "~/lib/utils/image-handler";
 import {comment, label, recipe, recipeLabel} from "~/lib/server/database/schema";
-import {imageRecipeSchema, recipeFormSchema, uploadRecipeSchema} from "~/lib/utils/schemas";
-
-
-const PDF_TYPE = ".pdf";
-const DOCUMENT_TYPES = [".doc", ".docx"];
-const IMAGE_TYPES = [".png", ".jpg", ".jpeg", ".webp"];
+import {imageRecipeSchema, recipeFormSchema, recipeImportTextSchema, uploadRecipeSchema} from "~/lib/utils/schemas";
 
 
 export const getLabels = createServerFn({ method: "GET" })
@@ -112,36 +107,30 @@ export const uploadRecipeForParsing = createServerFn({ method: "POST" })
         let fileForAI: File | null = null;
         let textContent: string | null = null;
 
-        const validatedData = uploadRecipeSchema.parse({
+        const validatedData = tryFormZodError(() => uploadRecipeSchema.parse({
             type: data.get("type"),
             content: data.get("content"),
-        });
+        }));
 
         if (validatedData.type === "text") {
-            textContent = validatedData.content as string;
+            textContent = validatedData.content;
         }
         else {
-            const file = validatedData.content as File;
-            const fileName = file.name.toLowerCase();
-            const fileExtension = fileName.substring(fileName.lastIndexOf("."));
-
-            if (DOCUMENT_TYPES.includes(fileExtension)) {
+            const file = validatedData.content;
+            if (file.name.toLowerCase().endsWith(".docx")) {
                 try {
                     const arrayBuffer = await file.arrayBuffer();
                     const buffer = Buffer.from(arrayBuffer);
                     const { default: mammoth } = await import("mammoth");
                     const result = await mammoth.extractRawText({ buffer: buffer });
-                    textContent = result.value;
+                    textContent = tryFormZodError(() => recipeImportTextSchema.parse(result.value));
                 }
                 catch {
                     throw new FormattedError("Failed to extract text. Try another one.");
                 }
             }
-            else if (IMAGE_TYPES.includes(fileExtension) || fileExtension === PDF_TYPE) {
-                fileForAI = file;
-            }
             else {
-                throw new FormattedError(`Unsupported file type: ${fileExtension}`);
+                fileForAI = file;
             }
         }
 

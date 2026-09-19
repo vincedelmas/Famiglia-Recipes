@@ -21,13 +21,13 @@
     "tab-file-upload": "Téléversement de Fichier",
     "tab-text-input": "Saisie de Texte",
     "label-choose-file": "Choisir un fichier",
-    "supported-formats": "Formats supportés : PDF, DOC, DOCX, JPG, PNG, WEBP (max 7 Mo)",
+    "supported-formats": "Formats supportés : PDF, DOCX, JPG, PNG, WEBP (max 20 Mo)",
     "file-selected-with-size": "Sélectionné : {{fileName}} ({{size}} Mo)",
     "label-text-content": "Zone de Texte",
     "placeholder-text": "Collez le contenu de la recette ici...",
     "max-char-info": "Maximum 10 000 caractères",
     "error-file-size": "La taille du fichier doit être inférieure à 7 Mo.",
-    "error-file-type": "Type de fichier non supporté. Veuillez téléverser des fichiers PDF, DOC, DOCX, JPG, PNG ou WEBP.",
+    "error-file-type": "Type de fichier non supporté. Veuillez téléverser des fichiers PDF, DOCX, JPG, PNG ou WEBP.",
     "error-text-length": "Le texte doit comporter moins de {{max}} caractères.",
     "toast-success": "Vérifie le formulaire et enregistre la recette !",
     "upload": "Téléverser",
@@ -202,6 +202,8 @@
         "recipe-created": "Recette ajoutée au carnet",
         "recipe-updated": "Modifications enregistrées",
         "move-up": "Monter {{item}}",
-        "move-down": "Descendre {{item}}"
-    }
+        "move-down": "Descendre {{item}}",
+        "signout-error": "La déconnexion a échoué. Veuillez réessayer."
+    },
+    "error-file-empty": "Le fichier sélectionné est vide."
 }

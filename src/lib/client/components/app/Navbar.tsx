@@ -4,6 +4,7 @@ import {useTranslation} from "react-i18next";
 import authClient from "~/lib/utils/auth-client";
 import {useAuth} from "~/lib/client/hooks/use-auth";
 import {useQueryClient} from "@tanstack/react-query";
+import {toast} from "~/lib/client/components/ui/toast";
 import {Button} from "~/lib/client/components/ui/button";
 import {Avatar, AvatarFallback} from "~/lib/client/components/ui/avatar";
 import {LanguageSwitcher} from "~/lib/client/components/app/LanguageSwitcher";
@@ -26,13 +27,21 @@ export const Navbar = () => {
         setSigningOut(true);
 
         try {
-            await authClient.signOut();
+            const { error } = await authClient.signOut();
+            if (error) {
+                toast.add({ type: "error", title: t("ui.signout-error") });
+                return;
+            }
+
             queryClient.setQueryData(authOptions.queryKey, null);
             setMenuOpen(false);
 
             await router.invalidate();
             await navigate({ to: "/", replace: true });
             queryClient.removeQueries();
+        }
+        catch {
+            toast.add({ type: "error", title: t("ui.signout-error") });
         }
         finally {
             setSigningOut(false);

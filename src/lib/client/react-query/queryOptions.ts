@@ -4,15 +4,8 @@ import {getLabels} from "~/lib/server/functions/add-recipe";
 import {getDashboard} from "~/lib/server/functions/dashboard";
 import {getEditRecipe} from "~/lib/server/functions/edit-recipe";
 import {getAllRecipes} from "~/lib/server/functions/all-recipes";
+import type {AllRecipesParams} from "~/lib/schemas/recipes.schema";
 import {getComments, getDetails} from "~/lib/server/functions/recipe-details";
-
-
-type AllRecipesParams = {
-    q: string;
-    page: number;
-    labels: number[];
-    authors: number[];
-};
 
 
 export const authOptions = queryOptions({
@@ -27,10 +20,12 @@ export const dashboardOptions = queryOptions({
     queryFn: () => getDashboard(),
 });
 
-export const allRecipesOptions = (params: AllRecipesParams = { q: "", page: 1, labels: [], authors: [] }) => queryOptions({
-    queryKey: ["allRecipes", params],
-    queryFn: () => getAllRecipes({ data: params }),
-});
+export const allRecipesOptions = (params: AllRecipesParams = { q: "", page: 1, labels: [], authors: [] }) => {
+    return queryOptions({
+        queryKey: ["allRecipes", params],
+        queryFn: () => getAllRecipes({ data: params }),
+    });
+}
 
 
 export const recipeDetailsOptions = (recipeId: number) => queryOptions({

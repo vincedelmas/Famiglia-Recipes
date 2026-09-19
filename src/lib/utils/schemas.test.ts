@@ -1,5 +1,5 @@
 import {expect, test} from "bun:test";
-import {editRecipeSchema, recipeFormSchema} from "./schemas";
+import {editRecipeSchema, recipeFormSchema, uploadRecipeSchema} from "./schemas";
 
 const recipe = {
     title: "Family soup", cooking: 10, preparation: 5, servings: 2,
@@ -23,4 +23,19 @@ test("edit requires a positive integer recipe ID", () => {
         expect(editRecipeSchema.safeParse({...recipe, id}).success).toBe(false);
     }
     expect(editRecipeSchema.parse({...recipe, id: "12"}).id).toBe("12");
+});
+
+test("recipe import rejects mismatched payloads and oversized or empty text", () => {
+    const file = new File(["image"], "recipe.png", {type: "image/png"});
+    for (const input of [
+        {type: "file", content: "not a file"},
+        {type: "text", content: file},
+        {type: "text", content: "   "},
+        {type: "text", content: "x".repeat(10_001)},
+        {type: "file", content: new File([], "recipe.png", {type: "image/png"})},
+        {type: "file", content: new File(["doc"], "recipe.doc", {type: "application/msword"})},
+        {type: "file", content: new File(["png"], "recipe.pdf", {type: "image/png"})},
+    ]) expect(uploadRecipeSchema.safeParse(input).success).toBe(false);
+    expect(uploadRecipeSchema.safeParse({type: "file", content: file}).success).toBe(true);
+    expect(uploadRecipeSchema.parse({type: "text", content: " Family soup "}).content).toBe("Family soup");
 });

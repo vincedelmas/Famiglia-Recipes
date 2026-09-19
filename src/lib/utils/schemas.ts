@@ -1,4 +1,5 @@
 import {z} from "zod";
+import {MAX_IMPORT_FILE_SIZE, MAX_IMPORT_TEXT_LENGTH, RECIPE_IMPORT_FILE_TYPES} from "./constants";
 
 
 const ingredientSchema = z.object({
@@ -39,13 +40,18 @@ export const imageRecipeSchema = z.instanceof(File)
     .optional()
 
 
-export const uploadRecipeSchema = z.object({
-    type: z.enum(["file", "text"]),
-    content: z.union([
-        z.instanceof(File).refine((file: File) => file.size <= 20 * 1024 * 1024, `File size should be less than 20MB.`),
-        z.string(),
-    ]),
-});
+export const recipeImportFileSchema = z.instanceof(File)
+    .refine(file => file.size > 0, "error-file-empty")
+    .refine(file => file.size <= MAX_IMPORT_FILE_SIZE, "error-file-size")
+    .refine(file => RECIPE_IMPORT_FILE_TYPES[file.type]
+        ?.some(extension => file.name.toLowerCase().endsWith(extension)), "error-file-type");
+
+export const recipeImportTextSchema = z.string().max(MAX_IMPORT_TEXT_LENGTH).trim().min(1);
+
+export const uploadRecipeSchema = z.discriminatedUnion("type", [
+    z.object({ type: z.literal("file"), content: recipeImportFileSchema }),
+    z.object({ type: z.literal("text"), content: recipeImportTextSchema }),
+]);
 
 
 export type RecipeFormValues = z.infer<typeof frontRecipeFormSchema>;
