@@ -19,10 +19,10 @@ const getAuthConfig = createServerOnlyFn(() => betterAuth({
     user: {
         additionalFields: {
             role: {
-                type: "string",
-                defaultValue: "user",
-                returned: true,
                 input: false,
+                type: "string",
+                returned: true,
+                defaultValue: "user",
             }
         }
     },

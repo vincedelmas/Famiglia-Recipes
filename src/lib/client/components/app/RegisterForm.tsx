@@ -1,12 +1,12 @@
-import {toast} from "~/lib/client/components/ui/toast";
 import {useForm} from "react-hook-form";
 import {LoaderCircle} from "lucide-react";
 import {useTranslation} from "react-i18next";
-import {Input} from "~/lib/client/components/ui/input";
 import authClient from "~/lib/utils/auth-client";
+import {toast} from "~/lib/client/components/ui/toast";
+import {Input} from "~/lib/client/components/ui/input";
 import {validateKey} from "~/lib/server/functions/user";
-import {FormButton} from "~/lib/client/components/app/FormButton";
 import {FieldGroup} from "~/lib/client/components/ui/field";
+import {FormButton} from "~/lib/client/components/app/FormButton";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "~/lib/client/components/ui/form";
 
 
@@ -176,13 +176,16 @@ export const RegisterForm = () => {
                                 />
                             </FieldGroup>
                         </fieldset>
+
                         {form.formState.errors.root &&
                             <p role="alert" className="text-center -mt-1.5">
                                 {form.formState.errors.root.message}
                             </p>
                         }
+
                         <FormButton disabled={form.formState.isSubmitting}>
-                            {form.formState.isSubmitting && <LoaderCircle className="size-4 animate-spin"/>} {t("register")}
+                            {form.formState.isSubmitting && <LoaderCircle className="size-4 animate-spin"/>}{" "}
+                            {t("register")}
                         </FormButton>
                     </form>
                 </Form>

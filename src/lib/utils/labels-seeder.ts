@@ -13,7 +13,7 @@ export const seedLabels = createServerOnlyFn(() => async () => {
     const jsonLabels: { name: string; color: string; order: number }[] = JSON.parse(fileContent);
 
     for (const label of jsonLabels) {
-        const existingLabel = await db
+        const existingLabel = db
             .select()
             .from(labelTable)
             .where(eq(labelTable.name, label.name))
@@ -25,8 +25,7 @@ export const seedLabels = createServerOnlyFn(() => async () => {
                 .set({
                     color: label.color,
                     order: label.order,
-                })
-                .where(eq(labelTable.name, label.name));
+                }).where(eq(labelTable.name, label.name));
         }
         else {
             await db

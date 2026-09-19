@@ -1,11 +1,11 @@
 import React from "react";
-import {ReorderButtons} from "~/lib/client/components/recipe-form/ReorderButtons";
 import {Minus, Plus} from "lucide-react";
 import {useTranslation} from "react-i18next";
+import {RecipeFormValues} from "~/lib/utils/schemas";
+import {Control, useFieldArray} from "react-hook-form";
 import {Button} from "~/lib/client/components/ui/button";
 import {Textarea} from "~/lib/client/components/ui/textarea";
-import {Control, useFieldArray} from "react-hook-form";
-import {RecipeFormValues} from "~/lib/utils/schemas";
+import {ReorderButtons} from "~/lib/client/components/recipe-form/ReorderButtons";
 import {FormControl, FormField, FormItem, FormMessage} from "~/lib/client/components/ui/form";
 
 
@@ -31,7 +31,13 @@ export const DynamicStepList = ({ control }: DynamicStepListProps) => {
         <div className="flex flex-col gap-3">
             {fields.map((field, idx) =>
                 <div key={field.id} className="flex items-start gap-3">
-                    <ReorderButtons index={idx} count={fields.length} item={`${t("step")} ${idx + 1}`} onMove={move}/>
+                    <ReorderButtons
+                        index={idx}
+                        onMove={move}
+                        count={fields.length}
+                        item={`${t("step")} ${idx + 1}`}
+                    />
+
                     <FormField
                         control={control}
                         name={`steps.${idx}.content`}
@@ -54,9 +60,9 @@ export const DynamicStepList = ({ control }: DynamicStepListProps) => {
                         type="button"
                         variant="ghost"
                         className="shrink-0"
-                        aria-label={t("ui.remove-step", {number:idx + 1})}
                         disabled={fields.length === 1}
                         onClick={() => removeStep(idx)}
+                        aria-label={t("ui.remove-step", { number: idx + 1 })}
                     >
                         <Minus/>
                     </Button>

@@ -1,22 +1,23 @@
-import {toast} from "~/lib/client/components/ui/toast";
 import type React from "react";
 import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {useTranslation} from "react-i18next";
 import {RecipeFormValues} from "~/lib/utils/schemas";
 import {Input} from "~/lib/client/components/ui/input";
-import {Field, FieldGroup, FieldLabel} from "~/lib/client/components/ui/field";
+import {toast} from "~/lib/client/components/ui/toast";
 import {Button} from "~/lib/client/components/ui/button";
 import {useUploadMutation} from "~/lib/client/react-query";
 import {Textarea} from "~/lib/client/components/ui/textarea";
 import {AlertCircle, FileText, Loader2, Upload} from "lucide-react";
 import {Alert, AlertDescription} from "~/lib/client/components/ui/alert";
+import {Field, FieldGroup, FieldLabel} from "~/lib/client/components/ui/field";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "~/lib/client/components/ui/tabs";
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "~/lib/client/components/ui/dialog";
 
 
 const MAX_TEXT_LENGTH = 10_000;
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
+
 const ACCEPTED_FILE_TYPES = {
     "image/png": [".png"],
     "image/webp": [".webp"],
@@ -137,18 +138,19 @@ export default function UploadDialog({ form }: UploadDialogProps) {
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogTrigger render={<Button variant="outline" />}>
+            <DialogTrigger render={<Button variant="outline"/>}>
                 <Upload data-icon="inline-start"/> {t("upload-button")}
             </DialogTrigger>
-            <DialogContent
-                className="max-h-[90dvh] overflow-y-auto sm:max-w-xl"
-            >
+            <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-xl">
                 <DialogHeader>
-                    <DialogTitle>{t("upload-dialog-title")}</DialogTitle>
+                    <DialogTitle>
+                        {t("upload-dialog-title")}
+                    </DialogTitle>
                     <DialogDescription>
                         {t("upload-dialog-desc")}
                     </DialogDescription>
                 </DialogHeader>
+
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList className="grid w-full grid-cols-2 mb-5">
                         <TabsTrigger value="upload" className="flex items-center gap-2">
@@ -158,70 +160,83 @@ export default function UploadDialog({ form }: UploadDialogProps) {
                             <FileText className="h-4 w-4"/> {t("tab-text-input")}
                         </TabsTrigger>
                     </TabsList>
+
                     <TabsContent value="upload" className="flex flex-col gap-4">
-                        <FieldGroup><Field>
-                            <FieldLabel htmlFor="file-upload">{t("label-choose-file")}</FieldLabel>
-                            <Input
-                                type="file"
-                                id="file-upload"
-                                onChange={handleFileChange}
-                                disabled={uploadMutation.isPending}
-                                accept=".pdf,.docx,.doc,.jpg,.jpeg,.png,.webp"
-                            />
-                            <p className="text-sm text-muted-foreground">
-                                {t("supported-formats")}
-                            </p>
-                            {selectedFile &&
-                                <div className="text-sm text-primary">
-                                    {t("file-selected-with-size", {
-                                        fileName: selectedFile.name,
-                                        size: (selectedFile.size / 1024 / 1024).toFixed(2)
-                                    })}
-                                </div>
-                            }
-                        </Field></FieldGroup>
+                        <FieldGroup>
+                            <Field>
+                                <FieldLabel htmlFor="file-upload">
+                                    {t("label-choose-file")}
+                                </FieldLabel>
+                                <Input
+                                    type="file"
+                                    id="file-upload"
+                                    onChange={handleFileChange}
+                                    disabled={uploadMutation.isPending}
+                                    accept=".pdf,.docx,.doc,.jpg,.jpeg,.png,.webp"
+                                />
+                                <p className="text-sm text-muted-foreground">
+                                    {t("supported-formats")}
+                                </p>
+                                {selectedFile &&
+                                    <div className="text-sm text-primary">
+                                        {t("file-selected-with-size", {
+                                            fileName: selectedFile.name,
+                                            size: (selectedFile.size / 1024 / 1024).toFixed(2)
+                                        })}
+                                    </div>
+                                }
+                            </Field>
+                        </FieldGroup>
                     </TabsContent>
                     <TabsContent value="text" className="flex flex-col gap-4">
-                        <FieldGroup><Field>
-                            <FieldLabel htmlFor="text-content">{t("label-text-content")}</FieldLabel>
-                            <Textarea
-                                id="text-content"
-                                value={textContent}
-                                onChange={handleTextChange}
-                                disabled={uploadMutation.isPending}
-                                placeholder={t("placeholder-text")}
-                                className="min-h-[200px] max-h-[500px] overflow-y-auto"
-                            />
-                            <div className="flex justify-between text-sm text-muted-foreground">
-                                <span>{t("max-char-info")}</span>
-                                <span className={textContent.length > MAX_TEXT_LENGTH ? "text-destructive" : ""}>
-                                    {textContent.length.toLocaleString()} / {MAX_TEXT_LENGTH.toLocaleString()}
-                                </span>
-                            </div>
-                        </Field></FieldGroup>
+                        <FieldGroup>
+                            <Field>
+                                <FieldLabel htmlFor="text-content">
+                                    {t("label-text-content")}
+                                </FieldLabel>
+                                <Textarea
+                                    id="text-content"
+                                    value={textContent}
+                                    onChange={handleTextChange}
+                                    disabled={uploadMutation.isPending}
+                                    placeholder={t("placeholder-text")}
+                                    className="min-h-50 max-h-125 overflow-y-auto"
+                                />
+                                <div className="flex justify-between text-sm text-muted-foreground">
+                                    <span>{t("max-char-info")}</span>
+                                    <span className={textContent.length > MAX_TEXT_LENGTH ? "text-destructive" : ""}>
+                                        {textContent.length.toLocaleString()} / {MAX_TEXT_LENGTH.toLocaleString()}
+                                    </span>
+                                </div>
+                            </Field>
+                        </FieldGroup>
                     </TabsContent>
                 </Tabs>
+
                 {errors.length > 0 &&
                     <Alert variant="destructive">
                         <AlertCircle className="h-4 w-4"/>
                         <AlertDescription>
                             <ul className="flex list-inside list-disc flex-col gap-1">
                                 {errors.map((error, idx) =>
-                                    <li key={idx}>{error}</li>
+                                    <li key={idx}>
+                                        {error}
+                                    </li>
                                 )}
                             </ul>
                         </AlertDescription>
                     </Alert>
                 }
+
                 <DialogFooter>
                     <Button variant="outline" onClick={() => setOpen(false)} disabled={uploadMutation.isPending}>
                         {t("cancel")}
                     </Button>
+
                     <Button onClick={handleSubmit} disabled={!canSubmit() || uploadMutation.isPending}>
-                        {uploadMutation.isPending ?
-                            <><Loader2 className="animate-spin"/> {t("uploading")}</>
-                            :
-                            t("upload")
+                        {uploadMutation.isPending
+                            ? <><Loader2 className="animate-spin"/> {t("uploading")}</>
+                            : t("upload")
                         }
                     </Button>
                 </DialogFooter>

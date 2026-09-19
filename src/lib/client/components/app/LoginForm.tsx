@@ -2,12 +2,11 @@ import {useForm} from "react-hook-form";
 import {LoaderCircle} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import authClient from "~/lib/utils/auth-client";
-import {getRouteApi} from "@tanstack/react-router";
+import {getRouteApi, Link, useNavigate, useRouter} from "@tanstack/react-router";
 import {useQueryClient} from "@tanstack/react-query";
 import {Input} from "~/lib/client/components/ui/input";
-import {FormButton} from "~/lib/client/components/app/FormButton";
-import {Link, useNavigate, useRouter} from "@tanstack/react-router";
 import {FieldGroup} from "~/lib/client/components/ui/field";
+import {FormButton} from "~/lib/client/components/app/FormButton";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "~/lib/client/components/ui/form";
 
 
@@ -21,8 +20,9 @@ export const LoginForm = () => {
     const router = useRouter();
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const { authOptions } = getRouteApi("__root__").useRouteContext();
     const queryClient = useQueryClient();
+    const { authOptions } = getRouteApi("__root__").useRouteContext();
+
     const form = useForm<FormValues>({
         shouldFocusError: false,
         defaultValues: {
@@ -80,8 +80,8 @@ export const LoginForm = () => {
                                                 <Input
                                                     {...field}
                                                     type="email"
-                                                    autoComplete="email"
                                                     placeholder="Email"
+                                                    autoComplete="email"
                                                 />
                                             </FormControl>
                                             <FormMessage/>
@@ -104,8 +104,8 @@ export const LoginForm = () => {
                                                 <Input
                                                     {...field}
                                                     type="password"
-                                                    autoComplete="current-password"
                                                     placeholder="********"
+                                                    autoComplete="current-password"
                                                 />
                                             </FormControl>
                                             <FormMessage/>
@@ -120,7 +120,8 @@ export const LoginForm = () => {
                             </p>
                         }
                         <FormButton disabled={form.formState.isSubmitting}>
-                            {form.formState.isSubmitting && <LoaderCircle className="size-4 animate-spin"/>} {t("login")}
+                            {form.formState.isSubmitting && <LoaderCircle className="size-4 animate-spin"/>}{" "}
+                            {t("login")}
                         </FormButton>
                     </form>
                 </Form>

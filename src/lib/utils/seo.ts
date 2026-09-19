@@ -7,7 +7,7 @@ interface AddSeoProps {
 
 
 export const addSeo = ({ title, description, keywords, image }: AddSeoProps) => {
-    const tags = [
+    return [
         { title },
         { name: "description", content: description },
         ...(keywords ? [{ name: "keywords", content: keywords }] : []),
@@ -24,6 +24,4 @@ export const addSeo = ({ title, description, keywords, image }: AddSeoProps) => 
             ]
             : []),
     ];
-
-    return tags;
 };

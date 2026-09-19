@@ -1,11 +1,11 @@
 import React from "react";
-import {ReorderButtons} from "~/lib/client/components/recipe-form/ReorderButtons";
 import {Minus, Plus} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import {RecipeFormValues} from "~/lib/utils/schemas";
 import {Input} from "~/lib/client/components/ui/input";
 import {Control, useFieldArray} from "react-hook-form";
 import {Button} from "~/lib/client/components/ui/button";
+import {ReorderButtons} from "~/lib/client/components/recipe-form/ReorderButtons";
 import {FormControl, FormField, FormItem, FormMessage} from "~/lib/client/components/ui/form";
 
 
@@ -39,7 +39,14 @@ export const DynamicIngredientList = ({ control }: DynIngListProps) => {
         <div className="flex flex-col gap-3">
             {fields.map((field, idx) =>
                 <div key={field.id} className="flex items-start gap-2">
-                    <ReorderButtons index={idx} count={fields.length} item={`${t("ingredient")} ${idx + 1}`} onMove={move}/>
+
+                    <ReorderButtons
+                        index={idx}
+                        onMove={move}
+                        count={fields.length}
+                        item={`${t("ingredient")} ${idx + 1}`}
+                    />
+
                     <FormField
                         control={control}
                         name={`ingredients.${idx}.quantity`}
@@ -88,7 +95,7 @@ export const DynamicIngredientList = ({ control }: DynIngListProps) => {
                         type="button"
                         variant="ghost"
                         className="shrink-0"
-                        aria-label={t("ui.remove-ingredient", {number:idx + 1})}
+                        aria-label={t("ui.remove-ingredient", { number: idx + 1 })}
                         disabled={fields.length === 1}
                         onClick={(ev) => removeIngredient(ev, idx)}
                     >

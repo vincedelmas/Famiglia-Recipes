@@ -17,11 +17,11 @@ interface ErrorEmailProps {
 export default function ErrorEmail({ ctx, brand = "Famiglia-Recipes" }: ErrorEmailProps) {
     if (ctx === undefined) {
         ctx = {
-            message: "No context provided",
+            stack: undefined,
             errorName: "Unknown",
+            message: "No context provided",
             timestamp: new Date().toISOString(),
             errorMessage: "No error message provided",
-            stack: undefined,
         }
     }
 
