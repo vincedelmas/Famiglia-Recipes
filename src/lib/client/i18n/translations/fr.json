@@ -350,8 +350,9 @@
   "935d017635f76c12": "Soumission...",
   "5e8d1f67d1c61be2": "Commentaire supprimé",
   "79ae43d8b6d1cce4": "Modifier le commentaire",
-  "f7b9098ab70ceab5": [
+  "af9bb0980e244199": [
     "Commentaires",
+    " ",
     {
       "t": "span",
       "i": 1,
@@ -376,6 +377,18 @@
   ],
   "479d8e886115385a": "Impossible de charger les commentaires. Veuillez réessayer.",
   "98707f319f98bb28": "Aucun commentaire pour le moment.",
+  "9520da683c51c07b": [
+    {
+      "t": "Sun",
+      "i": 1
+    },
+    "Garder l’écran allumé"
+  ],
+  "df03ad23f74186c4": "Ce navigateur ne permet pas de garder l’écran allumé.",
+  "9ef05237cbe1266b": "Impossible de garder l’écran allumé. Réessayez ou vérifiez les réglages d’alimentation de votre appareil.",
+  "1127bd4ab2d84cd3": "L’écran reste allumé tant que cette recette est ouverte.",
+  "2c0aa6f48ca6b6b4": "Activation…",
+  "dce91b9651c9a041": "Empêchez la mise en veille de l’écran pendant que vous cuisinez.",
   "49a3d2c68a3b117e": "Moins de portions",
   "ab450a11144a5bcf": "Plus de portions",
   "b8ca393c72db9f4f": "Ingrédient",
