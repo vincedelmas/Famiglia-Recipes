@@ -15,6 +15,13 @@
       "when": 1754055068617,
       "tag": "0001_remarkable_moon_knight",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1789817865825,
+      "tag": "0002_credential_account_id_text",
+      "breakpoints": true
     }
   ]
 }
