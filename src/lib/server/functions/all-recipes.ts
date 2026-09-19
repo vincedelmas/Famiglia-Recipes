@@ -6,7 +6,7 @@ import {favorites, label, recipe, recipeLabel, user} from "~/lib/server/database
 import {and, asc, count, eq, getTableColumns, inArray, like, sql, type SQL} from "drizzle-orm";
 
 
-const PAGE_SIZE = 25;
+const PAGE_SIZE = 24;
 type Label = typeof label.$inferSelect;
 type Author = Pick<typeof user.$inferSelect, "id" | "name">;
 

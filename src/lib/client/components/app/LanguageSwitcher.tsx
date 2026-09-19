@@ -1,32 +1,33 @@
-import React from "react";
-import {useTranslation} from "react-i18next";
+import {Globe2} from "lucide-react";
+import {useGT, useLocale, useSetLocale} from "gt-react";
+import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "~/lib/client/components/ui/select";
 
 
-interface LanguageSwitcherProps {
-    className?: string;
-}
-
-
-export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
-    const { i18n } = useTranslation();
-
-    const changeLanguage = async (ev: React.ChangeEvent<HTMLSelectElement>) => {
-        const newLang = ev.target.value;
-        await i18n.changeLanguage(newLang);
-    };
-
-    const languages = [{ code: "en" }, { code: "fr" }];
+export const LanguageSwitcher = ({ className }: { className?: string }) => {
+    const gt = useGT();
+    const locale = useLocale();
+    const setLocale = useSetLocale();
 
     return (
-        <div className={className}>
-            <select value={i18n.language} onChange={changeLanguage} className="bg-neutral-950 text-gray-300
-            text-sm font-medium hover:cursor-pointer">
-                {languages.map((lang) =>
-                    <option key={lang.code} value={lang.code}>
-                        {lang.code.toUpperCase()}
-                    </option>
-                )}
-            </select>
-        </div>
+        <Select
+            value={locale}
+            onValueChange={value => {
+                if (value) setLocale(value);
+            }}
+        >
+            <SelectTrigger aria-label={gt("Language")} className={className}>
+                <Globe2 aria-hidden="true"/>
+                <SelectValue>
+                    {value => String(value).toUpperCase()}
+                </SelectValue>
+            </SelectTrigger>
+
+            <SelectContent align="end" alignItemWithTrigger={false} sideOffset={8}>
+                <SelectGroup>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="fr">Français</SelectItem>
+                </SelectGroup>
+            </SelectContent>
+        </Select>
     );
 };

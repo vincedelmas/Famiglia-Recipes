@@ -7,6 +7,7 @@ export type LabelType = {
 
 // --- OPEN ROUTER AI TYPES -------------------------------------------------------------
 
+
 export type Request = {
     prompt?: string;
     messages?: Message[];
@@ -55,6 +56,7 @@ type TextContent = {
     text: string;
 };
 
+
 type ImageContentPart = {
     type: "image_url";
     image_url: {
@@ -63,7 +65,15 @@ type ImageContentPart = {
     };
 };
 
-type ContentPart = TextContent | ImageContentPart;
+
+type FileContentPart = {
+    type: "file";
+    file: { filename: string; file_data: string };
+};
+
+
+type ContentPart = TextContent | ImageContentPart | FileContentPart;
+
 
 export type Message =
     | {
@@ -78,16 +88,19 @@ export type Message =
     tool_call_id: string;
 };
 
+
 type FunctionDescription = {
     name: string;
     parameters: object;
     description?: string;
 };
 
+
 type Tool = {
     type: "function";
     function: FunctionDescription;
 };
+
 
 type ToolChoice =
     | "none"

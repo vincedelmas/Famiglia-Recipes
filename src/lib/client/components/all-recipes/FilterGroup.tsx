@@ -1,38 +1,39 @@
-import {Badge} from "~/lib/client/components/ui/badge";
-import {MutedText} from "~/lib/client/components/app/MutedText";
+import {ToggleGroup, ToggleGroupItem} from "~/lib/client/components/ui/toggle-group";
 
 
 interface FilterGroupProps {
     title: string;
-    emptyText: string;
-    onToggle: (id: number) => void;
+    selected: number[];
+    onChange: (selected: number[]) => void;
     items: {
         id: number;
         name: string;
-        color?: string;
     }[];
 }
 
 
-export function FilterGroup({ title, emptyText, items, onToggle }: FilterGroupProps) {
+export function FilterGroup({ title, selected, items, onChange }: FilterGroupProps) {
+    if (!items.length) return null;
+
     return (
-        <div>
-            <div className="text-lg font-semibold mb-1">{title}</div>
-            <div className="flex flex-wrap items-center gap-2">
-                {items.length === 0 ?
-                    <MutedText>{emptyText}</MutedText>
-                    :
-                    items.map((item) =>
-                        <Badge
-                            key={item.id}
-                            color={item.color}
-                            onClick={() => onToggle(item.id)}
-                            className={"cursor-pointer rounded-full"}
-                        >
-                            {item.name}
-                        </Badge>
-                    )}
-            </div>
+        <div className="flex flex-col gap-3">
+            <h2 className="eyebrow">
+                {title}
+            </h2>
+            <ToggleGroup
+                spacing={2}
+                variant="outline"
+                aria-label={title}
+                multiple value={selected.map(String)}
+                className="flex flex-wrap justify-start"
+                onValueChange={values => onChange(values.map(Number))}
+            >
+                {items.map(item =>
+                    <ToggleGroupItem key={item.id} value={String(item.id)}>
+                        {item.name}
+                    </ToggleGroupItem>
+                )}
+            </ToggleGroup>
         </div>
     );
 }

@@ -1,30 +1,18 @@
-import {toast} from "sonner";
-import type React from "react";
-import {useState} from "react";
+import React, {useState} from "react";
+import {useGT} from "gt-react";
 import {useForm} from "react-hook-form";
-import {useTranslation} from "react-i18next";
-import {RecipeFormValues} from "~/lib/utils/schemas";
 import {Input} from "~/lib/client/components/ui/input";
-import {Label} from "~/lib/client/components/ui/label";
+import {toast} from "~/lib/client/components/ui/toast";
 import {Button} from "~/lib/client/components/ui/button";
 import {useUploadMutation} from "~/lib/client/react-query";
 import {Textarea} from "~/lib/client/components/ui/textarea";
 import {AlertCircle, FileText, Loader2, Upload} from "lucide-react";
 import {Alert, AlertDescription} from "~/lib/client/components/ui/alert";
+import {RecipeFormValues, recipeImportFileSchema} from "~/lib/utils/schemas";
+import {Field, FieldGroup, FieldLabel} from "~/lib/client/components/ui/field";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "~/lib/client/components/ui/tabs";
+import {MAX_IMPORT_TEXT_LENGTH as MAX_TEXT_LENGTH, RECIPE_IMPORT_FILE_TYPES} from "~/lib/utils/constants";
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "~/lib/client/components/ui/dialog";
-
-
-const MAX_TEXT_LENGTH = 10_000;
-const MAX_FILE_SIZE = 20 * 1024 * 1024;
-const ACCEPTED_FILE_TYPES = {
-    "image/png": [".png"],
-    "image/webp": [".webp"],
-    "application/pdf": [".pdf"],
-    "application/msword": [".doc"],
-    "image/jpeg": [".jpg", ".jpeg"],
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
-};
 
 
 interface UploadDialogProps {
@@ -33,7 +21,7 @@ interface UploadDialogProps {
 
 
 export default function UploadDialog({ form }: UploadDialogProps) {
-    const { t } = useTranslation();
+    const gt = useGT();
     const uploadMutation = useUploadMutation();
     const [open, setOpen] = useState(false);
     const [errors, setErrors] = useState<string[]>([]);
@@ -41,27 +29,17 @@ export default function UploadDialog({ form }: UploadDialogProps) {
     const [activeTab, setActiveTab] = useState("upload");
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-    const validateFile = (file: File) => {
-        const errors: string[] = []
-
-        if (file.size > MAX_FILE_SIZE) {
-            errors.push(t("error-file-size"));
-        }
-
-        const fileType = file.type;
-        const isValidType = Object.keys(ACCEPTED_FILE_TYPES).includes(fileType);
-
-        if (!isValidType) {
-            errors.push(t("error-file-type"));
-        }
-
-        return errors;
-    }
-
     const handleFileChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
         const file = ev.target.files?.[0];
         if (file) {
-            const fileErrors = validateFile(file);
+            const validation = recipeImportFileSchema.safeParse(file);
+            const messages: Record<string, string> = {
+                "error-file-empty": gt("The selected file is empty."),
+                "error-file-size": gt("The file must be no larger than 20 MB."),
+                "error-file-type": gt("Unsupported file type. Please upload PDF, DOCX, JPG, PNG, or WEBP files."),
+            };
+            const fileErrors = validation.success ? [] : validation.error.issues.map(issue => messages[issue.message]);
+
             if (fileErrors.length > 0) {
                 setErrors(fileErrors);
                 setSelectedFile(null);
@@ -80,11 +58,15 @@ export default function UploadDialog({ form }: UploadDialogProps) {
             setErrors([]);
         }
         else {
-            setErrors([t("error-text-length", { max: MAX_TEXT_LENGTH.toLocaleString() })]);
+            setErrors([gt("Text must be less than {max} characters", { max: MAX_TEXT_LENGTH.toLocaleString() })]);
         }
     }
 
-    const onOpenChange = (value: boolean) => {
+    const onOpenChange: React.ComponentProps<typeof Dialog>["onOpenChange"] = (value, details) => {
+        if (!value && uploadMutation.isPending) {
+            details.cancel();
+            return;
+        }
         setOpen(value);
         if (!value) resetForm();
     }
@@ -105,12 +87,11 @@ export default function UploadDialog({ form }: UploadDialogProps) {
                 setErrors([error.message]);
             },
             onSuccess: (data) => {
-                setErrors([]);
-                form.reset(data);
+                form.reset({ ...data, image: form.getValues("image") }, { keepDefaultValues: true });
                 setOpen(false);
-                setTextContent("");
-                setSelectedFile(null);
-                toast.success(t("toast-success"));
+
+                resetForm();
+                toast.add({ type: "success", title: gt("Review the imported recipe before saving.") });
             },
         })
     }
@@ -133,95 +114,109 @@ export default function UploadDialog({ form }: UploadDialogProps) {
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogTrigger asChild>
-                <Button variant="outline">
-                    <Upload className="h-4 w-4"/> {t("upload-button")}
-                </Button>
+            <DialogTrigger render={<Button variant="outline"/>}>
+                <Upload data-icon="inline-start"/> Import a recipe
             </DialogTrigger>
-            <DialogContent
-                className="sm:max-w-[500px] space-y-3"
-                onEscapeKeyDown={(ev) => uploadMutation.isPending && ev.preventDefault()}
-                onPointerDownOutside={(ev) => uploadMutation.isPending && ev.preventDefault()}
-            >
+            <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-xl">
                 <DialogHeader>
-                    <DialogTitle>{t("upload-dialog-title")}</DialogTitle>
+                    <DialogTitle>
+                        Upload Content
+                    </DialogTitle>
                     <DialogDescription>
-                        {t("upload-dialog-desc")}
+                        Upload a file or paste your text content.
                     </DialogDescription>
                 </DialogHeader>
+
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList className="grid w-full grid-cols-2 mb-5">
                         <TabsTrigger value="upload" className="flex items-center gap-2">
-                            <Upload className="h-4 w-4"/> {t("tab-file-upload")}
+                            <Upload className="h-4 w-4"/> File Upload
                         </TabsTrigger>
                         <TabsTrigger value="text" className="flex items-center gap-2">
-                            <FileText className="h-4 w-4"/> {t("tab-text-input")}
+                            <FileText className="h-4 w-4"/> Text Input
                         </TabsTrigger>
                     </TabsList>
-                    <TabsContent value="upload" className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="file-upload">{t("label-choose-file")}</Label>
-                            <Input
-                                type="file"
-                                id="file-upload"
-                                onChange={handleFileChange}
-                                disabled={uploadMutation.isPending}
-                                accept=".pdf,.docx,.doc,.jpg,.jpeg,.png,.webp"
-                            />
-                            <p className="text-sm text-muted-foreground">
-                                {t("supported-formats")}
-                            </p>
-                            {selectedFile &&
-                                <div className="text-sm text-green-600">
-                                    {t("file-selected-with-size", {
-                                        fileName: selectedFile.name,
-                                        size: (selectedFile.size / 1024 / 1024).toFixed(2)
-                                    })}
-                                </div>
-                            }
-                        </div>
+
+                    <TabsContent value="upload" className="flex flex-col gap-4">
+                        <FieldGroup>
+                            <Field>
+                                <FieldLabel htmlFor="file-upload">
+                                    Choose File
+                                </FieldLabel>
+                                <Input
+                                    type="file"
+                                    id="file-upload"
+                                    onChange={handleFileChange}
+                                    disabled={uploadMutation.isPending}
+                                    accept={Object.values(RECIPE_IMPORT_FILE_TYPES).flat().join(",")}
+                                />
+                                <p className="text-sm text-muted-foreground">
+                                    Supported formats: PDF, DOCX, JPG, PNG, WEBP (max 20MB)
+                                </p>
+                                {selectedFile &&
+                                    <div className="text-sm text-primary">
+                                        Selected: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+                                    </div>
+                                }
+                            </Field>
+                        </FieldGroup>
                     </TabsContent>
-                    <TabsContent value="text" className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="text-content">{t("label-text-content")}</Label>
-                            <Textarea
-                                id="text-content"
-                                value={textContent}
-                                onChange={handleTextChange}
-                                disabled={uploadMutation.isPending}
-                                placeholder={t("placeholder-text")}
-                                className="min-h-[200px] max-h-[500px] overflow-y-auto"
-                            />
-                            <div className="flex justify-between text-sm text-muted-foreground">
-                                <span>{t("max-char-info")}</span>
-                                <span className={textContent.length > MAX_TEXT_LENGTH ? "text-red-700" : ""}>
-                                    {textContent.length.toLocaleString()} / {MAX_TEXT_LENGTH.toLocaleString()}
-                                </span>
-                            </div>
-                        </div>
+                    <TabsContent value="text" className="flex flex-col gap-4">
+                        <FieldGroup>
+                            <Field>
+                                <FieldLabel htmlFor="text-content">
+                                    Text Content
+                                </FieldLabel>
+                                <Textarea
+                                    id="text-content"
+                                    value={textContent}
+                                    onChange={handleTextChange}
+                                    disabled={uploadMutation.isPending}
+                                    placeholder={gt("Paste the recipe content here...")}
+                                    className="min-h-50 max-h-125 overflow-y-auto"
+                                />
+                                <div className="flex justify-between text-sm text-muted-foreground">
+                                    <span>Maximum 10,000 characters</span>
+                                    <span className={textContent.length > MAX_TEXT_LENGTH ? "text-destructive" : ""}>
+                                        {textContent.length.toLocaleString()} / {MAX_TEXT_LENGTH.toLocaleString()}
+                                    </span>
+                                </div>
+                            </Field>
+                        </FieldGroup>
                     </TabsContent>
                 </Tabs>
+
                 {errors.length > 0 &&
                     <Alert variant="destructive">
                         <AlertCircle className="h-4 w-4"/>
                         <AlertDescription>
-                            <ul className="list-disc list-inside space-y-1">
+                            <ul className="flex list-inside list-disc flex-col gap-1">
                                 {errors.map((error, idx) =>
-                                    <li key={idx}>{error}</li>
+                                    <li key={idx}>
+                                        {error}
+                                    </li>
                                 )}
                             </ul>
                         </AlertDescription>
                     </Alert>
                 }
+
                 <DialogFooter>
-                    <Button variant="outline" onClick={() => setOpen(false)} disabled={uploadMutation.isPending}>
-                        {t("cancel")}
+                    <Button
+                        variant="outline"
+                        disabled={uploadMutation.isPending}
+                        onClick={() => {
+                            setOpen(false);
+                            resetForm();
+                        }}
+                    >
+                        Cancel
                     </Button>
+
                     <Button onClick={handleSubmit} disabled={!canSubmit() || uploadMutation.isPending}>
-                        {uploadMutation.isPending ?
-                            <><Loader2 className="animate-spin"/> {t("uploading")}</>
-                            :
-                            t("upload")
+                        {uploadMutation.isPending
+                            ? <><Loader2 className="animate-spin"/> Uploading</>
+                            : <>Upload</>
                         }
                     </Button>
                 </DialogFooter>

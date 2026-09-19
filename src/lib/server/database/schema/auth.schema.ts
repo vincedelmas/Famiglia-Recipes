@@ -27,7 +27,7 @@ export const session = sqliteTable("session", {
 
 export const account = sqliteTable("account", {
     id: integer("id").primaryKey({ autoIncrement: true }),
-    accountId: integer('account_id').notNull(),
+    accountId: text('account_id').notNull(),
     providerId: text('provider_id').notNull(),
     userId: integer('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
     accessToken: text('access_token'),

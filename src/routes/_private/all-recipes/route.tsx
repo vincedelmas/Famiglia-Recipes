@@ -1,64 +1,75 @@
-import React from "react";
-import {Search, X} from "lucide-react";
-import {useTranslation} from "react-i18next";
-import {Input} from "~/lib/client/components/ui/input";
+import {Plural, useGT} from "gt-react";
 import {createFileRoute} from "@tanstack/react-router";
 import {useSuspenseQuery} from "@tanstack/react-query";
 import {Button} from "~/lib/client/components/ui/button";
+import React, {useEffect, useRef, useState} from "react";
 import {allRecipesOptions} from "~/lib/client/react-query";
-import {Separator} from "~/lib/client/components/ui/separator";
-import {MutedText} from "~/lib/client/components/app/MutedText";
 import {PageTitle} from "~/lib/client/components/app/PageTitle";
 import {Pagination} from "~/lib/client/components/app/Pagination";
 import {RecipeCard} from "~/lib/client/components/app/RecipeCard";
+import {ChevronDown, Search, SlidersHorizontal, X} from "lucide-react";
 import {FilterGroup} from "~/lib/client/components/all-recipes/FilterGroup";
 import {AllRecipesParams, allRecipesParamsSchema} from "~/lib/schemas/recipes.schema";
+import {InputGroup, InputGroupAddon, InputGroupInput} from "~/lib/client/components/ui/input-group";
+import {Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle} from "~/lib/client/components/ui/empty";
 
 
 export const Route = createFileRoute("/_private/all-recipes")({
     validateSearch: (search) => allRecipesParamsSchema.parse(search),
     loaderDeps: ({ search }) => ({ search }),
-    loader: ({ context: { queryClient }, deps: { search } }) => {
-        return queryClient.ensureQueryData(allRecipesOptions(search));
+    context: ({ deps: { search } }) => ({
+        allRecipesOptions: allRecipesOptions(search),
+    }),
+    loader: ({ context }) => {
+        return context.queryClient.query(context.allRecipesOptions);
     },
     component: AllRecipesPage,
 });
 
 
 function AllRecipesPage() {
-    const { t } = useTranslation();
+    const gt = useGT();
     const search = Route.useSearch();
     const navigate = Route.useNavigate();
-    const apiData = useSuspenseQuery(allRecipesOptions(search)).data;
+    const submittedQuery = useRef(search.q);
+    const [query, setQuery] = useState(search.q);
+    const { allRecipesOptions } = Route.useRouteContext();
+    const { data: apiData, isFetching } = useSuspenseQuery(allRecipesOptions);
+    const searchTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-    const selectedLabels = new Set(search.labels);
-    const selectedAuthors = new Set(search.authors);
+    useEffect(() => {
+        if (search.q === submittedQuery.current) return;
+        submittedQuery.current = search.q;
+        clearTimeout(searchTimer.current);
+        setQuery(search.q);
+    }, [search.q]);
+
+    useEffect(() => () => clearTimeout(searchTimer.current), []);
+
     const hasFilters = search.q || search.labels.length > 0 || search.authors.length > 0;
-    const availableAuthors = apiData.authors.filter((author) => !selectedAuthors.has(author.id));
-    const selectedAuthorItems = apiData.authors.filter((author) => selectedAuthors.has(author.id));
-    const availableLabels = apiData.labels.filter((label) => !selectedLabels.has(label.id));
-    const selectedLabelItems = apiData.labels.filter((label) => selectedLabels.has(label.id));
 
-    const updateSearch = (nextSearch: AllRecipesParams) => {
-        void navigate({ search: nextSearch });
+    const updateSearch = (nextSearch: AllRecipesParams, replace = false) => {
+        clearTimeout(searchTimer.current);
+
+        submittedQuery.current = nextSearch.q;
+        setQuery(nextSearch.q);
+
+        void navigate({ search: nextSearch, replace, resetScroll: false });
     };
 
     const onSearchSubmit = (ev: React.SubmitEvent<HTMLFormElement>) => {
         ev.preventDefault();
-        const formData = new FormData(ev.currentTarget);
-        const q = String(formData.get("q") ?? "").trim();
-
-        updateSearch({ ...search, q, page: 1 });
+        updateSearch({ ...search, q: query.trim(), page: 1 });
     };
 
-    const toggleFilter = (key: "labels" | "authors", id: number) => {
-        const activeValues = search[key];
-        const nextValues = activeValues.includes(id)
-            ? activeValues.filter((value) => value !== id)
-            : [...activeValues, id];
+    const onSearchChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+        const value = ev.target.value;
 
-        updateSearch({ ...search, [key]: nextValues, page: 1 });
-    };
+        setQuery(value);
+        clearTimeout(searchTimer.current);
+
+        searchTimer.current = setTimeout(() => updateSearch({ ...search, q: value.trim(), page: 1 }, true), 300);
+    }
 
     const clearFilters = () => {
         updateSearch({ q: "", page: 1, labels: [], authors: [] });
@@ -69,84 +80,109 @@ function AllRecipesPage() {
     };
 
     return (
-        <PageTitle title={t("all-recipes", { count: apiData.pagination.total })} subtitle={t("all-recipes-subtitle")}>
-            <section className="mt-6 space-y-6">
-                <div className="flex flex-wrap items-end gap-3">
-                    <form onSubmit={onSearchSubmit} className="flex w-90 max-w-full items-center gap-2">
-                        <div className="flex min-w-0 flex-1 items-center rounded-md border border-neutral-500 pl-2.5">
-                            <Search className="h-4 w-4 text-neutral-500"/>
-                            <Input
+        <PageTitle title={gt("The cookbook")} subtitle={<>Browse recipes or filter by category and author.</>}>
+            <section className="rounded-2xl border bg-card p-5 sm:p-6">
+                <div className="flex flex-wrap items-center gap-3">
+                    <form onSubmit={onSearchSubmit} className="flex min-w-0 flex-1 basis-72 gap-2">
+                        <InputGroup className="h-12">
+                            <InputGroupAddon>
+                                <Search/>
+                            </InputGroupAddon>
+                            <InputGroupInput
                                 name="q"
-                                key={search.q}
-                                defaultValue={search.q}
-                                placeholder={t("search-recipes")}
-                                className="border-none focus-visible:ring-0"
+                                value={query}
+                                maxLength={120}
+                                onChange={onSearchChange}
+                                aria-label={gt("Search by title")}
+                                placeholder={gt("Search recipes…")}
                             />
-                        </div>
-                        <Button type="submit" size="icon" aria-label={t("apply-search")}>
-                            <Search/>
-                        </Button>
+                        </InputGroup>
                     </form>
+
                     {hasFilters &&
-                        <Button type="button" variant="outline" onClick={clearFilters}>
-                            <X/>
-                            {t("clear-filters")}
+                        <Button variant="ghost" onClick={clearFilters}>
+                            <X data-icon="inline-start"/>
+                            Clear filters
                         </Button>
                     }
                 </div>
+                <details className="group mt-4 border-t pt-4" open={search.labels.length > 0 || search.authors.length > 0 || undefined}>
+                    <summary className="flex cursor-pointer list-none items-center gap-2 text-sm font-medium text-muted-foreground [&::-webkit-details-marker]:hidden">
+                        <SlidersHorizontal className="size-4"/>
+                        Refine your search
+                        <ChevronDown className="ml-auto size-4 transition-transform group-open:rotate-180"/>
+                    </summary>
 
-                <div className="grid gap-6 lg:grid-cols-2">
-                    <FilterGroup
-                        items={availableLabels}
-                        title={t("available-labels")}
-                        emptyText={t("no-available-labels")}
-                        onToggle={(id) => toggleFilter("labels", id)}
-                    />
-                    <FilterGroup
-                        items={selectedLabelItems}
-                        title={t("selected-labels")}
-                        emptyText={t("s-no-labels")}
-                        onToggle={(id) => toggleFilter("labels", id)}
-                    />
-                    <FilterGroup
-                        items={availableAuthors}
-                        title={t("available-authors")}
-                        emptyText={t("no-available-authors")}
-                        onToggle={(id) => toggleFilter("authors", id)}
-                    />
-                    <FilterGroup
-                        items={selectedAuthorItems}
-                        title={t("selected-authors")}
-                        emptyText={t("s-no-authors")}
-                        onToggle={(id) => toggleFilter("authors", id)}
-                    />
-                </div>
+                    <div className="mt-5 flex flex-col gap-6">
+                        <FilterGroup
+                            items={apiData.labels}
+                            selected={search.labels}
+                            title={gt("Categories")}
+                            onChange={(labels) => updateSearch({ ...search, q: query.trim(), labels, page: 1 })}
+                        />
+                        <FilterGroup
+                            items={apiData.authors}
+                            selected={search.authors}
+                            title={gt("Added by")}
+                            onChange={(authors) => updateSearch({ ...search, q: query.trim(), authors, page: 1 })}
+                        />
+                    </div>
+                </details>
             </section>
 
-            <section className="recipes mt-9">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                    <h2 className="text-xl font-medium">{t("all-recipes-results")}</h2>
+            <section className="mt-9" aria-busy={isFetching}>
+                <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+                    <p className="text-sm text-muted-foreground" role="status">
+
+                        <Plural
+                            n={apiData.pagination.total}
+                            one={<>{apiData.pagination.total} recipe</>}
+                            other={<>{apiData.pagination.total} recipes</>}
+                        />
+
+                    </p>
+
                     <Pagination
                         onPageChange={goToPage}
                         page={apiData.pagination.page}
                         totalPages={apiData.pagination.totalPages}
                     />
                 </div>
-                <Separator className="mt-1 mb-4"/>
-                {apiData.recipes.length === 0 ?
-                    <MutedText>{t("no-recipes-found")}</MutedText>
-                    :
-                    <div className="grid max-sm:grid-cols-1 max-lg:grid-cols-3 grid-cols-4 gap-6 max-lg:gap-4">
-                        {apiData.recipes.map((recipe) =>
+                {apiData.recipes.length ?
+                    <div className="recipe-grid">
+                        {apiData.recipes.map(recipe =>
                             <RecipeCard
                                 key={recipe.id}
                                 recipe={recipe}
                             />
                         )}
                     </div>
+                    :
+                    <Empty className="border py-16">
+                        <EmptyHeader>
+                            <EmptyMedia variant="icon">
+                                <Search/>
+                            </EmptyMedia>
+                            <EmptyTitle>
+                                No recipes found
+                            </EmptyTitle>
+                            <EmptyDescription>
+                                Try another title or clear a few filters.
+                            </EmptyDescription>
+                        </EmptyHeader>
+                        
+                        {hasFilters &&
+                            <EmptyContent>
+                                <Button variant="outline" onClick={clearFilters}>
+                                    Clear filters
+                                </Button>
+                            </EmptyContent>
+                        }
+                    </Empty>
                 }
-                {apiData.recipes.length > 0 &&
-                    <div className="mt-6 flex justify-end">
+
+                {apiData.pagination.totalPages > 1 &&
+                    <div className="mt-10 flex justify-center">
                         <Pagination
                             onPageChange={goToPage}
                             page={apiData.pagination.page}
@@ -158,6 +194,3 @@ function AllRecipesPage() {
         </PageTitle>
     );
 }
-
-
-

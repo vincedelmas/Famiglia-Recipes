@@ -1,8 +1,8 @@
 import * as React from "react";
 import {cn} from "~/lib/utils/helpers";
-import {Slot} from "@radix-ui/react-slot";
+import {useRender} from "@base-ui/react/use-render";
 import {Label} from "~/lib/client/components/ui/label";
-import * as LabelPrimitive from "@radix-ui/react-label";
+import {Field} from "~/lib/client/components/ui/field";
 import {Controller, ControllerProps, FieldPath, FieldValues, FormProvider, useFormContext, useFormState} from "react-hook-form";
 
 
@@ -69,14 +69,16 @@ const FormItemContext = React.createContext<FormItemContextValue>({} as FormItem
 
 function FormItem({ className, ...props }: React.ComponentProps<"div">) {
     const id = React.useId();
+    const {error} = useFormField();
 
     const idMemo = React.useMemo(() => ({ id }), [id]);
 
     return (
         <FormItemContext value={idMemo}>
-            <div
+            <Field
+                data-invalid={!!error}
                 data-slot="form-item"
-                className={cn("grid gap-2", className)}
+                className={cn("min-w-0", className)}
                 {...props}
             />
         </FormItemContext>
@@ -84,7 +86,7 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 
-function FormLabel({ className, ...props }: React.ComponentProps<typeof LabelPrimitive.Root>) {
+function FormLabel({ className, ...props }: React.ComponentProps<typeof Label>) {
     const { error, formItemId } = useFormField();
 
     return (
@@ -99,18 +101,19 @@ function FormLabel({ className, ...props }: React.ComponentProps<typeof LabelPri
 }
 
 
-function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
+function FormControl({ children, ...props }: React.HTMLAttributes<HTMLElement> & { children: React.ReactElement }) {
     const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
 
-    return (
-        <Slot
-            id={formItemId}
-            aria-invalid={!!error}
-            data-slot="form-control"
-            aria-describedby={error ? `${formDescriptionId} ${formMessageId}` : `${formDescriptionId}`}
-            {...props}
-        />
-    )
+    return useRender({
+        render: children,
+        props: {
+            id: formItemId,
+            "aria-invalid": !!error,
+            "aria-describedby": error ? `${formDescriptionId} ${formMessageId}` : formDescriptionId,
+            ...props,
+        },
+        state: { slot: "form-control" },
+    });
 }
 
 

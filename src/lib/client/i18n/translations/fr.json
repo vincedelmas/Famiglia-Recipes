@@ -1,130 +1,477 @@
 {
-    "welcome": "Bienvenue sur Famiglia Recipes",
-    "welcome-nav": "Bienvenue",
-    "hero-title": "Partagez, découvrez et préservez les recettes de votre famille",
-    "login": "Connexion",
-    "register": "Inscription",
-    "welcome-back": "Heureux de vous revoir",
-    "username": "Nom d'utilisateur",
-    "password": "Mot de passe",
-    "forgot-password": "Mot de passe oublié?",
-    "create-account": "Créer un compte",
-    "confirm-password": "Confirmer mot de passe",
-    "register-key": "Clé d'inscription",
-    "invalid-register-key": "Clé d'inscription non valide",
-    "email-sent": "Un e-mail a été envoyé pour confirmer votre compte.",
-    "submit": "Soumettre",
-    "ai-parsing": "Utilise AI",
-    "upload-button": "Téléverse PDF, DOCX, IMAGE or TEXTE",
-    "upload-dialog-title": "Téléverser du Contenu",
-    "upload-dialog-desc": "Téléversez un fichier ou collez votre texte.",
-    "tab-file-upload": "Téléversement de Fichier",
-    "tab-text-input": "Saisie de Texte",
-    "label-choose-file": "Choisir un fichier",
-    "supported-formats": "Formats supportés : PDF, DOC, DOCX, JPG, PNG, WEBP (max 7 Mo)",
-    "file-selected-with-size": "Sélectionné : {{fileName}} ({{size}} Mo)",
-    "label-text-content": "Zone de Texte",
-    "placeholder-text": "Collez le contenu de la recette ici...",
-    "max-char-info": "Maximum 10 000 caractères",
-    "error-file-size": "La taille du fichier doit être inférieure à 7 Mo.",
-    "error-file-type": "Type de fichier non supporté. Veuillez téléverser des fichiers PDF, DOC, DOCX, JPG, PNG ou WEBP.",
-    "error-text-length": "Le texte doit comporter moins de {{max}} caractères.",
-    "toast-success": "Vérifie le formulaire et enregistre la recette !",
-    "upload": "Téléverser",
-    "uploading": "Téléversement",
-    "feature-1-title": "Créez et partagez vos recettes préférées avec ingrédients, étapes et photos magnifiques",
-    "feature-2-title": "Sauvegardez vos recettes préférées pour un accès rapide des plats que vous aimez",
-    "feature-3-title": "Trouvez la recette parfaite avec la recherche intégrée et le filtrage par tag",
-    "fp-title": "Mot de passe oublié",
-    "fp-subtitle": "Entrez le mail associé à votre compte pour réinitialiser votre mot de passe",
-    "rp-title": "Réinitialiser votre mot de passe",
-    "rp-subtitle": "Vous pouvez maintenant changer votre mot de passe pour un nouveau",
-    "da-title": "Tableau de bord",
-    "da-subtitle": "Ici se trouvent vos recettes préférées ainsi que les dernières ajoutées",
-    "fav-recipes": "Vos recettes préférées",
-    "last-recipes": "Dernières recettes ajoutées",
-    "no-fav-recipes": "Aucune recette préférée ajoutée pour le moment",
-    "no-last-recipes": "Aucune recette ajoutée pour le moment",
-    "cook": "Cuisson",
-    "cook-details": "Cuisson",
-    "added-by": "Ajouté par",
-    "the": "le",
-    "servings": "Portions",
-    "step": "Étape",
-    "ingredients": "Ingrédients",
-    "ingredient": "Ingrédient",
-    "comments": "Commentaires",
-    "comment": "Commentaire",
-    "add-comment": "Ajouter un commentaire",
-    "edit-comment": "Modifier le commentaire",
-    "edit": "Modifier",
-    "cancel": "Annuler",
-    "save": "Enregistrer",
-    "add": "Ajouter",
-    "submitting": "Soumission...",
-    "ec-subtitle": "Modifier votre commentaire pour cette recette",
-    "ac-subtitle": "Ajouter un nouveau commentaire à cette recette",
-    "c-info": "Votre commentaire sera visible par les autres utilisateurs",
-    "c-error": "Le commentaire ne peut pas être vide",
-    "c-placeholder": "Ajoutez votre commentaire ici",
-    "add-recipe": "Ajouter une recette",
-    "add-recipes": "Ajouter des recettes",
-    "ar-subtitle": "Ajoutez une nouvelle recette ici en utilisant ce formulaire",
-    "r-image": "Image de la recette",
-    "r-title": "Titre de la recette",
-    "r-preparation": "Temps de prép. (min)",
-    "r-cooking": "Temps de cuisson (min)",
-    "r-servings": "Portions",
-    "r-steps": "Étapes",
-    "r-add": "Créer la recette",
-    "r-edit": "Modifier la recette",
-    "crop-title": "Recadrer l'image de la recette",
-    "crop-subtitle": "Redimensionnez l’image pour l’adapter à la zone de recadrage.",
-    "crop-selected": "Image sélectionnée",
-    "quantity": "Quantité",
-    "block-confirm": "Êtes-vous sûr de vouloir quitter ? Toutes modifications seront perdues.",
-    "r-title-req": "Titre requis",
-    "r-ingredient-req": "Une quantité et un ingrédient requis",
-    "r-quantity-req": "Tous les ingrédients doivent avoir une quantité et une description",
-    "r-steps-req": "Une étape requise",
-    "r-all-steps-req": "Toutes les étapes doivent avoir une description",
-    "r-label-req": "Un label requis",
-    "all-recipes": "Toutes les recettes ({{count}})",
-    "all-recipes-subtitle": "Rechercher et filtrer toutes les recettes",
-    "available-labels": "Labels disponibles",
-    "selected-labels": "Labels sélectionnés",
-    "available-authors": "Auteurs disponibles",
-    "selected-authors": "Auteurs sélectionnés",
-    "search-recipes": "Rechercher par Titre",
-    "apply-search": "Rechercher",
-    "clear-filters": "Effacer les filtres",
-    "all-recipes-results": "Recettes",
-    "no-available-labels": "Aucun label disponible",
-    "no-available-authors": "Aucun auteur disponible",
-    "s-no-labels": "Aucun label sélectionné pour le filtrage",
-    "s-no-authors": "Aucun auteur sélectionné pour le filtrage",
-    "no-recipes-found": "Aucune recette trouvée",
-    "previous-page": "Précédent",
-    "next-page": "Suivant",
-    "page-of": "Page {{page}} sur {{totalPages}}",
-    "edit-recipe": "Modifier la recette",
-    "edit-recipe-subtitle": "Modifier la recette en utilisant le formulaire suivant",
-    "unauthorized": "Vous devez être connecté pour accéder à cette page",
-    "take-me-home": "Retourner à l'accueil",
-    "add-recipe-nav": "Ajouter",
-    "all-recipes-nav": "Recettes",
-    "dashboard-nav": "Tableau de bord",
-    "submit-date": "{{date, datetime}}",
-    "login-error": "Nom d'utilisateur ou mot de passe incorrect.",
-    "unexpected-error": "Une erreur inattendue s'est produite. Veuillez réessayer plus tard.",
-    "success-account-created": "Votre compte a été créé. Vous pouvez maintenant vous connecter.",
-    "invalid-token": "Le jeton fourni est invalide ou a expiré.",
-    "success-pass-modified": "Votre mot de passe a été modifié avec succès",
-    "success-reset-email": "Un email a été envoyé pour réinitialiser votre mot de passe",
-    "success-comment-deleted": "Commentaire supprimé",
-    "success-recipe-added": "Recette ajoutée!",
-    "success-recipe-edited": "Recette modifiée!",
-    "success-recipe-deleted": "Recette supprimée!",
-    "added-recipe-favorite": "Ajouté à vos favoris",
-    "removed-recipe-favorite": "Supprimé de vos favoris"
+  "585c7f9fef80e384": "Aller au contenu",
+  "9bafb27d5f568f97": "Mot de passe oublié",
+  "af96ca5858a6c6e5": "Nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+  "effdcd633af15789": "E-mail",
+  "49d7e830f6faffb5": [
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    "Soumettre"
+  ],
+  "443870512a460d53": [
+    {
+      "t": "ArrowLeft",
+      "i": 1
+    },
+    "Retour à l’accueil"
+  ],
+  "d4d56c123836faf8": "Recettes de famille",
+  "79fdbd7882479c0f": [
+    {
+      "t": "Leaf",
+      "i": 1
+    },
+    "Recettes de famille"
+  ],
+  "5f2039e209fb19f0": "Nos recettes à partager.",
+  "0a53033ceacc8675": "Toutes les recettes de la famille au même endroit.",
+  "5654a750d56b7018": "FAMIGLIA RECIPES",
+  "2de92b53412559be": "Bienvenue sur Famiglia",
+  "114d5332d2abdeeb": "Connectez-vous pour consulter et ajouter des recettes.",
+  "ec21b232e0eacd4a": "Se connecter",
+  "d67740332ce46e97": "Créer un compte",
+  "a65ef2683669814e": [
+    {
+      "t": "LockKeyhole",
+      "i": 1
+    },
+    "L’accès est réservé aux membres de la famille."
+  ],
+  "acbb34d9bef3a5cd": "Le jeton fourni est invalide ou a expiré.",
+  "abbf90446b55eb3f": "Une erreur inattendue s'est produite. Veuillez réessayer plus tard.",
+  "5c63676019fb3250": "Votre mot de passe a été modifié.",
+  "034ee4fb22f486ff": "Réinitialiser le mot de passe",
+  "68fa09c5e428e39f": "Choisissez un nouveau mot de passe pour votre compte.",
+  "81f4dd9973774d67": "Mot de passe",
+  "96017fdee11bf2cf": "Confirmer mot de passe",
+  "f68414fa7c3c39c3": [
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    "  ",
+    "Soumettre"
+  ],
+  "650ff02babc5dabf": "Recette ajoutée",
+  "1fd326dc6b2ca153": "Ajouter une recette",
+  "521c80c2d6943984": "Saisissez les ingrédients et les étapes, ou importez une recette.",
+  "4391a10fc1507f58": "Le carnet",
+  "e7977497958318b4": "Rechercher par titre",
+  "c6c4dbc2a12b6a14": "Rechercher une recette…",
+  "703c7cb3584bd86a": "Catégories",
+  "47b6db17060181c5": "Ajoutée par",
+  "d5890ae0f333d2d3": "Consultez les recettes ou filtrez par catégorie et par auteur.",
+  "7e087eb20d306a2f": [
+    {
+      "t": "X",
+      "i": 1
+    },
+    "Effacer les filtres"
+  ],
+  "118c3c3d8e1ebb3a": [
+    {
+      "t": "SlidersHorizontal",
+      "i": 1
+    },
+    "Affiner la recherche",
+    {
+      "t": "ChevronDown",
+      "i": 2
+    }
+  ],
+  "14df4fdf55acd8cb": {
+    "t": "Plural",
+    "i": 1,
+    "d": {
+      "b": {
+        "one": {
+          "t": "C2",
+          "i": 2,
+          "c": [
+            {
+              "i": 3,
+              "k": "_gt_value_3",
+              "v": "v"
+            },
+            " recette"
+          ]
+        },
+        "other": {
+          "t": "C2",
+          "i": 2,
+          "c": [
+            {
+              "i": 3,
+              "k": "_gt_value_3",
+              "v": "v"
+            },
+            " recettes"
+          ]
+        }
+      },
+      "t": "p"
+    }
+  },
+  "bd75d54faee5d0be": "Aucune recette trouvée",
+  "439fce0f15e4ce96": "Essayez un autre nom ou retirez quelques filtres.",
+  "3fe9728594a7340c": "Effacer les filtres",
+  "2ecf88ef9e8e4259": "Accueil",
+  "df0ff222c8095f46": [
+    "Bonjour, ",
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    "."
+  ],
+  "496ea1eff6e4d9e1": "Recettes de famille",
+  "e42486d648d65a80": "Trouver une recette",
+  "9d7830a3f5bf91c8": "Consultez le carnet ou ajoutez une recette.",
+  "3791eb82bee5665a": [
+    "Voir les recettes",
+    {
+      "t": "ArrowRight",
+      "i": 1
+    }
+  ],
+  "146cbb3ff5fc8c1a": "Dernières recettes",
+  "1d2628e9aa239c54": "Les recettes ajoutées récemment.",
+  "061b2b83a4ef14ff": [
+    "Toutes les recettes",
+    {
+      "t": "ArrowRight",
+      "i": 1
+    }
+  ],
+  "3a84937fc4e70967": "Aucune recette pour le moment",
+  "62cc7589c139bd33": "Ajoutez une première recette.",
+  "7b9ecd6a448d5808": [
+    {
+      "t": "Plus",
+      "i": 1
+    },
+    "Ajouter une recette"
+  ],
+  "0fff823a26e1670e": "Recettes enregistrées",
+  "4f8d3fbf4de52f50": "Vos favoris",
+  "6e8a54f94d856862": "Les recettes que vous avez mises en favoris.",
+  "5ef82d951bc45216": "Aucun favori pour le moment",
+  "99538e0eed941738": "Cliquez sur le cœur d’une recette pour l’ajouter ici.",
+  "000e4a65e47e4135": "Supprimer cette recette ? Cette action est définitive.",
+  "a37c5c3aeea31de4": "Recette supprimée",
+  "2a0ee79757e2d9f6": "Supprimé de vos favoris",
+  "60a4c889bf7c4c83": "Ajouté à vos favoris",
+  "f319e07863d35ebc": "Préparation",
+  "f3607272366f0d55": "Cuisson",
+  "96342a1adf3fd22b": "Temps total",
+  "da49b8271b9dffa0": "Supprimer",
+  "6d793a27cdb821ba": [
+    {
+      "t": "ArrowLeft",
+      "i": 1
+    },
+    "Retour au carnet"
+  ],
+  "a09a5ac4322e67fa": [
+    "Ajoutée par ",
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    }
+  ],
+  "867414ab4a068a9d": [
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    " min"
+  ],
+  "8c1d33a53464ce69": "Retirer des favoris",
+  "9be58a5582fc7bfa": "Garder dans mes favoris",
+  "641d4effa4ddc6d6": [
+    {
+      "t": "Pen",
+      "i": 1
+    },
+    "Modifier"
+  ],
+  "483abfbaf3674342": "Ingrédients",
+  "df53809c4e598735": "Modifiez le nombre de portions pour ajuster les quantités.",
+  "922538b51f40cbf7": "Portions",
+  "a0abd0334ec08186": [
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    " / ",
+    {
+      "i": 2,
+      "k": "_gt_value_2",
+      "v": "v"
+    }
+  ],
+  "4f730f6e0f077117": "Étapes",
+  "d4b3fe97dd0501a8": "Instructions",
+  "26d7f8aecad18aec": "Modifications enregistrées",
+  "69d017847cde17f4": "Modifier la recette",
+  "fa9338c4399e801b": "Modifiez les informations, les ingrédients ou les étapes de la recette.",
+  "480646ceb98c7163": "Fermer",
+  "4ff72c2acc7f6656": "Chargement…",
+  "5a0125dd9241cdec": "Chargement…",
+  "a2acf8270d351160": "Une erreur est survenue",
+  "f5182ed26cf337bb": "Une erreur inattendue s'est produite. Veuillez réessayer plus tard.",
+  "ff2615406e371ca9": [
+    {
+      "t": "ArrowLeft",
+      "i": 1
+    },
+    "Retour"
+  ],
+  "1f68e6600def68f6": [
+    {
+      "t": "Leaf",
+      "i": 1
+    },
+    "Les recettes de la famille."
+  ],
+  "56b09983370a86ed": [
+    "Famiglia · ",
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    }
+  ],
+  "6ebd5c05eaff711a": "Recadrer l'image de la recette",
+  "18114f21e923a16e": "Redimensionnez l’image pour l’adapter à la zone de recadrage.",
+  "9eb2dbf6073def42": "Enregistrer",
+  "046176f8a55917bf": "Image sélectionnée",
+  "f5b66c481aa3e4df": "Modifier",
+  "2c1c93a646bbea6e": "Langue",
+  "b536a564e40ec3c4": "English",
+  "95b53ad678052e8d": "Français",
+  "a5f8b0972e2c403e": "Mot de passe oublié?",
+  "a282ebb19b58127e": [
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    "  ",
+    "Se connecter"
+  ],
+  "5c0b47879846d2a6": "La déconnexion a échoué. Veuillez réessayer.",
+  "74b1e2c17ea2e0f3": "Navigation principale",
+  "a656dc69a38a3639": "Se déconnecter",
+  "6662bfef4fbe8763": "Ouvrir le menu",
+  "1a15e6e8f52637d1": [
+    "famiglia",
+    {
+      "t": "span",
+      "i": 1,
+      "c": "."
+    }
+  ],
+  "1a52c0fc26d8b5e7": [
+    "Recettes de famille",
+    {
+      "t": "ArrowUpRight",
+      "i": 1
+    }
+  ],
+  "5b507a644eed059f": [
+    {
+      "t": "LogOut",
+      "i": 1
+    },
+    "Se déconnecter"
+  ],
+  "f08afb1daf7281d0": "Page introuvable",
+  "24b8592bb4ea7ac4": "Vérifiez l’adresse ou revenez à l’accueil.",
+  "aa39c8d4b0caedfb": "Précédent",
+  "12f4763a6120c59c": [
+    "Page ",
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    " sur ",
+    {
+      "i": 2,
+      "k": "_gt_value_2",
+      "v": "v"
+    }
+  ],
+  "77b5f98f1f9a4ca7": "Suivant",
+  "149c56ff4f5eb78d": [
+    {
+      "t": "Clock",
+      "i": 1
+    },
+    {
+      "i": 2,
+      "k": "_gt_value_2",
+      "v": "v"
+    },
+    " min"
+  ],
+  "a48493d9cb2525c3": "Pas de photo",
+  "b499946e6e3d9ddd": "Clé d’invitation incorrecte",
+  "79d45a13204f5c4c": "Un e-mail a été envoyé pour confirmer votre compte.",
+  "72fcd24abd213e79": "Votre prénom",
+  "e2328b3735cd1dbd": "Votre prénom",
+  "e13f1097576527d7": "Clé d’invitation",
+  "e1359a213b3352cc": [
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    "  ",
+    "Créer un compte"
+  ],
+  "e4aa76cf5a9416e9": "Ajoutez votre commentaire ici",
+  "a486801c4a7a2a53": "Modifier le commentaire",
+  "78c94fabadf67aa4": "Ajouter un commentaire",
+  "d21925e86d62f978": "Modifier votre commentaire pour cette recette",
+  "9dcf4d4f9a6f084f": "Ajouter un nouveau commentaire à cette recette",
+  "32ad6b9868508897": "Commentaire",
+  "723c5c98f6b24d83": "Le commentaire ne peut pas être vide",
+  "ec5d72aff62f3547": "Ajoutez un conseil ou un avis sur cette recette.",
+  "935d017635f76c12": "Soumission...",
+  "5e8d1f67d1c61be2": "Commentaire supprimé",
+  "79ae43d8b6d1cce4": "Modifier le commentaire",
+  "f7b9098ab70ceab5": [
+    "Commentaires",
+    {
+      "t": "span",
+      "i": 1,
+      "c": [
+        "(",
+        {
+          "i": 2,
+          "k": "_gt_value_2",
+          "v": "v"
+        },
+        ")"
+      ]
+    }
+  ],
+  "b960ecc1ad6cf0f0": "Conseils et avis sur cette recette.",
+  "377f5a3e658ea4e1": [
+    {
+      "t": "Plus",
+      "i": 1
+    },
+    "Ajouter un commentaire"
+  ],
+  "479d8e886115385a": "Impossible de charger les commentaires. Veuillez réessayer.",
+  "98707f319f98bb28": "Aucun commentaire pour le moment.",
+  "49a3d2c68a3b117e": "Moins de portions",
+  "ab450a11144a5bcf": "Plus de portions",
+  "b8ca393c72db9f4f": "Ingrédient",
+  "7637a571ff5e01b1": "Quantité",
+  "81bd636dded0b6d5": "Retirer l’ingrédient {number}",
+  "62981f132f88a0b2": [
+    {
+      "t": "Plus",
+      "i": 1
+    },
+    " Ajouter un ingrédient"
+  ],
+  "e83d7bb8bf8239af": "Catégories de la recette",
+  "e15e73c94118de92": "Êtes-vous sûr de vouloir quitter ? Toutes modifications seront perdues.",
+  "f613c4b1c7937261": "Titre de la recette",
+  "3e9b6b4821d5fdce": "Informations sur la recette",
+  "54a51723052d7246": "Image de la recette",
+  "71950402d4de2f32": "Titre de la recette",
+  "2b5cf07b0c088baf": "Prépa. (min)",
+  "ef436aedc6535f25": "Cuisson (min)",
+  "5fabcdf08676a4c1": "Indiquez les ingrédients et les quantités.",
+  "553c8c63916ab158": "Décrivez les étapes dans l’ordre.",
+  "b9be95130425ff4b": "Informations complémentaires",
+  "a08ccea91838fd27": "Catégories de la recette",
+  "2f4ef70d15027bb0": "Notes",
+  "b108bc57762640c4": "Enregistrer la recette",
+  "374caa799474ba78": "Enregistrer les modifications",
+  "e6756a4ca37bcd25": "Importer une recette",
+  "98e72f7f42d20063": "Importez une recette à partir d’une photo, d’un document ou d’un texte.",
+  "aabc454eb06ea782": "Vérifiez les ingrédients et les quantités avant d’enregistrer.",
+  "745a5a3a7ebe2ec0": "Monter {item}",
+  "5474e3f9bc2574c1": "Descendre {item}",
+  "131e7c2a70d640ef": "Étape",
+  "12e8c8a932ce494d": "Retirer l’étape {number}",
+  "b2caec60f71d29a5": [
+    {
+      "t": "Plus",
+      "i": 1
+    },
+    " Ajouter une étape"
+  ],
+  "6c9bf092b3407a59": "Le fichier sélectionné est vide.",
+  "3e0ed6bbd167be4e": "Le fichier ne doit pas dépasser 20 Mo.",
+  "dc2039243a9523e6": "Format non pris en charge. Choisissez un fichier PDF, DOCX, JPG, PNG ou WEBP.",
+  "94c0bf7c0cf364be": "Le texte doit comporter moins de {max} caractères.",
+  "89cc26d13759ea13": "Vérifiez la recette importée avant de l’enregistrer.",
+  "c7dbc1ad5cfd863b": "Collez le contenu de la recette ici...",
+  "e3fe827de6a5c068": [
+    {
+      "t": "Upload",
+      "i": 1
+    },
+    " Importer une recette"
+  ],
+  "dbbe3f8f153f88ee": "Téléverser du Contenu",
+  "4759d6091cac7925": "Téléversez un fichier ou collez votre texte.",
+  "9f71ceb39e15a802": [
+    {
+      "t": "Upload",
+      "i": 1
+    },
+    " Téléversement de Fichier"
+  ],
+  "acdf8500ab7412c4": [
+    {
+      "t": "FileText",
+      "i": 1
+    },
+    " Saisie de Texte"
+  ],
+  "5006be3f38fec89d": "Choisir un fichier",
+  "496f32d5494ab334": "Formats supportés : PDF, DOCX, JPG, PNG, WEBP (max 20 Mo)",
+  "a72e484c60f97ebd": [
+    "Sélectionné : ",
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    " (",
+    {
+      "i": 2,
+      "k": "_gt_value_2",
+      "v": "v"
+    },
+    " Mo)"
+  ],
+  "d29068c397f62fd8": "Zone de Texte",
+  "8e0244936af342e8": "Maximum 10 000 caractères",
+  "d15d4ce9981708e9": "Annuler",
+  "3e75a496f3711d12": [
+    {
+      "t": "Loader2",
+      "i": 1
+    },
+    " Téléversement"
+  ],
+  "0fb7d77d920191f9": "Téléverser"
 }

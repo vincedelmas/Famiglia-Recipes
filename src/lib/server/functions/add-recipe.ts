@@ -5,15 +5,10 @@ import {createServerFn} from "@tanstack/react-start";
 import {callGeminiModel} from "~/lib/utils/LLM-call";
 import {tryFormZodError} from "~/lib/utils/zod-errors";
 import {FormattedError} from "~/lib/utils/error-classes";
-import {saveUploadedImage} from "~/lib/utils/image-handler";
 import {authMiddleware} from "~/lib/server/middleware/auth-guard";
+import {deleteImage, saveUploadedImage} from "~/lib/utils/image-handler";
 import {comment, label, recipe, recipeLabel} from "~/lib/server/database/schema";
-import {imageRecipeSchema, recipeFormSchema, uploadRecipeSchema} from "~/lib/utils/schemas";
-
-
-const PDF_TYPE = ".pdf";
-const DOCUMENT_TYPES = [".doc", ".docx"];
-const IMAGE_TYPES = [".png", ".jpg", ".jpeg", ".webp"];
+import {imageRecipeSchema, recipeFormSchema, recipeImportTextSchema, uploadRecipeSchema} from "~/lib/utils/schemas";
 
 
 export const getLabels = createServerFn({ method: "GET" })
@@ -39,6 +34,15 @@ export const postAddRecipe = createServerFn({ method: "POST" })
         if (formDataImage) tryFormZodError(() => imageRecipeSchema.parse(formDataImage))
         const recipeData = tryFormZodError(() => recipeFormSchema.parse(JSON.parse(formDataRecipe)));
 
+        const matchingLabels = await db
+            .select()
+            .from(label)
+            .where(inArray(label.name, recipeData.labels));
+
+        if (matchingLabels.length !== new Set(recipeData.labels).size) {
+            throw new FormattedError("Unknown recipe category");
+        }
+
         let coverName = "default.png";
         if (formDataImage) {
             coverName = await saveUploadedImage({
@@ -53,42 +57,43 @@ export const postAddRecipe = createServerFn({ method: "POST" })
             ingredient: ing.description,
         }));
 
-        const matchingLabels = await db
-            .select()
-            .from(label)
-            .where(inArray(label.name, recipeData.labels));
-
-        await db.transaction(async (tx) => {
-            const [newRecipe] = await tx
-                .insert(recipe)
-                .values({
-                    steps: steps,
-                    image: coverName,
-                    title: recipeData.title,
-                    ingredients: ingredients,
-                    submitterId: currentUser.id,
-                    servings: recipeData.servings,
-                    cookingTime: recipeData.cooking,
-                    prepTime: recipeData.preparation,
-                })
-                .returning();
-
-            if (matchingLabels.length) {
-                await tx
-                    .insert(recipeLabel)
-                    .values(matchingLabels.map(l => ({ recipeId: newRecipe.id, labelId: l.id })));
-            }
-
-            if (recipeData.comment) {
-                await tx
-                    .insert(comment)
+        try {
+            db.transaction((tx) => {
+                const newRecipe = tx
+                    .insert(recipe)
                     .values({
-                        userId: currentUser.id,
-                        recipeId: newRecipe.id,
-                        content: recipeData.comment,
-                    });
-            }
-        });
+                        steps: steps,
+                        image: coverName,
+                        title: recipeData.title,
+                        ingredients: ingredients,
+                        submitterId: currentUser.id,
+                        servings: recipeData.servings,
+                        cookingTime: recipeData.cooking,
+                        prepTime: recipeData.preparation,
+                    })
+                    .returning()
+                    .get();
+
+                if (matchingLabels.length) {
+                    tx.insert(recipeLabel)
+                        .values(matchingLabels.map(l => ({ recipeId: newRecipe.id, labelId: l.id })))
+                        .run();
+                }
+
+                if (recipeData.comment) {
+                    tx.insert(comment)
+                        .values({
+                            userId: currentUser.id,
+                            recipeId: newRecipe.id,
+                            content: recipeData.comment,
+                        }).run();
+                }
+            });
+        }
+        catch (error) {
+            if (formDataImage) await deleteImage(coverName);
+            throw error;
+        }
     });
 
 
@@ -102,36 +107,30 @@ export const uploadRecipeForParsing = createServerFn({ method: "POST" })
         let fileForAI: File | null = null;
         let textContent: string | null = null;
 
-        const validatedData = uploadRecipeSchema.parse({
+        const validatedData = tryFormZodError(() => uploadRecipeSchema.parse({
             type: data.get("type"),
             content: data.get("content"),
-        });
+        }));
 
         if (validatedData.type === "text") {
-            textContent = validatedData.content as string;
+            textContent = validatedData.content;
         }
         else {
-            const file = validatedData.content as File;
-            const fileName = file.name.toLowerCase();
-            const fileExtension = fileName.substring(fileName.lastIndexOf("."));
-
-            if (DOCUMENT_TYPES.includes(fileExtension)) {
+            const file = validatedData.content;
+            if (file.name.toLowerCase().endsWith(".docx")) {
                 try {
                     const arrayBuffer = await file.arrayBuffer();
                     const buffer = Buffer.from(arrayBuffer);
                     const { default: mammoth } = await import("mammoth");
                     const result = await mammoth.extractRawText({ buffer: buffer });
-                    textContent = result.value;
+                    textContent = tryFormZodError(() => recipeImportTextSchema.parse(result.value));
                 }
                 catch {
                     throw new FormattedError("Failed to extract text. Try another one.");
                 }
             }
-            else if (IMAGE_TYPES.includes(fileExtension) || fileExtension === PDF_TYPE) {
-                fileForAI = file;
-            }
             else {
-                throw new FormattedError(`Unsupported file type: ${fileExtension}`);
+                fileForAI = file;
             }
         }
 

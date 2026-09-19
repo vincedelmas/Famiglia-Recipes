@@ -1,54 +1,43 @@
+import {useGT} from "gt-react";
 import {Minus, Plus} from "lucide-react";
-import {useEffect, useState} from "react";
+import {Button} from "~/lib/client/components/ui/button";
 
 
 interface ServingsProps {
-    initServings: number;
-    multiSetter: (multiplier: number) => void;
+    servings: number;
+    onChange: (servings: number) => void;
 }
 
 
-export const Servings = ({ initServings, multiSetter }: ServingsProps) => {
-    const [servings, setServings] = useState(initServings);
-    const [disabled, setDisabled] = useState(false);
-
-    useEffect(() => {
-        // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
-        setServings(initServings);
-    }, [initServings]);
-
-    const updateServings = (action: "add" | "remove") => {
-        let newServing = initServings;
-
-        if (action === "add") {
-            newServing = servings + 1;
-            setDisabled(false);
-        }
-
-        if (action === "remove") {
-            newServing = servings - 1;
-            if (newServing === 1) {
-                setDisabled(true);
-            }
-        }
-
-        setServings(newServing);
-        multiSetter(newServing / initServings);
-    };
+export const Servings = ({ servings, onChange }: ServingsProps) => {
+    const gt = useGT();
 
     return (
-        <div className="flex items-center justify-around gap-2">
-            {disabled ?
-                <Minus className="w-4 h-4"/>
-                :
-                <div role="button" onClick={() => updateServings("remove")}>
-                    <Minus className="w-4 h-4 hover:opacity-70"/>
-                </div>
-            }
-            {servings} pers.
-            <div role="button" onClick={() => updateServings("add")}>
-                <Plus className="w-4 h-4 hover:opacity-70"/>
-            </div>
+        <div className="flex items-center gap-3 rounded-xl border bg-background p-1">
+            <Button
+                type="button"
+                size="icon-sm"
+                variant="ghost"
+                disabled={servings <= 1}
+                aria-label={gt("Fewer servings")}
+                onClick={() => onChange(servings - 1)}
+            >
+                <Minus/>
+            </Button>
+
+            <output className="min-w-5 text-center text-sm font-medium tabular-nums" aria-live="polite">
+                {servings}
+            </output>
+
+            <Button
+                type="button"
+                size="icon-sm"
+                variant="ghost"
+                aria-label={gt("More servings")}
+                onClick={() => onChange(servings + 1)}
+            >
+                <Plus/>
+            </Button>
         </div>
     );
 };

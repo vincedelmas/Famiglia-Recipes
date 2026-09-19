@@ -1,6 +1,5 @@
 node_modules
 package-lock.json
-bun.lock
 yarn.lock
 
 .DS_Store
@@ -35,5 +34,4 @@ ecosystem.config.cjs
 deploy.sh
 /tsconfig.tsbuildinfo
 **/routeTree.gen.ts
-/bun.lock
 .env.docker

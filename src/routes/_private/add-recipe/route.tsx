@@ -1,24 +1,33 @@
-import {toast} from "sonner";
-import {useTranslation} from "react-i18next";
+import {useGT} from "gt-react";
 import {RecipeFormValues} from "~/lib/utils/schemas";
 import {useAddRecipe} from "~/lib/client/react-query";
-import {useSuspenseQuery} from "@tanstack/react-query";
+import {toast} from "~/lib/client/components/ui/toast";
 import {PageTitle} from "~/lib/client/components/app/PageTitle";
 import {createFileRoute, useNavigate} from "@tanstack/react-router";
 import {addRecipeOptions} from "~/lib/client/react-query/queryOptions";
+import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
 import {RecipeForm} from "~/lib/client/components/recipe-form/RecipeForm";
 
 
 export const Route = createFileRoute("/_private/add-recipe")({
-    loader: ({ context: { queryClient } }) => queryClient.ensureQueryData(addRecipeOptions),
+    context: () => ({
+        addRecipeOptions: addRecipeOptions,
+    }),
+    loader: ({ context }) => {
+        return context.queryClient.query(context.addRecipeOptions);
+    },
     component: AddRecipePage,
 });
 
+
 function AddRecipePage() {
     const navigate = useNavigate();
-    const { t } = useTranslation();
+    const gt = useGT();
     const addRecipe = useAddRecipe();
+    const queryClient = useQueryClient();
+    const { addRecipeOptions } = Route.useRouteContext();
     const { data: labels } = useSuspenseQuery(addRecipeOptions);
+
     const initValues: RecipeFormValues = {
         title: "",
         labels: [],
@@ -38,16 +47,23 @@ function AddRecipePage() {
             formData.append("image", submittedData.image);
         }
 
-        addRecipe.mutate({ data: formData }, {
-            onSuccess: () => {
-                toast.success("Recipe Successfully edited");
-                return navigate({ to: "/dashboard" });
-            }
+        await addRecipe.mutateAsync({ data: formData });
+
+        await Promise.all([
+            queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
+            queryClient.invalidateQueries({ queryKey: ["allRecipes"] }),
+        ]);
+
+        toast.add({
+            type: "success",
+            title: gt("Recipe added"),
         });
+
+        return navigate({ to: "/dashboard" });
     };
 
     return (
-        <PageTitle title={t("add-recipe")} subtitle={t("ar-subtitle")}>
+        <PageTitle title={gt("Add a recipe")} subtitle={<>Enter the ingredients and steps, or import a recipe.</>}>
             <RecipeForm
                 labels={labels}
                 type="Creation"

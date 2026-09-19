@@ -1,130 +1,477 @@
 {
-    "welcome": "Welcome to Famiglia Recipes",
-    "welcome-nav": "Welcome",
-    "hero-title": "Share, discover, and preserve your family's recipes traditions",
-    "login": "Login",
-    "register": "Register",
-    "welcome-back": "Welcome back",
-    "username": "Username",
-    "password": "Password",
-    "forgot-password": "Forgot password?",
-    "create-account": "Create an account",
-    "confirm-password": "Confirm Password",
-    "email-sent": "An email was sent to confirm your account.",
-    "register-key": "Register Key",
-    "invalid-register-key": "Invalid Register Key",
-    "submit": "Submit",
-    "ai-parsing": "Use AI to parse",
-    "upload-button": "Upload PDF, DOCX, IMAGE or TEXT",
-    "upload-dialog-title": "Upload Content",
-    "upload-dialog-desc": "Upload a file or paste your text content.",
-    "tab-file-upload": "File Upload",
-    "tab-text-input": "Text Input",
-    "label-choose-file": "Choose File",
-    "supported-formats": "Supported formats: PDF, DOC, DOCX, JPG, PNG, WEBP (max 20MB)",
-    "file-selected-with-size": "Selected: {{fileName}} ({{size}} Mo)",
-    "label-text-content": "Text Content",
-    "placeholder-text": "Paste the recipe content here...",
-    "max-char-info": "Maximum 10,000 characters",
-    "error-file-size": "File size must be less than 20MB",
-    "error-file-type": "File type not supported. Please upload PDF, DOC, DOCX, JPG, PNG, or WEBP files.",
-    "error-text-length": "Text must be less than {{max}} characters",
-    "toast-success": "Check the form and save the recipe!",
-    "upload": "Upload",
-    "uploading": "Uploading",
-    "feature-1-title": "Create and share your favorite recipes with ingredients, steps, and beautiful photos",
-    "feature-2-title": "Save your favorite recipes for quick access and never lose track of the dishes you love",
-    "feature-3-title": "Find the perfect recipe with the integrated search and filtering by tags",
-    "fp-title": "Forgot password",
-    "fp-subtitle": "Enter the email associated with your account to reset your password",
-    "rp-title": "Reset Your Password",
-    "rp-subtitle": "You can now change your password to a new one",
-    "da-title": "Your Dashboard",
-    "da-subtitle": "Here are your favorite recipes as well as the last added one",
-    "fav-recipes": "Your Favorite Recipes",
-    "last-recipes": "Last Added Recipes",
-    "no-fav-recipes": "No favorite recipes added yet",
-    "no-last-recipes": "No last recipes added yet",
-    "cook": "Cook",
-    "cook-details": "Cooking",
-    "added-by": "Added by",
-    "the": "the",
-    "servings": "Servings",
-    "step": "Step",
-    "ingredients": "Ingredients",
-    "ingredient": "Ingredient",
-    "comment": "Comment",
-    "comments": "Comments",
-    "add-comment": "Add a comment",
-    "edit-comment": "Edit comment",
-    "edit": "Edit",
-    "cancel": "Cancel",
-    "save": "Save",
-    "add": "Add",
-    "submitting": "Submitting...",
-    "ec-subtitle": "Edit your comment for this recipe",
-    "ac-subtitle": "Add a new comment to this recipe",
-    "c-info": "Your comment will be visible to other users",
-    "c-error": "The comment cannot be empty",
-    "c-placeholder": "Add your comment here",
-    "add-recipe": "Add a Recipe",
-    "add-recipes": "Add Recipes",
-    "ar-subtitle": "Add a recipe here using the following form",
-    "r-image": "Recipe Image",
-    "r-title": "Recipe Title",
-    "r-preparation": "Preparation Time (min)",
-    "r-cooking": "Cooking Time (min)",
-    "r-servings": "Servings",
-    "r-steps": "Steps",
-    "r-add": "Create Recipe",
-    "r-edit": "Edit Recipe",
-    "crop-title": "Crop Recipe Image",
-    "crop-subtitle": "Resize the recipe image to fit the crop area.",
-    "crop-selected": "Selected Image",
-    "quantity": "Quantity",
-    "block-confirm": "Are you sure you want to leave? All your changes will be lost.",
-    "r-title-req": "Title required",
-    "r-ingredient-req": "One quantity and ingredient required",
-    "r-quantity-req": "All ingredients must have a quantity and a description",
-    "r-steps-req": "One step required",
-    "r-all-steps-req": "All steps must have a description",
-    "r-label-req": "One label required",
-    "all-recipes": "All Recipes ({{count}})",
-    "all-recipes-subtitle": "Search and filter all recipes",
-    "available-labels": "Available Labels",
-    "selected-labels": "Selected Labels",
-    "available-authors": "Available Authors",
-    "selected-authors": "Selected Authors",
-    "search-recipes": "Search by Title",
-    "apply-search": "Search",
-    "clear-filters": "Clear filters",
-    "all-recipes-results": "Recipes",
-    "no-available-labels": "No available labels",
-    "no-available-authors": "No available authors",
-    "s-no-labels": "No selected labels added for filtering",
-    "s-no-authors": "No selected authors added for filtering",
-    "no-recipes-found": "No recipes found",
-    "previous-page": "Previous",
-    "next-page": "Next",
-    "page-of": "Page {{page}} of {{totalPages}}",
-    "edit-recipe": "Edit Recipe",
-    "edit-recipe-subtitle": "Edit the recipe using the following form",
-    "unauthorized": "You need to be logged in to access this page",
-    "take-me-home": "Take Me Home",
-    "dashboard-nav": "Dashboard",
-    "add-recipe-nav": "Add Recipe",
-    "all-recipes-nav": "All Recipes",
-    "submit-date": "{{date, datetime}}",
-    "login-error": "Username or password incorrect.",
-    "unexpected-error": "An unexpected error occurred. Please try again later.",
-    "success-account-created": "Your account has been created. You can now log-in.",
-    "invalid-token": "The provided token is invalid or expired.",
-    "success-pass-modified": "Your password was successfully modified",
-    "success-reset-email": "An email was sent to reset your password",
-    "success-comment-deleted": "Comment deleted",
-    "success-recipe-added": "Recipe Added!",
-    "success-recipe-edited": "Recipe Edited!",
-    "success-recipe-deleted": "Recipe Deleted!",
-    "added-recipe-favorite": "Added to your favorites",
-    "removed-recipe-favorite": "Removed from your favorites"
+  "585c7f9fef80e384": "Skip to content",
+  "9bafb27d5f568f97": "Forgot password",
+  "af96ca5858a6c6e5": "We’ll send you a link to reset your password.",
+  "effdcd633af15789": "Email",
+  "49d7e830f6faffb5": [
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    "Submit"
+  ],
+  "443870512a460d53": [
+    {
+      "t": "ArrowLeft",
+      "i": 1
+    },
+    "Back to home"
+  ],
+  "d4d56c123836faf8": "Family recipes",
+  "79fdbd7882479c0f": [
+    {
+      "t": "Leaf",
+      "i": 1
+    },
+    "Family recipes"
+  ],
+  "5f2039e209fb19f0": "Recipes to share.",
+  "0a53033ceacc8675": "Keep the family’s recipes in one place.",
+  "5654a750d56b7018": "FAMIGLIA RECIPES",
+  "2de92b53412559be": "Welcome to Famiglia",
+  "114d5332d2abdeeb": "Sign in to view and add recipes.",
+  "ec21b232e0eacd4a": "Sign in",
+  "d67740332ce46e97": "Create an account",
+  "a65ef2683669814e": [
+    {
+      "t": "LockKeyhole",
+      "i": 1
+    },
+    "Access is reserved for family members."
+  ],
+  "acbb34d9bef3a5cd": "The provided token is invalid or expired.",
+  "abbf90446b55eb3f": "An unexpected error occurred. Please try again later.",
+  "5c63676019fb3250": "Your password has been updated.",
+  "034ee4fb22f486ff": "Reset password",
+  "68fa09c5e428e39f": "Choose a new password for your account.",
+  "81f4dd9973774d67": "Password",
+  "96017fdee11bf2cf": "Confirm Password",
+  "f68414fa7c3c39c3": [
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    " ",
+    "Submit"
+  ],
+  "650ff02babc5dabf": "Recipe added",
+  "1fd326dc6b2ca153": "Add a recipe",
+  "521c80c2d6943984": "Enter the ingredients and steps, or import a recipe.",
+  "4391a10fc1507f58": "The cookbook",
+  "e7977497958318b4": "Search by title",
+  "c6c4dbc2a12b6a14": "Search recipes…",
+  "703c7cb3584bd86a": "Categories",
+  "47b6db17060181c5": "Added by",
+  "d5890ae0f333d2d3": "Browse recipes or filter by category and author.",
+  "7e087eb20d306a2f": [
+    {
+      "t": "X",
+      "i": 1
+    },
+    "Clear filters"
+  ],
+  "118c3c3d8e1ebb3a": [
+    {
+      "t": "SlidersHorizontal",
+      "i": 1
+    },
+    "Refine your search",
+    {
+      "t": "ChevronDown",
+      "i": 2
+    }
+  ],
+  "14df4fdf55acd8cb": {
+    "t": "Plural",
+    "i": 1,
+    "d": {
+      "b": {
+        "one": {
+          "t": "C2",
+          "i": 2,
+          "c": [
+            {
+              "i": 3,
+              "k": "_gt_value_3",
+              "v": "v"
+            },
+            " recipe"
+          ]
+        },
+        "other": {
+          "t": "C2",
+          "i": 2,
+          "c": [
+            {
+              "i": 3,
+              "k": "_gt_value_3",
+              "v": "v"
+            },
+            " recipes"
+          ]
+        }
+      },
+      "t": "p"
+    }
+  },
+  "bd75d54faee5d0be": "No recipes found",
+  "439fce0f15e4ce96": "Try another title or clear a few filters.",
+  "3fe9728594a7340c": "Clear filters",
+  "2ecf88ef9e8e4259": "Home",
+  "df0ff222c8095f46": [
+    "Hello, ",
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    "."
+  ],
+  "496ea1eff6e4d9e1": "Family recipes",
+  "e42486d648d65a80": "Find a recipe",
+  "9d7830a3f5bf91c8": "Browse the collection or add a recipe to share.",
+  "3791eb82bee5665a": [
+    "Browse recipes",
+    {
+      "t": "ArrowRight",
+      "i": 1
+    }
+  ],
+  "146cbb3ff5fc8c1a": "Latest recipes",
+  "1d2628e9aa239c54": "Recently added recipes.",
+  "061b2b83a4ef14ff": [
+    "All recipes",
+    {
+      "t": "ArrowRight",
+      "i": 1
+    }
+  ],
+  "3a84937fc4e70967": "No recipes yet",
+  "62cc7589c139bd33": "Add the first recipe to get started.",
+  "7b9ecd6a448d5808": [
+    {
+      "t": "Plus",
+      "i": 1
+    },
+    "Add a recipe"
+  ],
+  "0fff823a26e1670e": "Saved recipes",
+  "4f8d3fbf4de52f50": "Your favorites",
+  "6e8a54f94d856862": "Recipes you’ve saved for later.",
+  "5ef82d951bc45216": "No favorites yet",
+  "99538e0eed941738": "Use the heart button to save a recipe here.",
+  "000e4a65e47e4135": "Delete this recipe? This cannot be undone.",
+  "a37c5c3aeea31de4": "Recipe deleted",
+  "2a0ee79757e2d9f6": "Removed from your favorites",
+  "60a4c889bf7c4c83": "Added to your favorites",
+  "f319e07863d35ebc": "Preparation",
+  "f3607272366f0d55": "Cooking",
+  "96342a1adf3fd22b": "Total time",
+  "da49b8271b9dffa0": "Delete",
+  "6d793a27cdb821ba": [
+    {
+      "t": "ArrowLeft",
+      "i": 1
+    },
+    "Back to the cookbook"
+  ],
+  "a09a5ac4322e67fa": [
+    "Added by ",
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    }
+  ],
+  "867414ab4a068a9d": [
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    " min"
+  ],
+  "8c1d33a53464ce69": "Remove from favorites",
+  "9be58a5582fc7bfa": "Save to favorites",
+  "641d4effa4ddc6d6": [
+    {
+      "t": "Pen",
+      "i": 1
+    },
+    "Edit"
+  ],
+  "483abfbaf3674342": "Ingredients",
+  "df53809c4e598735": "Change the servings to adjust ingredient quantities.",
+  "922538b51f40cbf7": "Servings",
+  "a0abd0334ec08186": [
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    " / ",
+    {
+      "i": 2,
+      "k": "_gt_value_2",
+      "v": "v"
+    }
+  ],
+  "4f730f6e0f077117": "Steps",
+  "d4b3fe97dd0501a8": "Instructions",
+  "26d7f8aecad18aec": "Recipe changes saved",
+  "69d017847cde17f4": "Edit recipe",
+  "fa9338c4399e801b": "Update the recipe details, ingredients, or steps.",
+  "480646ceb98c7163": "Close",
+  "4ff72c2acc7f6656": "Loading…",
+  "5a0125dd9241cdec": "Loading…",
+  "a2acf8270d351160": "Something went wrong",
+  "f5182ed26cf337bb": "An unexpected error occurred. Please try again later.",
+  "ff2615406e371ca9": [
+    {
+      "t": "ArrowLeft",
+      "i": 1
+    },
+    "Go back"
+  ],
+  "1f68e6600def68f6": [
+    {
+      "t": "Leaf",
+      "i": 1
+    },
+    "Recipes shared by the family."
+  ],
+  "56b09983370a86ed": [
+    "Famiglia · ",
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    }
+  ],
+  "6ebd5c05eaff711a": "Crop Recipe Image",
+  "18114f21e923a16e": "Resize the recipe image to fit the crop area.",
+  "9eb2dbf6073def42": "Save",
+  "046176f8a55917bf": "Selected Image",
+  "f5b66c481aa3e4df": "Edit",
+  "2c1c93a646bbea6e": "Language",
+  "b536a564e40ec3c4": "English",
+  "95b53ad678052e8d": "Français",
+  "a5f8b0972e2c403e": "Forgot password?",
+  "a282ebb19b58127e": [
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    " ",
+    "Sign in"
+  ],
+  "5c0b47879846d2a6": "Couldn’t sign out. Please try again.",
+  "74b1e2c17ea2e0f3": "Main navigation",
+  "a656dc69a38a3639": "Sign out",
+  "6662bfef4fbe8763": "Open menu",
+  "1a15e6e8f52637d1": [
+    "famiglia",
+    {
+      "t": "span",
+      "i": 1,
+      "c": "."
+    }
+  ],
+  "1a52c0fc26d8b5e7": [
+    "Family recipes",
+    {
+      "t": "ArrowUpRight",
+      "i": 1
+    }
+  ],
+  "5b507a644eed059f": [
+    {
+      "t": "LogOut",
+      "i": 1
+    },
+    "Sign out"
+  ],
+  "f08afb1daf7281d0": "Page not found",
+  "24b8592bb4ea7ac4": "Check the address or return to home.",
+  "aa39c8d4b0caedfb": "Previous",
+  "12f4763a6120c59c": [
+    "Page ",
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    " of ",
+    {
+      "i": 2,
+      "k": "_gt_value_2",
+      "v": "v"
+    }
+  ],
+  "77b5f98f1f9a4ca7": "Next",
+  "149c56ff4f5eb78d": [
+    {
+      "t": "Clock",
+      "i": 1
+    },
+    {
+      "i": 2,
+      "k": "_gt_value_2",
+      "v": "v"
+    },
+    " min"
+  ],
+  "a48493d9cb2525c3": "No photo",
+  "b499946e6e3d9ddd": "Invalid invitation key",
+  "79d45a13204f5c4c": "An email was sent to confirm your account.",
+  "72fcd24abd213e79": "Your name",
+  "e2328b3735cd1dbd": "Your name",
+  "e13f1097576527d7": "Invitation key",
+  "e1359a213b3352cc": [
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    " ",
+    "Create an account"
+  ],
+  "e4aa76cf5a9416e9": "Add your comment here",
+  "a486801c4a7a2a53": "Edit comment",
+  "78c94fabadf67aa4": "Add a comment",
+  "d21925e86d62f978": "Edit your comment for this recipe",
+  "9dcf4d4f9a6f084f": "Add a new comment to this recipe",
+  "32ad6b9868508897": "Comment",
+  "723c5c98f6b24d83": "The comment cannot be empty",
+  "ec5d72aff62f3547": "Add a tip or feedback about this recipe.",
+  "935d017635f76c12": "Submitting...",
+  "5e8d1f67d1c61be2": "Comment deleted",
+  "79ae43d8b6d1cce4": "Edit comment",
+  "f7b9098ab70ceab5": [
+    "Comments",
+    {
+      "t": "span",
+      "i": 1,
+      "c": [
+        "(",
+        {
+          "i": 2,
+          "k": "_gt_value_2",
+          "v": "v"
+        },
+        ")"
+      ]
+    }
+  ],
+  "b960ecc1ad6cf0f0": "Tips and feedback about this recipe.",
+  "377f5a3e658ea4e1": [
+    {
+      "t": "Plus",
+      "i": 1
+    },
+    "Add a comment"
+  ],
+  "479d8e886115385a": "Couldn’t load the comments. Please try again.",
+  "98707f319f98bb28": "No comments yet.",
+  "49a3d2c68a3b117e": "Fewer servings",
+  "ab450a11144a5bcf": "More servings",
+  "b8ca393c72db9f4f": "Ingredient",
+  "7637a571ff5e01b1": "Quantity",
+  "81bd636dded0b6d5": "Remove ingredient {number}",
+  "62981f132f88a0b2": [
+    {
+      "t": "Plus",
+      "i": 1
+    },
+    " Add an ingredient"
+  ],
+  "e83d7bb8bf8239af": "Recipe categories",
+  "e15e73c94118de92": "Are you sure you want to leave? All your changes will be lost.",
+  "f613c4b1c7937261": "Recipe Title",
+  "3e9b6b4821d5fdce": "Recipe details",
+  "54a51723052d7246": "Recipe Image",
+  "71950402d4de2f32": "Recipe Title",
+  "2b5cf07b0c088baf": "Prep (min)",
+  "ef436aedc6535f25": "Cooking (min)",
+  "5fabcdf08676a4c1": "List the ingredients and quantities.",
+  "553c8c63916ab158": "Describe each step in order.",
+  "b9be95130425ff4b": "Additional information",
+  "a08ccea91838fd27": "Recipe categories",
+  "2f4ef70d15027bb0": "Notes",
+  "b108bc57762640c4": "Save the recipe",
+  "374caa799474ba78": "Save changes",
+  "e6756a4ca37bcd25": "Import a recipe",
+  "98e72f7f42d20063": "Import from a photo, document, or text.",
+  "aabc454eb06ea782": "Check the ingredients and quantities before saving.",
+  "745a5a3a7ebe2ec0": "Move {item} up",
+  "5474e3f9bc2574c1": "Move {item} down",
+  "131e7c2a70d640ef": "Step",
+  "12e8c8a932ce494d": "Remove step {number}",
+  "b2caec60f71d29a5": [
+    {
+      "t": "Plus",
+      "i": 1
+    },
+    " Add a step"
+  ],
+  "6c9bf092b3407a59": "The selected file is empty.",
+  "3e0ed6bbd167be4e": "The file must be no larger than 20 MB.",
+  "dc2039243a9523e6": "Unsupported file type. Please upload PDF, DOCX, JPG, PNG, or WEBP files.",
+  "94c0bf7c0cf364be": "Text must be less than {max} characters",
+  "89cc26d13759ea13": "Review the imported recipe before saving.",
+  "c7dbc1ad5cfd863b": "Paste the recipe content here...",
+  "e3fe827de6a5c068": [
+    {
+      "t": "Upload",
+      "i": 1
+    },
+    " Import a recipe"
+  ],
+  "dbbe3f8f153f88ee": "Upload Content",
+  "4759d6091cac7925": "Upload a file or paste your text content.",
+  "9f71ceb39e15a802": [
+    {
+      "t": "Upload",
+      "i": 1
+    },
+    " File Upload"
+  ],
+  "acdf8500ab7412c4": [
+    {
+      "t": "FileText",
+      "i": 1
+    },
+    " Text Input"
+  ],
+  "5006be3f38fec89d": "Choose File",
+  "496f32d5494ab334": "Supported formats: PDF, DOCX, JPG, PNG, WEBP (max 20MB)",
+  "a72e484c60f97ebd": [
+    "Selected: ",
+    {
+      "i": 1,
+      "k": "_gt_value_1",
+      "v": "v"
+    },
+    " (",
+    {
+      "i": 2,
+      "k": "_gt_value_2",
+      "v": "v"
+    },
+    " MB)"
+  ],
+  "d29068c397f62fd8": "Text Content",
+  "8e0244936af342e8": "Maximum 10,000 characters",
+  "d15d4ce9981708e9": "Cancel",
+  "3e75a496f3711d12": [
+    {
+      "t": "Loader2",
+      "i": 1
+    },
+    " Uploading"
+  ],
+  "0fb7d77d920191f9": "Upload"
 }

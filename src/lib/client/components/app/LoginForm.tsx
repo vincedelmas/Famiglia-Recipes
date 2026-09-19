@@ -1,13 +1,11 @@
 import {useForm} from "react-hook-form";
 import {LoaderCircle} from "lucide-react";
-import {useTranslation} from "react-i18next";
 import authClient from "~/lib/utils/auth-client";
-import {authOptions} from "~/lib/client/react-query";
 import {useQueryClient} from "@tanstack/react-query";
 import {Input} from "~/lib/client/components/ui/input";
+import {FieldGroup} from "~/lib/client/components/ui/field";
 import {FormButton} from "~/lib/client/components/app/FormButton";
-import {Link, useNavigate, useRouter} from "@tanstack/react-router";
-import {Card, CardContent, CardHeader, CardTitle} from "~/lib/client/components/ui/card";
+import {getRouteApi, Link, useNavigate, useRouter} from "@tanstack/react-router";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "~/lib/client/components/ui/form";
 
 
@@ -19,9 +17,10 @@ interface FormValues {
 
 export const LoginForm = () => {
     const router = useRouter();
-    const { t } = useTranslation();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const { authOptions } = getRouteApi("__root__").useRouteContext();
+
     const form = useForm<FormValues>({
         shouldFocusError: false,
         defaultValues: {
@@ -57,17 +56,17 @@ export const LoginForm = () => {
 
 
     return (
-        <Card className="pt-4 pb-6">
-            <CardHeader>
-                <CardTitle className="flex justify-center text-lg mb-4">
-                    {t("welcome-back")}
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
+        <div>
+            <header className="mb-7">
+                <h2 className="font-heading text-3xl tracking-tight">
+                    Sign in
+                </h2>
+            </header>
+            <div>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        <fieldset disabled={form.formState.isSubmitting}>
-                            <div className="space-y-4">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
+                        <fieldset disabled={form.formState.isSubmitting} className="min-w-0">
+                            <FieldGroup>
                                 <FormField
                                     control={form.control}
                                     name="email"
@@ -80,6 +79,7 @@ export const LoginForm = () => {
                                                     {...field}
                                                     type="email"
                                                     placeholder="Email"
+                                                    autoComplete="email"
                                                 />
                                             </FormControl>
                                             <FormMessage/>
@@ -93,9 +93,9 @@ export const LoginForm = () => {
                                     render={({ field }) =>
                                         <FormItem>
                                             <div className="flex items-center justify-between">
-                                                <FormLabel>{t("password")}</FormLabel>
-                                                <Link to="/forgot-password" className="text-sm underline" tabIndex={-1}>
-                                                    {t("forgot-password")}
+                                                <FormLabel>Password</FormLabel>
+                                                <Link to="/forgot-password" className="text-sm underline">
+                                                    Forgot password?
                                                 </Link>
                                             </div>
                                             <FormControl>
@@ -103,25 +103,27 @@ export const LoginForm = () => {
                                                     {...field}
                                                     type="password"
                                                     placeholder="********"
+                                                    autoComplete="current-password"
                                                 />
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>
                                     }
                                 />
-                            </div>
+                            </FieldGroup>
                         </fieldset>
                         {form.formState.errors.root &&
-                            <FormMessage className="text-center">
+                            <p role="alert" className="text-sm text-destructive">
                                 {form.formState.errors.root.message}
-                            </FormMessage>
+                            </p>
                         }
                         <FormButton disabled={form.formState.isSubmitting}>
-                            {form.formState.isSubmitting && <LoaderCircle className="size-4 animate-spin"/>} {t("login")}
+                            {form.formState.isSubmitting && <LoaderCircle className="size-4 animate-spin"/>}{" "}
+                            Sign in
                         </FormButton>
                     </form>
                 </Form>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 };

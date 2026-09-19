@@ -29,7 +29,8 @@ export const saveUploadedImage = createServerOnlyFn(() => async ({ file, resize 
     try {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
-        return processAndSaveImage({ buffer, resize });
+
+        return await processAndSaveImage({ buffer, resize });
     }
     catch {
         throw new FormattedError("This image could not be processed");
@@ -58,8 +59,9 @@ const processAndSaveImage = createServerOnlyFn(() => async ({ buffer, resize }: 
 })();
 
 
-export const deleteImage = createServerOnlyFn(() => async (imageName: string | null | undefined) => {
-    if (!imageName || imageName === "default.png") return;
+export const deleteImage = createServerOnlyFn(() => async (imagePath: string) => {
+    const imageName = path.basename(imagePath);
+    if (imageName === "default.png") return;
 
     try {
         const imagePath = path.join(serverEnv.BASE_UPLOADS_LOCATION, imageName);

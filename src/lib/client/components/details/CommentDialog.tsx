@@ -1,11 +1,12 @@
+import {useGT} from "gt-react";
 import {useState} from "react";
 import {useForm} from "react-hook-form";
-import {useTranslation} from "react-i18next";
+import {getRouteApi} from "@tanstack/react-router";
 import {useQueryClient} from "@tanstack/react-query";
 import {Button} from "~/lib/client/components/ui/button";
 import {Textarea} from "~/lib/client/components/ui/textarea";
 import {Comment} from "~/lib/client/components/details/CommentSection";
-import {recipeCommentsOptions, useAddComment, useEditComment} from "~/lib/client/react-query";
+import {useAddComment, useEditComment} from "~/lib/client/react-query";
 import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "~/lib/client/components/ui/form";
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "~/lib/client/components/ui/dialog";
 
@@ -19,12 +20,13 @@ interface CommentDialogProps {
 
 
 export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: CommentDialogProps) => {
-    const { t } = useTranslation();
+    const gt = useGT();
     const isEditing = !!commentToEdit;
     const addComment = useAddComment();
     const editComment = useEditComment();
     const queryClient = useQueryClient();
     const [warning, setWarning] = useState(false);
+    const { recipeCommentsOptions: commentsOptions } = getRouteApi("/_private/details/$recipeId").useRouteContext();
     const form = useForm<Comment>({
         defaultValues: {
             content: isEditing ? commentToEdit.content : "",
@@ -40,7 +42,7 @@ export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: Commen
                 onSuccess: async () => {
                     form.reset();
                     setOpen(false);
-                    await queryClient.invalidateQueries({ queryKey: recipeCommentsOptions(recipeId).queryKey });
+                    await queryClient.invalidateQueries({ queryKey: commentsOptions.queryKey });
                 },
             });
         }
@@ -49,24 +51,24 @@ export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: Commen
                 onSuccess: async () => {
                     form.reset();
                     setOpen(false);
-                    await queryClient.invalidateQueries({ queryKey: recipeCommentsOptions(recipeId).queryKey });
+                    await queryClient.invalidateQueries({ queryKey: commentsOptions.queryKey });
                 },
             });
         }
     }
 
-    const title = isEditing ? t("edit-comment") : t("add-comment");
-    const subtitle = isEditing ? t("ec-subtitle") : t("ac-subtitle");
+    const title = isEditing ? <>Edit comment</> : <>Add a comment</>;
+    const subtitle = isEditing ? <>Edit your comment for this recipe</> : <>Add a new comment to this recipe</>;
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="max-sm:w-full w-[450px]">
+            <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
                     <DialogDescription>{subtitle}</DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
                         <FormField
                             name="content"
                             control={form.control}
@@ -76,12 +78,12 @@ export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: Commen
                                     <FormControl>
                                         <Textarea
                                             {...field}
-                                            className="h-[150px]"
-                                            placeholder={t("c-placeholder")}
+                                            className="h-37.5"
+                                            placeholder={gt("Add your comment here")}
                                         />
                                     </FormControl>
                                     <FormDescription>
-                                        {warning ? <div className="text-red-500">{t("c-error")}</div> : t("c-info")}
+                                        {warning ? <span className="text-destructive">The comment cannot be empty</span> : <>Add a tip or feedback about this recipe.</>}
                                     </FormDescription>
                                     <FormMessage/>
                                 </FormItem>
@@ -89,7 +91,10 @@ export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: Commen
                         />
                         <DialogFooter>
                             <Button type="submit" disabled={addComment.isPending || editComment.isPending}>
-                                {(addComment.isPending || editComment.isPending) ? t("submitting") : t("save")}
+                                {(addComment.isPending || editComment.isPending)
+                                    ? <>Submitting...</>
+                                    : <>Save</>
+                                }
                             </Button>
                         </DialogFooter>
                     </form>

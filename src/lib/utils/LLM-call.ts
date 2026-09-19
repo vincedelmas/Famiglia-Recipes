@@ -6,13 +6,11 @@ import {FormattedError} from "~/lib/utils/error-classes";
 import {createServerOnlyFn} from "@tanstack/react-start";
 
 
-const createRecipeText = () => {
-    // noinspection SpellCheckingInspection
-    return `Retourne cette recette en utilisant ce format JSON est aucun autre text. UTILISE LE FRANCAIS. Pour la description 
-    des étapes tu peux etre un peu plus court. Pour les labels tu a le choix entre (MAX 4) : Apéro, Plat, Dessert, Poisson, 
-    Viande rouge, Viande blanche, Végétarien, Végan, Fruit de mer, Fruit, Légumineuse, Four, Casserole, Friteuse, Cuisson vapeur, 
-    Micro-ondes, Grill, Entrée, Sauce, Cocotte-minute. JE REPETE RETOURNE LES DATA EN FRANCAIS. 
-    RESPECTE CE FORMAT POUR LES INGREDIENTS (VALEUR NUMERIQUE DANS "quantity" ET UNITE ET CONTENU DANS "description"), exemple: 
+const recipeInstructions = `Retourne cette recette en utilisant ce format JSON est aucun autre text. UTILISE LE FRANCAIS. Pour la description
+    des étapes tu peux etre un peu plus court. Pour les labels tu a le choix entre (MAX 4) : Apéro, Plat, Dessert, Poisson,
+    Viande rouge, Viande blanche, Végétarien, Végan, Fruit de mer, Fruit, Légumineuse, Four, Casserole, Friteuse, Cuisson vapeur,
+    Micro-ondes, Grill, Entrée, Sauce, Cocotte-minute. JE REPETE RETOURNE LES DATA EN FRANCAIS.
+    RESPECTE CE FORMAT POUR LES INGREDIENTS (VALEUR NUMERIQUE DANS "quantity" ET UNITE ET CONTENU DANS "description"), exemple:
     {
         quantity: 60,
         description: "cl. de jus de cuisson"
@@ -30,7 +28,6 @@ const createRecipeText = () => {
         description: "pincée de poivre"
     },
     `.trim();
-};
 
 
 export const callGeminiModel = createServerOnlyFn(() => async (textContent: string | null, file: File | null) => {
@@ -39,7 +36,7 @@ export const callGeminiModel = createServerOnlyFn(() => async (textContent: stri
     if (textContent) {
         messages.push({
             role: "user",
-            content: `Ceci est la recette : ${textContent}. ${createRecipeText()}`,
+            content: `Ceci est la recette : ${textContent}. ${recipeInstructions}`,
         });
     }
     else if (file) {
@@ -51,10 +48,9 @@ export const callGeminiModel = createServerOnlyFn(() => async (textContent: stri
                 content: [
                     {
                         type: "text",
-                        text: `Ce PDF contient la recette. ${createRecipeText}`,
+                        text: `Ce PDF contient la recette. ${recipeInstructions}`,
                     },
                     {
-                        //@ts-expect-error 'file' not on type but doc (https://openrouter.ai/docs/features/images-and-pdfs)
                         type: "file",
                         file: {
                             filename: "recipe.pdf",
@@ -70,12 +66,12 @@ export const callGeminiModel = createServerOnlyFn(() => async (textContent: stri
                 content: [
                     {
                         type: "text",
-                        text: `Cette image contient la recette. ${createRecipeText}`,
+                        text: `Cette image contient la recette. ${recipeInstructions}`,
                     },
                     {
                         type: "image_url",
                         image_url: {
-                            url: `data:image/jpeg;base64,${base64Content}`,
+                            url: `data:${file.type};base64,${base64Content}`,
                         },
                     },
                 ],

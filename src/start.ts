@@ -35,12 +35,12 @@ const csrfMiddleware = createCsrfMiddleware({
             pathname: requestUrl.pathname,
             requestOrigin: requestUrl.origin,
             host: ctx.request.headers.get("Host"),
-            forwardedHost: ctx.request.headers.get("X-Forwarded-Host"),
-            forwardedProto: ctx.request.headers.get("X-Forwarded-Proto"),
-            secFetchSite: ctx.request.headers.get("Sec-Fetch-Site"),
             origin: ctx.request.headers.get("Origin"),
             referer: ctx.request.headers.get("Referer"),
             userAgent: ctx.request.headers.get("User-Agent"),
+            secFetchSite: ctx.request.headers.get("Sec-Fetch-Site"),
+            forwardedHost: ctx.request.headers.get("X-Forwarded-Host"),
+            forwardedProto: ctx.request.headers.get("X-Forwarded-Proto"),
         });
 
         return new Response("Forbidden", { status: 403 });

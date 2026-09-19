@@ -1,10 +1,11 @@
 import React from "react";
+import {useGT} from "gt-react";
 import {Minus, Plus} from "lucide-react";
-import {useTranslation} from "react-i18next";
 import {RecipeFormValues} from "~/lib/utils/schemas";
 import {Input} from "~/lib/client/components/ui/input";
 import {Control, useFieldArray} from "react-hook-form";
 import {Button} from "~/lib/client/components/ui/button";
+import {ReorderButtons} from "~/lib/client/components/recipe-form/ReorderButtons";
 import {FormControl, FormField, FormItem, FormMessage} from "~/lib/client/components/ui/form";
 
 
@@ -14,8 +15,8 @@ interface DynIngListProps {
 
 
 export const DynamicIngredientList = ({ control }: DynIngListProps) => {
-    const { t } = useTranslation();
-    const { fields, append, remove } = useFieldArray({ control, name: "ingredients" });
+    const gt = useGT();
+    const { fields, append, remove, move } = useFieldArray({ control, name: "ingredients" });
 
     const addIngredient = (ev: React.MouseEvent | React.KeyboardEvent) => {
         ev.preventDefault();
@@ -35,21 +36,32 @@ export const DynamicIngredientList = ({ control }: DynIngListProps) => {
     };
 
     return (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-3">
             {fields.map((field, idx) =>
-                <div key={field.id} className="flex items-center space-x-2">
+                <div key={field.id} className="flex items-start gap-2">
+
+                    <ReorderButtons
+                        index={idx}
+                        onMove={move}
+                        count={fields.length}
+                        item={`${gt("Ingredient")} ${idx + 1}`}
+                    />
+
                     <FormField
                         control={control}
                         name={`ingredients.${idx}.quantity`}
                         render={({ field }) => (
-                            <FormItem>
+                            <FormItem className="w-16 shrink-0 sm:w-24">
                                 <FormControl>
                                     <Input
                                         {...field}
                                         type="number"
-                                        className="w-28"
+                                        className="w-16 sm:w-24"
                                         onKeyDown={handleOnEnter}
-                                        placeholder={t("quantity")}
+                                        aria-label={`${gt("Quantity")} ${idx + 1}`}
+                                        placeholder={gt("Quantity")}
+                                        min={0}
+                                        step="any"
                                         onChange={(ev) => {
                                             const value = Number(ev.target.value);
                                             field.onChange(isNaN(value) ? "" : value);
@@ -64,13 +76,14 @@ export const DynamicIngredientList = ({ control }: DynIngListProps) => {
                         control={control}
                         name={`ingredients.${idx}.description`}
                         render={({ field }) => (
-                            <FormItem className="flex-grow">
+                            <FormItem className="min-w-0 flex-1">
                                 <FormControl>
                                     <Input
                                         {...field}
-                                        className="flex-grow"
+                                        className="min-w-0 flex-1"
                                         onKeyDown={handleOnEnter}
-                                        placeholder={t("ingredient")}
+                                        aria-label={`${gt("Ingredient")} ${idx + 1}`}
+                                        placeholder={gt("Ingredient")}
                                     />
                                 </FormControl>
                                 <FormMessage/>
@@ -79,18 +92,19 @@ export const DynamicIngredientList = ({ control }: DynIngListProps) => {
                     />
                     <Button
                         size="icon"
-                        tabIndex={-1}
-                        variant="outline"
-                        className="w-[50px]"
+                        type="button"
+                        variant="ghost"
+                        className="shrink-0"
+                        aria-label={gt("Remove ingredient {number}", { number: idx + 1 })}
                         disabled={fields.length === 1}
                         onClick={(ev) => removeIngredient(ev, idx)}
                     >
-                        <Minus className="h-4 w-4"/>
+                        <Minus/>
                     </Button>
                 </div>
             )}
-            <Button onClick={addIngredient} size="sm">
-                <Plus className="h-4 w-4 mr-2"/> {t("add")}
+            <Button type="button" onClick={addIngredient} variant="outline" className="self-start">
+                <Plus data-icon="inline-start"/> Add an ingredient
             </Button>
         </div>
     );

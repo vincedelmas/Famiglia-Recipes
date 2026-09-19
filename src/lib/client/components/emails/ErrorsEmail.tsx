@@ -1,5 +1,4 @@
-import {Tailwind} from "@react-email/tailwind";
-import {Body, Container, Head, Heading, Hr, Html, Preview, Section, Text} from "@react-email/components";
+import {Body, Container, Head, Heading, Hr, Html, Preview, Section, Tailwind, Text} from "@react-email/components";
 
 
 interface ErrorEmailProps {
@@ -17,11 +16,11 @@ interface ErrorEmailProps {
 export default function ErrorEmail({ ctx, brand = "Famiglia-Recipes" }: ErrorEmailProps) {
     if (ctx === undefined) {
         ctx = {
-            message: "No context provided",
+            stack: undefined,
             errorName: "Unknown",
+            message: "No context provided",
             timestamp: new Date().toISOString(),
             errorMessage: "No error message provided",
-            stack: undefined,
         }
     }
 
@@ -81,7 +80,7 @@ export default function ErrorEmail({ ctx, brand = "Famiglia-Recipes" }: ErrorEma
                                     Stack Trace
                                 </Heading>
                                 <div className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto">
-                                    <pre className="font-mono text-xs whitespace-pre-wrap break-words m-0">
+                                    <pre className="font-mono text-xs whitespace-pre-wrap wrap-break-word m-0">
                                         {ctx.stack}
                                     </pre>
                                 </div>

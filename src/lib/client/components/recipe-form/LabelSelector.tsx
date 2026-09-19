@@ -1,7 +1,7 @@
 import React from "react";
-import {Button} from "~/lib/client/components/ui/button";
-
+import {useGT} from "gt-react";
 import {LabelType} from "~/lib/types/types";
+import {ToggleGroup, ToggleGroupItem} from "~/lib/client/components/ui/toggle-group";
 
 
 interface LabelSelectorProps {
@@ -12,25 +12,22 @@ interface LabelSelectorProps {
 
 
 export const LabelSelector = ({ labelsList, selectedLabels, setSelectedLabels }: LabelSelectorProps) => {
-    const toggleLabel = (ev: React.MouseEvent, label: string) => {
-        ev.preventDefault();
-
-        if (selectedLabels.includes(label)) {
-            setSelectedLabels(selectedLabels.filter(l => l !== label));
-        }
-        else {
-            setSelectedLabels([...selectedLabels, label]);
-        }
-    };
+    const gt = useGT();
 
     return (
-        <div className="flex flex-wrap items-center justify-start gap-2">
+        <ToggleGroup
+            multiple
+            value={selectedLabels}
+            variant="outline" spacing={2}
+            onValueChange={setSelectedLabels}
+            className="flex flex-wrap justify-start"
+            aria-label={gt("Recipe categories")}
+        >
             {labelsList.map(label =>
-                <Button key={label.name} variant={selectedLabels.includes(label.name) ? "default" : "outline"}
-                        onClick={(ev) => toggleLabel(ev, label.name)} className="text-sm rounded-full px-3">
+                <ToggleGroupItem key={label.name} value={label.name}>
                     {label.name}
-                </Button>
+                </ToggleGroupItem>
             )}
-        </div>
+        </ToggleGroup>
     );
 };

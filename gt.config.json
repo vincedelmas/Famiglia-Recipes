@@ -1,0 +1,19 @@
+{
+    "defaultLocale": "en",
+    "locales": [
+        "fr"
+    ],
+    "files": {
+        "gt": {
+            "output": "src/lib/client/i18n/translations/[locale].json",
+            "parsingFlags": {
+                "enableAutoJsxInjection": true,
+                "devHotReload": false
+            }
+        }
+    },
+    "src": [
+        "src/routes/**/*.tsx",
+        "src/lib/client/components/{app,details,recipe-form,ui}/**/*.tsx"
+    ]
+}

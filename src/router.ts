@@ -1,6 +1,6 @@
-import {toast} from "sonner";
 import {routeTree} from "~/routeTree.gen";
 import {createRouter} from "@tanstack/react-router";
+import {toast} from "~/lib/client/components/ui/toast";
 import {NotFound} from "~/lib/client/components/app/NotFound";
 import {DefaultLoader} from "~/lib/client/components/app/DefaultLoader";
 import {MutationCache, QueryCache, QueryClient} from "@tanstack/react-query";
@@ -13,22 +13,22 @@ export function getRouter() {
         queryCache: new QueryCache({
             onError: (error, query) => {
                 if (query?.meta?.displayErrorMsg) {
-                    toast.error(error.message);
+                    toast.add({ type: "error", title: error.message });
                 }
                 if (query?.meta?.errorMessage) {
-                    toast.error(query.meta.errorMessage.toString());
+                    toast.add({ type: "error", title: query.meta.errorMessage.toString() });
                 }
             },
         }),
         mutationCache: new MutationCache({
             onError: (_error, _variables, _context, mutation) => {
                 if (mutation?.meta?.errorMessage) {
-                    toast.error(mutation.meta.errorMessage.toString());
+                    toast.add({ type: "error", title: mutation.meta.errorMessage.toString() });
                 }
             },
             onSuccess: (_data, _variables, _context, mutation) => {
                 if (mutation?.meta?.successMessage) {
-                    toast.success(mutation.meta.successMessage.toString());
+                    toast.add({ type: "success", title: mutation.meta.successMessage.toString() });
                 }
             }
         }),
@@ -43,14 +43,14 @@ export function getRouter() {
 
     const router = createRouter({
         routeTree,
-        context: { queryClient },
         defaultPreload: false,
+        defaultPendingMs: 1000,
+        context: { queryClient },
+        defaultPendingMinMs: 500,
         defaultPreloadStaleTime: 0,
-        defaultErrorComponent: ErrorCatchBoundary,
         defaultNotFoundComponent: NotFound,
         defaultPendingComponent: DefaultLoader,
-        defaultPendingMs: 1000,
-        defaultPendingMinMs: 500,
+        defaultErrorComponent: ErrorCatchBoundary,
         scrollRestoration: true,
         defaultStructuralSharing: true,
     });

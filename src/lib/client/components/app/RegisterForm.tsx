@@ -1,12 +1,11 @@
-import {toast} from "sonner";
+import {useGT} from "gt-react";
 import {useForm} from "react-hook-form";
 import {LoaderCircle} from "lucide-react";
-import {useTranslation} from "react-i18next";
-import {Input} from "~/lib/client/components/ui/input";
 import authClient from "~/lib/utils/auth-client";
-import {validateKey} from "~/lib/server/functions/user";
+import {toast} from "~/lib/client/components/ui/toast";
+import {Input} from "~/lib/client/components/ui/input";
+import {FieldGroup} from "~/lib/client/components/ui/field";
 import {FormButton} from "~/lib/client/components/app/FormButton";
-import {Card, CardContent, CardHeader, CardTitle} from "~/lib/client/components/ui/card";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "~/lib/client/components/ui/form";
 
 
@@ -20,7 +19,7 @@ interface FormValues {
 
 
 export const RegisterForm = () => {
-    const { t } = useTranslation();
+    const gt = useGT();
     const form = useForm<FormValues>({
         shouldFocusError: false,
         defaultValues: {
@@ -33,40 +32,43 @@ export const RegisterForm = () => {
     });
 
     const onSubmit = async (submitted: FormValues) => {
-        const isKeyValid = await validateKey({ data: submitted.registerKey });
-
-        if (!isKeyValid) {
-            form.setError("registerKey", { type: "value", message: t("invalid-register-key") }, { shouldFocus: false });
-            return;
-        }
-
         await authClient.signUp.email({
             email: submitted.email,
             name: submitted.username,
             password: submitted.password,
         }, {
+            headers: {
+                "x-registration-key": submitted.registerKey,
+            },
             onError: (ctx) => {
-                form.setError("root", { type: "value", message: ctx.error.message }, { shouldFocus: false });
+                const invalidKey = ctx.error.code === "INVALID_REGISTRATION_KEY";
+
+                form.setError(invalidKey ? "registerKey" : "root", {
+                    type: "value",
+                    message: invalidKey
+                        ? gt("Invalid invitation key")
+                        : ctx.error.message,
+                }, { shouldFocus: false });
             },
             onSuccess: () => {
                 form.reset();
-                toast.success(t("email-sent"));
+                toast.add({ type: "success", title: gt("An email was sent to confirm your account.") });
             },
         });
     };
 
     return (
-        <Card className="pt-4 pb-6">
-            <CardHeader>
-                <CardTitle className="flex justify-center text-lg mb-4">
-                    {t("create-account")}
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
+        <div>
+            <header className="mb-7">
+                <h2 className="font-heading text-3xl tracking-tight">
+                    Create an account
+                </h2>
+            </header>
+            <div>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                        <fieldset disabled={form.formState.isSubmitting}>
-                            <div className="space-y-4">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
+                        <fieldset disabled={form.formState.isSubmitting} className="min-w-0">
+                            <FieldGroup>
                                 <FormField
                                     control={form.control}
                                     name="username"
@@ -77,11 +79,12 @@ export const RegisterForm = () => {
                                     }}
                                     render={({ field }) =>
                                         <FormItem>
-                                            <FormLabel>{t("username")}</FormLabel>
+                                            <FormLabel>Your name</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     {...field}
-                                                    placeholder="Username"
+                                                    autoComplete="name"
+                                                    placeholder={gt("Your name")}
                                                 />
                                             </FormControl>
                                             <FormMessage/>
@@ -99,6 +102,7 @@ export const RegisterForm = () => {
                                                 <Input
                                                     {...field}
                                                     type="email"
+                                                    autoComplete="email"
                                                     placeholder="john.doe@example.com"
                                                 />
                                             </FormControl>
@@ -115,11 +119,12 @@ export const RegisterForm = () => {
                                     }}
                                     render={({ field }) =>
                                         <FormItem>
-                                            <FormLabel>{t("password")}</FormLabel>
+                                            <FormLabel>Password</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     {...field}
                                                     type="password"
+                                                    autoComplete="new-password"
                                                     placeholder="********"
                                                 />
                                             </FormControl>
@@ -139,11 +144,12 @@ export const RegisterForm = () => {
                                     }}
                                     render={({ field }) =>
                                         <FormItem>
-                                            <FormLabel>{t("confirm-password")}</FormLabel>
+                                            <FormLabel>Confirm Password</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     {...field}
                                                     type="password"
+                                                    autoComplete="new-password"
                                                     placeholder="********"
                                                 />
                                             </FormControl>
@@ -157,11 +163,12 @@ export const RegisterForm = () => {
                                     rules={{ required: "The register key is required" }}
                                     render={({ field }) =>
                                         <FormItem>
-                                            <FormLabel>{t("register-key")}</FormLabel>
+                                            <FormLabel>Invitation key</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     {...field}
                                                     type="password"
+                                                    autoComplete="new-password"
                                                     placeholder="********"
                                                 />
                                             </FormControl>
@@ -169,19 +176,22 @@ export const RegisterForm = () => {
                                         </FormItem>
                                     }
                                 />
-                            </div>
+                            </FieldGroup>
                         </fieldset>
+
                         {form.formState.errors.root &&
-                            <FormMessage className="text-center -mt-1.5">
+                            <p role="alert" className="text-center -mt-1.5">
                                 {form.formState.errors.root.message}
-                            </FormMessage>
+                            </p>
                         }
+
                         <FormButton disabled={form.formState.isSubmitting}>
-                            {form.formState.isSubmitting && <LoaderCircle className="size-4 animate-spin"/>} {t("register")}
+                            {form.formState.isSubmitting && <LoaderCircle className="size-4 animate-spin"/>}{" "}
+                            Create an account
                         </FormButton>
                     </form>
                 </Form>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 };
