@@ -2,14 +2,15 @@ import {createFileRoute, redirect} from "@tanstack/react-router";
 
 
 export const Route = createFileRoute("/_public")({
-    validateSearch: ({ search }) => search as { authExpired?: boolean },
-    beforeLoad: async ({ context: { queryClient, authOptions }, search }) => {
+    validateSearch: (search): { authExpired?: boolean } => ({
+        authExpired: search.authExpired === true || search.authExpired === "true" || undefined,
+    }),
+    beforeLoad: ({ context: { queryClient, authOptions }, search }) => {
         const currentUser = queryClient.getQueryData(authOptions.queryKey);
         
         if (search.authExpired) {
-            await queryClient.invalidateQueries({ queryKey: authOptions.queryKey });
             queryClient.clear();
-            throw redirect({ to: "/", replace: true });
+            throw redirect({ to: "/", search: {}, replace: true });
         }
 
         if (currentUser) {

@@ -3,8 +3,10 @@ import {serverEnv} from "~/env/server";
 import {db} from "~/lib/server/database/db";
 import {betterAuth} from "better-auth/minimal";
 import {sendEmail} from "~/lib/utils/mail-sender";
+import {scryptSync, timingSafeEqual} from "node:crypto";
 import {createServerOnlyFn} from "@tanstack/react-start";
 import {drizzleAdapter} from "better-auth/adapters/drizzle";
+import {APIError, createAuthMiddleware} from "better-auth/api";
 import {tanstackStartCookies} from "better-auth/tanstack-start";
 import {checkWerkzeugPassword, generatePasswordHash} from "~/lib/server/core/security";
 
@@ -25,6 +27,26 @@ const getAuthConfig = createServerOnlyFn(() => betterAuth({
                 defaultValue: "user",
             }
         }
+    },
+    hooks: {
+        before: createAuthMiddleware(async ctx => {
+            if (ctx.path !== "/sign-up/email") return;
+
+            const registrationKey = ctx.headers?.get("x-registration-key");
+
+            if (
+                !registrationKey ||
+                !timingSafeEqual(
+                    scryptSync(registrationKey, serverEnv.REGISTER_KEY_SALT, 64),
+                    Buffer.from(serverEnv.REGISTER_KEY_HASH, "hex"),
+                )
+            ) {
+                throw new APIError("BAD_REQUEST", {
+                    code: "INVALID_REGISTRATION_KEY",
+                    message: "Invalid registration key",
+                });
+            }
+        }),
     },
     session: {
         cookieCache: {
@@ -63,10 +85,11 @@ const getAuthConfig = createServerOnlyFn(() => betterAuth({
         sendOnSignIn: true,
         autoSignInAfterVerification: true,
         sendVerificationEmail: async ({ user, url }) => {
-            const dashboardUrl = url + "dashboard";
+            const verificationUrl = new URL(url);
+            verificationUrl.searchParams.set("callbackURL", new URL("/dashboard", clientEnv.VITE_BASE_URL).href);
             await sendEmail({
                 to: user.email,
-                link: dashboardUrl,
+                link: verificationUrl.href,
                 username: user.name,
                 template: "register",
                 subject: "Famiglia-Recipes - Verify your email address",

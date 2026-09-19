@@ -4,7 +4,6 @@ import {useTranslation} from "react-i18next";
 import authClient from "~/lib/utils/auth-client";
 import {toast} from "~/lib/client/components/ui/toast";
 import {Input} from "~/lib/client/components/ui/input";
-import {validateKey} from "~/lib/server/functions/user";
 import {FieldGroup} from "~/lib/client/components/ui/field";
 import {FormButton} from "~/lib/client/components/app/FormButton";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "~/lib/client/components/ui/form";
@@ -33,20 +32,23 @@ export const RegisterForm = () => {
     });
 
     const onSubmit = async (submitted: FormValues) => {
-        const isKeyValid = await validateKey({ data: submitted.registerKey });
-
-        if (!isKeyValid) {
-            form.setError("registerKey", { type: "value", message: t("invalid-register-key") }, { shouldFocus: false });
-            return;
-        }
-
         await authClient.signUp.email({
             email: submitted.email,
             name: submitted.username,
             password: submitted.password,
         }, {
+            headers: {
+                "x-registration-key": submitted.registerKey,
+            },
             onError: (ctx) => {
-                form.setError("root", { type: "value", message: ctx.error.message }, { shouldFocus: false });
+                const invalidKey = ctx.error.code === "INVALID_REGISTRATION_KEY";
+
+                form.setError(invalidKey ? "registerKey" : "root", {
+                    type: "value",
+                    message: invalidKey
+                        ? t("invalid-register-key")
+                        : ctx.error.message,
+                }, { shouldFocus: false });
             },
             onSuccess: () => {
                 form.reset();

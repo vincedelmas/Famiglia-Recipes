@@ -1,9 +1,9 @@
 import {z} from "zod";
-import {eq, inArray} from "drizzle-orm";
 import {db} from "~/lib/server/database/db";
+import {asc, eq, inArray} from "drizzle-orm";
 import {notFound} from "@tanstack/react-router";
-import {createServerFn} from "@tanstack/react-start";
 import {HEIGHT, WIDTH} from "~/lib/utils/constants";
+import {createServerFn} from "@tanstack/react-start";
 import {FormattedError} from "~/lib/utils/error-classes";
 import {authMiddleware} from "~/lib/server/middleware/auth-guard";
 import {tryFormZodError, tryOrNotFound} from "~/lib/utils/zod-errors";
@@ -20,13 +20,15 @@ export const getEditRecipe = createServerFn({ method: "POST" })
             where: eq(recipe.id, recipeId),
             with: { recipeLabels: { with: { label: true } } }
         });
+
         if (!singleRecipe) {
             throw notFound();
         }
 
         const allLabelsResult = await db
             .select()
-            .from(label);
+            .from(label)
+            .orderBy(asc(label.order));
 
         const recipeResult = {
             ...singleRecipe,
@@ -65,47 +67,67 @@ export const postEditRecipe = createServerFn({ method: "POST" })
             throw new FormattedError("Recipe not found");
         }
 
+        const labels = await db
+            .select()
+            .from(label)
+            .where(inArray(label.name, recipeData.labels));
+
+        if (labels.length !== new Set(recipeData.labels).size) {
+            throw new FormattedError("Unknown recipe category");
+        }
+
         const url = new URL(checkRecipe.image);
         let coverName = url.pathname.split("/").pop() as string;
+
         if (formDataImage) {
             coverName = await saveUploadedImage({
                 file: formDataImage,
                 resize: { width: WIDTH, height: HEIGHT },
             });
-
-            await deleteImage(checkRecipe.image);
         }
 
         const steps = recipeData.steps.map((step) => ({ description: step.content }));
-
-        const labels = await db
-            .select()
-            .from(label)
-            .where(inArray(label.name, recipeData.labels))
 
         const ingredients = recipeData.ingredients.map((ing) => ({
             proportion: ing.quantity,
             ingredient: ing.description,
         }));
 
-        await db
-            .update(recipeTable)
-            .set({
-                steps: steps,
-                image: coverName,
-                title: recipeData.title,
-                ingredients: ingredients,
-                servings: recipeData.servings,
-                cookingTime: recipeData.cooking,
-                prepTime: recipeData.preparation,
-            })
-            .where(eq(recipeTable.id, checkRecipe.id));
+        try {
+            db.transaction((tx) => {
+                tx.update(recipeTable)
+                    .set({
+                        steps,
+                        ingredients,
+                        image: coverName,
+                        title: recipeData.title,
+                        servings: recipeData.servings,
+                        cookingTime: recipeData.cooking,
+                        prepTime: recipeData.preparation,
+                    })
+                    .where(eq(recipeTable.id, checkRecipe.id))
+                    .run();
 
-        await db
-            .delete(recipeLabel)
-            .where(eq(recipeLabel.recipeId, checkRecipe.id));
+                tx.delete(recipeLabel)
+                    .where(eq(recipeLabel.recipeId, checkRecipe.id))
+                    .run();
 
-        await db
-            .insert(recipeLabel)
-            .values(labels.map((l) => ({ recipeId: checkRecipe.id, labelId: l.id })));
+                if (labels.length) {
+                    tx.insert(recipeLabel)
+                        .values(labels.map(l => ({
+                            labelId: l.id,
+                            recipeId: checkRecipe.id,
+                        })))
+                        .run();
+                }
+            });
+        }
+        catch (error) {
+            if (formDataImage) await deleteImage(coverName);
+            throw error;
+        }
+
+        if (formDataImage) {
+            await deleteImage(checkRecipe.image);
+        }
     });

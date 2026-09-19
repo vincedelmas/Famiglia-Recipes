@@ -53,7 +53,12 @@ function RecipeDetailsPage() {
         if (!window.confirm(t("ui.delete-confirm"))) return;
 
         deleteRecipeMutation.mutate({ recipeId }, {
-            onSuccess: () => {
+            onSuccess: async () => {
+                await Promise.all([
+                    queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
+                    queryClient.invalidateQueries({ queryKey: ["allRecipes"] }),
+                ]);
+
                 toast.add({ type: "success", title: t("success-recipe-deleted") });
                 return navigate({ to: "/dashboard" });
             }
@@ -62,7 +67,7 @@ function RecipeDetailsPage() {
 
     const handleUpdateFavorite = () => {
         updateFavorite.mutate({ recipeId }, {
-            onSuccess: () => {
+            onSuccess: async () => {
                 queryClient.setQueryData(recipeDetailsOptions.queryKey, (oldData) => {
                     if (!oldData) return;
 
@@ -76,6 +81,10 @@ function RecipeDetailsPage() {
                         isFavorited: !oldData.isFavorited,
                     };
                 });
+                await Promise.all([
+                    queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
+                    queryClient.invalidateQueries({ queryKey: ["allRecipes"] }),
+                ]);
             },
         });
     };
@@ -181,7 +190,7 @@ function RecipeDetailsPage() {
                                 {t("edit")}
                             </Button>
 
-                            {currentUser?.role !== "user" &&
+                            {currentUser?.role === "manager" &&
                                 <Button
                                     size="icon"
                                     variant="ghost"

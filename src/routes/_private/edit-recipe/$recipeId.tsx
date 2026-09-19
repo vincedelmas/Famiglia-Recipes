@@ -50,18 +50,18 @@ function EditRecipePage() {
             formData.append("image", submittedData.image);
         }
 
-        updateRecipeMutation.mutate({ formData: formData }, {
-            onSuccess: async () => {
-                await Promise.all([
-                    queryClient.invalidateQueries({ queryKey: ["recipeDetails", recipeId] }),
-                    queryClient.invalidateQueries({ queryKey: ["editRecipe", recipeId] }),
-                    queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
-                    queryClient.invalidateQueries({ queryKey: ["allRecipes"] }),
-                ]);
-                toast.add({ type: "success", title: t("ui.recipe-updated") });
-                return navigate({ to: "/details/$recipeId", params: { recipeId }, replace: true });
-            }
-        });
+        await updateRecipeMutation.mutateAsync({ formData });
+
+        await Promise.all([
+            queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
+            queryClient.invalidateQueries({ queryKey: ["allRecipes"] }),
+            queryClient.invalidateQueries({ queryKey: ["editRecipe", recipeId] }),
+            queryClient.invalidateQueries({ queryKey: ["recipeDetails", recipeId] }),
+        ]);
+        
+        toast.add({ type: "success", title: t("ui.recipe-updated") });
+
+        return navigate({ to: "/details/$recipeId", params: { recipeId }, replace: true });
     };
 
     return (

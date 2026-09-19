@@ -47,21 +47,19 @@ function AddRecipePage() {
             formData.append("image", submittedData.image);
         }
 
-        addRecipe.mutate({ data: formData }, {
-            onSuccess: async () => {
-                await Promise.all([
-                    queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
-                    queryClient.invalidateQueries({ queryKey: ["allRecipes"] }),
-                ]);
+        await addRecipe.mutateAsync({ data: formData });
 
-                toast.add({
-                    type: "success",
-                    title: t("ui.recipe-created"),
-                });
+        await Promise.all([
+            queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
+            queryClient.invalidateQueries({ queryKey: ["allRecipes"] }),
+        ]);
 
-                return navigate({ to: "/dashboard" });
-            }
+        toast.add({
+            type: "success",
+            title: t("ui.recipe-created"),
         });
+
+        return navigate({ to: "/dashboard" });
     };
 
     return (

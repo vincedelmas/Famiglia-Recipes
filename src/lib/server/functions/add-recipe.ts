@@ -5,8 +5,8 @@ import {createServerFn} from "@tanstack/react-start";
 import {callGeminiModel} from "~/lib/utils/LLM-call";
 import {tryFormZodError} from "~/lib/utils/zod-errors";
 import {FormattedError} from "~/lib/utils/error-classes";
-import {saveUploadedImage} from "~/lib/utils/image-handler";
 import {authMiddleware} from "~/lib/server/middleware/auth-guard";
+import {deleteImage, saveUploadedImage} from "~/lib/utils/image-handler";
 import {comment, label, recipe, recipeLabel} from "~/lib/server/database/schema";
 import {imageRecipeSchema, recipeFormSchema, uploadRecipeSchema} from "~/lib/utils/schemas";
 
@@ -39,6 +39,15 @@ export const postAddRecipe = createServerFn({ method: "POST" })
         if (formDataImage) tryFormZodError(() => imageRecipeSchema.parse(formDataImage))
         const recipeData = tryFormZodError(() => recipeFormSchema.parse(JSON.parse(formDataRecipe)));
 
+        const matchingLabels = await db
+            .select()
+            .from(label)
+            .where(inArray(label.name, recipeData.labels));
+
+        if (matchingLabels.length !== new Set(recipeData.labels).size) {
+            throw new FormattedError("Unknown recipe category");
+        }
+
         let coverName = "default.png";
         if (formDataImage) {
             coverName = await saveUploadedImage({
@@ -53,42 +62,43 @@ export const postAddRecipe = createServerFn({ method: "POST" })
             ingredient: ing.description,
         }));
 
-        const matchingLabels = await db
-            .select()
-            .from(label)
-            .where(inArray(label.name, recipeData.labels));
-
-        await db.transaction(async (tx) => {
-            const [newRecipe] = await tx
-                .insert(recipe)
-                .values({
-                    steps: steps,
-                    image: coverName,
-                    title: recipeData.title,
-                    ingredients: ingredients,
-                    submitterId: currentUser.id,
-                    servings: recipeData.servings,
-                    cookingTime: recipeData.cooking,
-                    prepTime: recipeData.preparation,
-                })
-                .returning();
-
-            if (matchingLabels.length) {
-                await tx
-                    .insert(recipeLabel)
-                    .values(matchingLabels.map(l => ({ recipeId: newRecipe.id, labelId: l.id })));
-            }
-
-            if (recipeData.comment) {
-                await tx
-                    .insert(comment)
+        try {
+            db.transaction((tx) => {
+                const newRecipe = tx
+                    .insert(recipe)
                     .values({
-                        userId: currentUser.id,
-                        recipeId: newRecipe.id,
-                        content: recipeData.comment,
-                    });
-            }
-        });
+                        steps: steps,
+                        image: coverName,
+                        title: recipeData.title,
+                        ingredients: ingredients,
+                        submitterId: currentUser.id,
+                        servings: recipeData.servings,
+                        cookingTime: recipeData.cooking,
+                        prepTime: recipeData.preparation,
+                    })
+                    .returning()
+                    .get();
+
+                if (matchingLabels.length) {
+                    tx.insert(recipeLabel)
+                        .values(matchingLabels.map(l => ({ recipeId: newRecipe.id, labelId: l.id })))
+                        .run();
+                }
+
+                if (recipeData.comment) {
+                    tx.insert(comment)
+                        .values({
+                            userId: currentUser.id,
+                            recipeId: newRecipe.id,
+                            content: recipeData.comment,
+                        }).run();
+                }
+            });
+        }
+        catch (error) {
+            if (formDataImage) await deleteImage(coverName);
+            throw error;
+        }
     });
 
 

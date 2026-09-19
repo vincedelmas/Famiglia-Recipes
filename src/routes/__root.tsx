@@ -29,7 +29,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
                 description: `A simple, modern web app designed for families to easily share and manage recipes.`,
             }),
         ],
-        links: [{ rel: "stylesheet", href: appCss }],
+        links: [
+            { rel: "stylesheet", href: appCss },
+            { rel: "alternate icon", href: "/favicon.ico" },
+            { rel: "apple-touch-icon", href: "/logo192.png" },
+            { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+        ],
     }),
     component: RootComponent,
     shellComponent: RootComponent,
@@ -39,6 +44,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootComponent() {
     useNProgress();
 
+    // noinspection HtmlUnknownAnchorTarget,HtmlRequiredTitleElement
     return (
         <html lang="en" suppressHydrationWarning>
         <head>
