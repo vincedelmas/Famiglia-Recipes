@@ -1,4 +1,5 @@
 import React from "react";
+import {ReorderButtons} from "~/lib/client/components/recipe-form/ReorderButtons";
 import {Minus, Plus} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import {Button} from "~/lib/client/components/ui/button";
@@ -15,7 +16,7 @@ interface DynamicStepListProps {
 
 export const DynamicStepList = ({ control }: DynamicStepListProps) => {
     const { t } = useTranslation();
-    const { fields, append, remove } = useFieldArray({ control, name: "steps" });
+    const { fields, append, remove, move } = useFieldArray({ control, name: "steps" });
 
     const addStep = (ev: React.MouseEvent) => {
         ev.preventDefault();
@@ -30,6 +31,7 @@ export const DynamicStepList = ({ control }: DynamicStepListProps) => {
         <div className="flex flex-col gap-3">
             {fields.map((field, idx) =>
                 <div key={field.id} className="flex items-start gap-3">
+                    <ReorderButtons index={idx} count={fields.length} item={`${t("step")} ${idx + 1}`} onMove={move}/>
                     <FormField
                         control={control}
                         name={`steps.${idx}.content`}

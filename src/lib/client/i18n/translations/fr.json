@@ -200,6 +200,8 @@
         "prep-minutes": "Prépa. (min)",
         "cooking-minutes": "Cuisson (min)",
         "recipe-created": "Recette ajoutée au carnet",
-        "recipe-updated": "Modifications enregistrées"
+        "recipe-updated": "Modifications enregistrées",
+        "move-up": "Monter {{item}}",
+        "move-down": "Descendre {{item}}"
     }
 }

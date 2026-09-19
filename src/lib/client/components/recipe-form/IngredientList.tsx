@@ -1,4 +1,5 @@
 import React from "react";
+import {ReorderButtons} from "~/lib/client/components/recipe-form/ReorderButtons";
 import {Minus, Plus} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import {RecipeFormValues} from "~/lib/utils/schemas";
@@ -15,7 +16,7 @@ interface DynIngListProps {
 
 export const DynamicIngredientList = ({ control }: DynIngListProps) => {
     const { t } = useTranslation();
-    const { fields, append, remove } = useFieldArray({ control, name: "ingredients" });
+    const { fields, append, remove, move } = useFieldArray({ control, name: "ingredients" });
 
     const addIngredient = (ev: React.MouseEvent | React.KeyboardEvent) => {
         ev.preventDefault();
@@ -38,16 +39,17 @@ export const DynamicIngredientList = ({ control }: DynIngListProps) => {
         <div className="flex flex-col gap-3">
             {fields.map((field, idx) =>
                 <div key={field.id} className="flex items-start gap-2">
+                    <ReorderButtons index={idx} count={fields.length} item={`${t("ingredient")} ${idx + 1}`} onMove={move}/>
                     <FormField
                         control={control}
                         name={`ingredients.${idx}.quantity`}
                         render={({ field }) => (
-                            <FormItem className="w-20 shrink-0 sm:w-24">
+                            <FormItem className="w-16 shrink-0 sm:w-24">
                                 <FormControl>
                                     <Input
                                         {...field}
                                         type="number"
-                                        className="w-20 sm:w-24"
+                                        className="w-16 sm:w-24"
                                         onKeyDown={handleOnEnter}
                                         aria-label={`${t("quantity")} ${idx + 1}`}
                                         placeholder={t("quantity")}

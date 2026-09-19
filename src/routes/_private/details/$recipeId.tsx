@@ -91,9 +91,9 @@ function RecipeDetailsPage() {
             <Link to="/all-recipes" search={{q:"", page:1, labels:[], authors:[]}} className="text-link mb-7"><ArrowLeft className="size-4"/>{t("ui.back-recipes")}</Link>
             <div className="grid gap-8 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-14">
                 <div>
-                    <div className="mb-5 flex flex-wrap gap-2">{recipe.labels.map(label => <Badge key={label.name} variant="secondary">{label.name}</Badge>)}</div>
+                    <div className="mb-5 flex flex-wrap gap-2">{recipe.labels.map(label => <Badge key={label.id} variant="secondary" render={<Link to="/all-recipes" search={{q:"", page:1, labels:[label.id], authors:[]}}/>}>{label.name}</Badge>)}</div>
                     <h1 className="page-heading text-[42px] sm:text-[58px]">{recipe.title}</h1>
-                    <div className="mt-6 flex items-center gap-3"><Avatar><AvatarFallback>{recipe.submitterName.charAt(0).toUpperCase()}</AvatarFallback></Avatar><div><p className="text-sm font-medium">{t("ui.from-kitchen", {name:recipe.submitterName})}</p><p className="mt-0.5 text-xs text-muted-foreground">{t("submit-date", {date:recipe.submittedDate})}</p></div></div>
+                    <div className="mt-6 flex items-center gap-3"><Avatar><AvatarFallback>{recipe.submitterName.charAt(0).toUpperCase()}</AvatarFallback></Avatar><div><Link to="/all-recipes" search={{q:"", page:1, labels:[], authors:[recipe.submitterId]}} className="text-link">{t("ui.from-kitchen", {name:recipe.submitterName})}</Link><p className="mt-0.5 text-xs text-muted-foreground">{t("submit-date", {date:recipe.submittedDate})}</p></div></div>
                     <div className="my-7 grid grid-cols-3 divide-x border-y py-5">
                         {[{icon:Clock, label:t("ui.prep"), value:recipe.prepTime}, {icon:CookingPot, label:t("cook-details"), value:recipe.cookingTime}, {icon:Timer, label:t("ui.total"), value:recipe.prepTime + recipe.cookingTime}].map(item => <div key={item.label} className="flex flex-col gap-1.5 px-3 first:pl-0"><item.icon className="mb-1 size-4 text-primary" strokeWidth={1.5}/><span className="text-xs text-muted-foreground">{item.label}</span><span className="text-sm font-medium">{item.value} {t("ui.min")}</span></div>)}
                     </div>
