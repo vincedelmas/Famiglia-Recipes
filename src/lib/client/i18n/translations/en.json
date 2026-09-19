@@ -350,8 +350,9 @@
   "935d017635f76c12": "Submitting...",
   "5e8d1f67d1c61be2": "Comment deleted",
   "79ae43d8b6d1cce4": "Edit comment",
-  "f7b9098ab70ceab5": [
+  "af9bb0980e244199": [
     "Comments",
+    " ",
     {
       "t": "span",
       "i": 1,
@@ -376,6 +377,18 @@
   ],
   "479d8e886115385a": "Couldn’t load the comments. Please try again.",
   "98707f319f98bb28": "No comments yet.",
+  "9520da683c51c07b": [
+    {
+      "t": "Sun",
+      "i": 1
+    },
+    "Keep screen on"
+  ],
+  "df03ad23f74186c4": "This browser cannot keep the screen on.",
+  "9ef05237cbe1266b": "Couldn’t keep the screen on. Try again or check your device’s power settings.",
+  "1127bd4ab2d84cd3": "Screen stays on while this recipe is open.",
+  "2c0aa6f48ca6b6b4": "Turning on…",
+  "dce91b9651c9a041": "Prevent the screen from sleeping while you cook.",
   "49a3d2c68a3b117e": "Fewer servings",
   "ab450a11144a5bcf": "More servings",
   "b8ca393c72db9f4f": "Ingredient",

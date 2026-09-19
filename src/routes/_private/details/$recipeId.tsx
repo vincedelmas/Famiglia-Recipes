@@ -1,15 +1,16 @@
 import {useState} from "react";
-import {cn, formatDateTime} from "~/lib/utils/helpers";
 import {useGT, useLocale} from "gt-react";
 import {useAuth} from "~/lib/client/hooks/use-auth";
 import {toast} from "~/lib/client/components/ui/toast";
 import {Badge} from "~/lib/client/components/ui/badge";
+import {cn, formatDateTime} from "~/lib/utils/helpers";
 import {Button} from "~/lib/client/components/ui/button";
 import {PageTitle} from "~/lib/client/components/app/PageTitle";
 import {Servings} from "~/lib/client/components/details/Servings";
 import {RecipeImage} from "~/lib/client/components/app/RecipeImage";
 import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
 import {Avatar, AvatarFallback} from "~/lib/client/components/ui/avatar";
+import {KeepScreenOn} from "~/lib/client/components/details/KeepScreenOn";
 import {createFileRoute, Link, useNavigate} from "@tanstack/react-router";
 import {CommentSection} from "~/lib/client/components/details/CommentSection";
 import {ArrowLeft, Clock, CookingPot, Heart, Pen, Timer, Trash2} from "lucide-react";
@@ -202,6 +203,9 @@ function RecipeDetailsPage() {
                                     <Trash2/>
                                 </Button>}
                         </div>
+
+                        <KeepScreenOn/>
+
                     </div>
                     <div className="order-first aspect-5/4 overflow-hidden rounded-[24px] bg-muted lg:order-last">
                         <RecipeImage
