@@ -1,6 +1,6 @@
+import {useGT} from "gt-react";
 import {useForm} from "react-hook-form";
 import {LoaderCircle} from "lucide-react";
-import {useTranslation} from "react-i18next";
 import authClient from "~/lib/utils/auth-client";
 import {toast} from "~/lib/client/components/ui/toast";
 import {Input} from "~/lib/client/components/ui/input";
@@ -19,7 +19,7 @@ interface FormValues {
 
 
 export const RegisterForm = () => {
-    const { t } = useTranslation();
+    const gt = useGT();
     const form = useForm<FormValues>({
         shouldFocusError: false,
         defaultValues: {
@@ -46,13 +46,13 @@ export const RegisterForm = () => {
                 form.setError(invalidKey ? "registerKey" : "root", {
                     type: "value",
                     message: invalidKey
-                        ? t("invalid-register-key")
+                        ? gt("Invalid invitation key")
                         : ctx.error.message,
                 }, { shouldFocus: false });
             },
             onSuccess: () => {
                 form.reset();
-                toast.add({ type: "success", title: t("email-sent") });
+                toast.add({ type: "success", title: gt("An email was sent to confirm your account.") });
             },
         });
     };
@@ -61,7 +61,7 @@ export const RegisterForm = () => {
         <div>
             <header className="mb-7">
                 <h2 className="font-heading text-3xl tracking-tight">
-                    {t("create-account")}
+                    Create an account
                 </h2>
             </header>
             <div>
@@ -79,12 +79,12 @@ export const RegisterForm = () => {
                                     }}
                                     render={({ field }) =>
                                         <FormItem>
-                                            <FormLabel>{t("username")}</FormLabel>
+                                            <FormLabel>Your name</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     {...field}
                                                     autoComplete="name"
-                                                    placeholder={t("username")}
+                                                    placeholder={gt("Your name")}
                                                 />
                                             </FormControl>
                                             <FormMessage/>
@@ -119,7 +119,7 @@ export const RegisterForm = () => {
                                     }}
                                     render={({ field }) =>
                                         <FormItem>
-                                            <FormLabel>{t("password")}</FormLabel>
+                                            <FormLabel>Password</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     {...field}
@@ -144,7 +144,7 @@ export const RegisterForm = () => {
                                     }}
                                     render={({ field }) =>
                                         <FormItem>
-                                            <FormLabel>{t("confirm-password")}</FormLabel>
+                                            <FormLabel>Confirm Password</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     {...field}
@@ -163,7 +163,7 @@ export const RegisterForm = () => {
                                     rules={{ required: "The register key is required" }}
                                     render={({ field }) =>
                                         <FormItem>
-                                            <FormLabel>{t("register-key")}</FormLabel>
+                                            <FormLabel>Invitation key</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     {...field}
@@ -187,7 +187,7 @@ export const RegisterForm = () => {
 
                         <FormButton disabled={form.formState.isSubmitting}>
                             {form.formState.isSubmitting && <LoaderCircle className="size-4 animate-spin"/>}{" "}
-                            {t("register")}
+                            Create an account
                         </FormButton>
                     </form>
                 </Form>

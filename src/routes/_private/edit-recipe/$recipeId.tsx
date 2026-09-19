@@ -1,4 +1,4 @@
-import {useTranslation} from "react-i18next";
+import {useGT} from "gt-react";
 import {RecipeFormValues} from "~/lib/utils/schemas";
 import {toast} from "~/lib/client/components/ui/toast";
 import {PageTitle} from "~/lib/client/components/app/PageTitle";
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_private/edit-recipe/$recipeId")({
 
 
 function EditRecipePage() {
-    const { t } = useTranslation();
+    const gt = useGT();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const { recipeId } = Route.useParams();
@@ -58,14 +58,14 @@ function EditRecipePage() {
             queryClient.invalidateQueries({ queryKey: ["editRecipe", recipeId] }),
             queryClient.invalidateQueries({ queryKey: ["recipeDetails", recipeId] }),
         ]);
-        
-        toast.add({ type: "success", title: t("ui.recipe-updated") });
+
+        toast.add({ type: "success", title: gt("Recipe changes saved") });
 
         return navigate({ to: "/details/$recipeId", params: { recipeId }, replace: true });
     };
 
     return (
-        <PageTitle title={t("edit-recipe")} subtitle={t("edit-recipe-subtitle")}>
+        <PageTitle title={gt("Edit recipe")} subtitle={<>Update the recipe details, ingredients, or steps.</>}>
             <RecipeForm
                 type="Edition"
                 onSubmit={onSubmit}

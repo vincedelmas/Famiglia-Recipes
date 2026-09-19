@@ -1,5 +1,4 @@
 import {Link} from "@tanstack/react-router";
-import {useTranslation} from "react-i18next";
 import {Badge} from "~/lib/client/components/ui/badge";
 import {ArrowUpRight, Clock, Heart} from "lucide-react";
 import type {dashboardOptions} from "~/lib/client/react-query";
@@ -10,8 +9,6 @@ type Recipe = Awaited<ReturnType<NonNullable<typeof dashboardOptions["queryFn"]>
 
 
 export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
-    const { t } = useTranslation();
-
     return (
         <Link
             to="/details/$recipeId"
@@ -27,12 +24,12 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
                 {recipe.isFavorited &&
                     <span className="absolute right-3 top-3 flex size-8 items-center justify-center rounded-full bg-card text-destructive">
                         <Heart className="size-3.5 fill-current"/>
-                        <span className="sr-only">{t("fav-recipes")}</span>
+                        <span className="sr-only">Your favorites</span>
                     </span>
                 }
                 <span className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full bg-card/95 px-2.5 py-1 text-[11px] font-medium">
                     <Clock className="size-3"/>
-                    {recipe.prepTime + recipe.cookingTime} {t("ui.min")}
+                    {recipe.prepTime + recipe.cookingTime} min
                 </span>
             </div>
             <div className="flex flex-1 flex-col px-1 pb-1 pt-4">
@@ -55,7 +52,7 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
                 </div>
 
                 <p className="mt-2 text-xs text-muted-foreground">
-                    {t("ui.from-kitchen", { name: recipe.submitter.name })}
+                    Added by {recipe.submitter.name}
                 </p>
             </div>
         </Link>

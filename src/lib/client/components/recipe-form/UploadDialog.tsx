@@ -1,7 +1,6 @@
-import type React from "react";
-import {useState} from "react";
+import React, {useState} from "react";
+import {useGT} from "gt-react";
 import {useForm} from "react-hook-form";
-import {useTranslation} from "react-i18next";
 import {Input} from "~/lib/client/components/ui/input";
 import {toast} from "~/lib/client/components/ui/toast";
 import {Button} from "~/lib/client/components/ui/button";
@@ -22,7 +21,7 @@ interface UploadDialogProps {
 
 
 export default function UploadDialog({ form }: UploadDialogProps) {
-    const { t } = useTranslation();
+    const gt = useGT();
     const uploadMutation = useUploadMutation();
     const [open, setOpen] = useState(false);
     const [errors, setErrors] = useState<string[]>([]);
@@ -34,7 +33,12 @@ export default function UploadDialog({ form }: UploadDialogProps) {
         const file = ev.target.files?.[0];
         if (file) {
             const validation = recipeImportFileSchema.safeParse(file);
-            const fileErrors = validation.success ? [] : validation.error.issues.map(issue => t(issue.message));
+            const messages: Record<string, string> = {
+                "error-file-empty": gt("The selected file is empty."),
+                "error-file-size": gt("The file must be no larger than 20 MB."),
+                "error-file-type": gt("Unsupported file type. Please upload PDF, DOCX, JPG, PNG, or WEBP files."),
+            };
+            const fileErrors = validation.success ? [] : validation.error.issues.map(issue => messages[issue.message]);
 
             if (fileErrors.length > 0) {
                 setErrors(fileErrors);
@@ -54,7 +58,7 @@ export default function UploadDialog({ form }: UploadDialogProps) {
             setErrors([]);
         }
         else {
-            setErrors([t("error-text-length", { max: MAX_TEXT_LENGTH.toLocaleString() })]);
+            setErrors([gt("Text must be less than {max} characters", { max: MAX_TEXT_LENGTH.toLocaleString() })]);
         }
     }
 
@@ -87,7 +91,7 @@ export default function UploadDialog({ form }: UploadDialogProps) {
                 setOpen(false);
 
                 resetForm();
-                toast.add({ type: "success", title: t("toast-success") });
+                toast.add({ type: "success", title: gt("Review the imported recipe before saving.") });
             },
         })
     }
@@ -111,25 +115,25 @@ export default function UploadDialog({ form }: UploadDialogProps) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger render={<Button variant="outline"/>}>
-                <Upload data-icon="inline-start"/> {t("upload-button")}
+                <Upload data-icon="inline-start"/> Import a recipe
             </DialogTrigger>
             <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-xl">
                 <DialogHeader>
                     <DialogTitle>
-                        {t("upload-dialog-title")}
+                        Upload Content
                     </DialogTitle>
                     <DialogDescription>
-                        {t("upload-dialog-desc")}
+                        Upload a file or paste your text content.
                     </DialogDescription>
                 </DialogHeader>
 
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList className="grid w-full grid-cols-2 mb-5">
                         <TabsTrigger value="upload" className="flex items-center gap-2">
-                            <Upload className="h-4 w-4"/> {t("tab-file-upload")}
+                            <Upload className="h-4 w-4"/> File Upload
                         </TabsTrigger>
                         <TabsTrigger value="text" className="flex items-center gap-2">
-                            <FileText className="h-4 w-4"/> {t("tab-text-input")}
+                            <FileText className="h-4 w-4"/> Text Input
                         </TabsTrigger>
                     </TabsList>
 
@@ -137,7 +141,7 @@ export default function UploadDialog({ form }: UploadDialogProps) {
                         <FieldGroup>
                             <Field>
                                 <FieldLabel htmlFor="file-upload">
-                                    {t("label-choose-file")}
+                                    Choose File
                                 </FieldLabel>
                                 <Input
                                     type="file"
@@ -147,14 +151,11 @@ export default function UploadDialog({ form }: UploadDialogProps) {
                                     accept={Object.values(RECIPE_IMPORT_FILE_TYPES).flat().join(",")}
                                 />
                                 <p className="text-sm text-muted-foreground">
-                                    {t("supported-formats")}
+                                    Supported formats: PDF, DOCX, JPG, PNG, WEBP (max 20MB)
                                 </p>
                                 {selectedFile &&
                                     <div className="text-sm text-primary">
-                                        {t("file-selected-with-size", {
-                                            fileName: selectedFile.name,
-                                            size: (selectedFile.size / 1024 / 1024).toFixed(2)
-                                        })}
+                                        Selected: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
                                     </div>
                                 }
                             </Field>
@@ -164,18 +165,18 @@ export default function UploadDialog({ form }: UploadDialogProps) {
                         <FieldGroup>
                             <Field>
                                 <FieldLabel htmlFor="text-content">
-                                    {t("label-text-content")}
+                                    Text Content
                                 </FieldLabel>
                                 <Textarea
                                     id="text-content"
                                     value={textContent}
                                     onChange={handleTextChange}
                                     disabled={uploadMutation.isPending}
-                                    placeholder={t("placeholder-text")}
+                                    placeholder={gt("Paste the recipe content here...")}
                                     className="min-h-50 max-h-125 overflow-y-auto"
                                 />
                                 <div className="flex justify-between text-sm text-muted-foreground">
-                                    <span>{t("max-char-info")}</span>
+                                    <span>Maximum 10,000 characters</span>
                                     <span className={textContent.length > MAX_TEXT_LENGTH ? "text-destructive" : ""}>
                                         {textContent.length.toLocaleString()} / {MAX_TEXT_LENGTH.toLocaleString()}
                                     </span>
@@ -209,13 +210,13 @@ export default function UploadDialog({ form }: UploadDialogProps) {
                             resetForm();
                         }}
                     >
-                        {t("cancel")}
+                        Cancel
                     </Button>
 
                     <Button onClick={handleSubmit} disabled={!canSubmit() || uploadMutation.isPending}>
                         {uploadMutation.isPending
-                            ? <><Loader2 className="animate-spin"/> {t("uploading")}</>
-                            : t("upload")
+                            ? <><Loader2 className="animate-spin"/> Uploading</>
+                            : <>Upload</>
                         }
                     </Button>
                 </DialogFooter>

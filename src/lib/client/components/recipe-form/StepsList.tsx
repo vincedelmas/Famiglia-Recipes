@@ -1,6 +1,6 @@
 import React from "react";
+import {useGT} from "gt-react";
 import {Minus, Plus} from "lucide-react";
-import {useTranslation} from "react-i18next";
 import {RecipeFormValues} from "~/lib/utils/schemas";
 import {Control, useFieldArray} from "react-hook-form";
 import {Button} from "~/lib/client/components/ui/button";
@@ -15,7 +15,7 @@ interface DynamicStepListProps {
 
 
 export const DynamicStepList = ({ control }: DynamicStepListProps) => {
-    const { t } = useTranslation();
+    const gt = useGT();
     const { fields, append, remove, move } = useFieldArray({ control, name: "steps" });
 
     const addStep = (ev: React.MouseEvent) => {
@@ -35,7 +35,7 @@ export const DynamicStepList = ({ control }: DynamicStepListProps) => {
                         index={idx}
                         onMove={move}
                         count={fields.length}
-                        item={`${t("step")} ${idx + 1}`}
+                        item={`${gt("Step")} ${idx + 1}`}
                     />
 
                     <FormField
@@ -47,8 +47,8 @@ export const DynamicStepList = ({ control }: DynamicStepListProps) => {
                                     <Textarea
                                         {...field}
                                         className="min-w-0 flex-1"
-                                        aria-label={`${t("step")} ${idx + 1}`}
-                                        placeholder={`${t("step")} ${idx + 1}`}
+                                        aria-label={`${gt("Step")} ${idx + 1}`}
+                                        placeholder={`${gt("Step")} ${idx + 1}`}
                                     />
                                 </FormControl>
                                 <FormMessage/>
@@ -62,14 +62,14 @@ export const DynamicStepList = ({ control }: DynamicStepListProps) => {
                         className="shrink-0"
                         disabled={fields.length === 1}
                         onClick={() => removeStep(idx)}
-                        aria-label={t("ui.remove-step", { number: idx + 1 })}
+                        aria-label={gt("Remove step {number}", { number: idx + 1 })}
                     >
                         <Minus/>
                     </Button>
                 </div>
             )}
             <Button type="button" onClick={addStep} variant="outline" className="self-start">
-                <Plus data-icon="inline-start"/> {t("ui.add-step")}
+                <Plus data-icon="inline-start"/> Add a step
             </Button>
         </div>
     );

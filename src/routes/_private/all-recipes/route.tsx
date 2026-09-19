@@ -1,4 +1,4 @@
-import {useTranslation} from "react-i18next";
+import {Plural, useGT} from "gt-react";
 import {createFileRoute} from "@tanstack/react-router";
 import {useSuspenseQuery} from "@tanstack/react-query";
 import {Button} from "~/lib/client/components/ui/button";
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/_private/all-recipes")({
 
 
 function AllRecipesPage() {
-    const { t } = useTranslation();
+    const gt = useGT();
     const search = Route.useSearch();
     const navigate = Route.useNavigate();
     const submittedQuery = useRef(search.q);
@@ -80,7 +80,7 @@ function AllRecipesPage() {
     };
 
     return (
-        <PageTitle title={t("ui.collection-title")} subtitle={t("ui.collection-note")}>
+        <PageTitle title={gt("The cookbook")} subtitle={<>Browse recipes or filter by category and author.</>}>
             <section className="rounded-2xl border bg-card p-5 sm:p-6">
                 <div className="flex flex-wrap items-center gap-3">
                     <form onSubmit={onSearchSubmit} className="flex min-w-0 flex-1 basis-72 gap-2">
@@ -93,8 +93,8 @@ function AllRecipesPage() {
                                 value={query}
                                 maxLength={120}
                                 onChange={onSearchChange}
-                                aria-label={t("search-recipes")}
-                                placeholder={t("ui.search-placeholder")}
+                                aria-label={gt("Search by title")}
+                                placeholder={gt("Search recipes…")}
                             />
                         </InputGroup>
                     </form>
@@ -102,14 +102,14 @@ function AllRecipesPage() {
                     {hasFilters &&
                         <Button variant="ghost" onClick={clearFilters}>
                             <X data-icon="inline-start"/>
-                            {t("clear-filters")}
+                            Clear filters
                         </Button>
                     }
                 </div>
                 <details className="group mt-4 border-t pt-4" open={search.labels.length > 0 || search.authors.length > 0 || undefined}>
                     <summary className="flex cursor-pointer list-none items-center gap-2 text-sm font-medium text-muted-foreground [&::-webkit-details-marker]:hidden">
                         <SlidersHorizontal className="size-4"/>
-                        {t("ui.filters")}
+                        Refine your search
                         <ChevronDown className="ml-auto size-4 transition-transform group-open:rotate-180"/>
                     </summary>
 
@@ -117,13 +117,13 @@ function AllRecipesPage() {
                         <FilterGroup
                             items={apiData.labels}
                             selected={search.labels}
-                            title={t("ui.categories")}
+                            title={gt("Categories")}
                             onChange={(labels) => updateSearch({ ...search, q: query.trim(), labels, page: 1 })}
                         />
                         <FilterGroup
                             items={apiData.authors}
                             selected={search.authors}
-                            title={t("ui.cooks")}
+                            title={gt("Added by")}
                             onChange={(authors) => updateSearch({ ...search, q: query.trim(), authors, page: 1 })}
                         />
                     </div>
@@ -133,7 +133,13 @@ function AllRecipesPage() {
             <section className="mt-9" aria-busy={isFetching}>
                 <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
                     <p className="text-sm text-muted-foreground" role="status">
-                        {t("ui.results", { count: apiData.pagination.total })}
+
+                        <Plural
+                            n={apiData.pagination.total}
+                            one={<>{apiData.pagination.total} recipe</>}
+                            other={<>{apiData.pagination.total} recipes</>}
+                        />
+
                     </p>
 
                     <Pagination
@@ -158,17 +164,17 @@ function AllRecipesPage() {
                                 <Search/>
                             </EmptyMedia>
                             <EmptyTitle>
-                                {t("no-recipes-found")}
+                                No recipes found
                             </EmptyTitle>
                             <EmptyDescription>
-                                {t("ui.no-results-note")}
+                                Try another title or clear a few filters.
                             </EmptyDescription>
                         </EmptyHeader>
                         
                         {hasFilters &&
                             <EmptyContent>
                                 <Button variant="outline" onClick={clearFilters}>
-                                    {t("clear-filters")}
+                                    Clear filters
                                 </Button>
                             </EmptyContent>
                         }

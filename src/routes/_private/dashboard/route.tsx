@@ -1,4 +1,4 @@
-import {useTranslation} from "react-i18next";
+import {useGT} from "gt-react";
 import {useAuth} from "~/lib/client/hooks/use-auth";
 import {useSuspenseQuery} from "@tanstack/react-query";
 import {Button} from "~/lib/client/components/ui/button";
@@ -22,39 +22,39 @@ export const Route = createFileRoute("/_private/dashboard")({
 
 
 function DashboardPage() {
-    const { t } = useTranslation();
+    const gt = useGT();
     const { currentUser } = useAuth();
     const { dashboardOptions } = Route.useRouteContext();
     const { data: apiData } = useSuspenseQuery(dashboardOptions);
 
     return (
-        <PageTitle title={t("dashboard-nav")} onlyHelmet>
+        <PageTitle title={gt("Home")} onlyHelmet>
             <div className="page-enter pb-4 pt-9 sm:pt-12">
                 <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
                     <p className="eyebrow">
-                        {t("ui.welcome-name", { name: currentUser?.name.split(" ")[0] })}
+                        Hello, {currentUser?.name.split(" ")[0]}.
                     </p>
                     <span className="text-xs text-muted-foreground">
-                        {t("ui.family-cookbook")}
+                        Family recipes
                     </span>
                 </div>
 
                 <section className="relative grid overflow-hidden rounded-[24px] bg-accent lg:grid-cols-[1.15fr_1fr]">
                     <div className="relative z-10 px-7 py-10 sm:px-11 sm:py-14">
                         <p className="eyebrow mb-4">
-                            {t("ui.made-at-home")}
+                            Family recipes
                         </p>
 
                         <h1 className="page-heading max-w-md text-accent-foreground sm:text-[58px]">
-                            {t("ui.what-cooking")}
+                            Find a recipe
                         </h1>
 
                         <p className="mb-7 mt-5 max-w-sm text-sm leading-7 text-muted-foreground">
-                            {t("ui.dashboard-note")}
+                            Browse the collection or add a recipe to share.
                         </p>
 
                         <Button nativeButton={false} render={<Link to="/all-recipes" search={{ q: "", page: 1, labels: [], authors: [] }}/>}>
-                            {t("ui.browse")}
+                            Browse recipes
                             <ArrowRight data-icon="inline-end"/>
                         </Button>
                     </div>
@@ -66,18 +66,18 @@ function DashboardPage() {
                     <div className="section-top">
                         <div>
                             <p className="eyebrow mb-2">
-                                {t("ui.family-cookbook")}
+                                Family recipes
                             </p>
                             <h2 className="section-heading">
-                                {t("ui.fresh-pages")}
+                                Latest recipes
                             </h2>
                             <p className="mt-2 text-sm text-muted-foreground">
-                                {t("ui.fresh-note")}
+                                Recently added recipes.
                             </p>
                         </div>
 
                         <Link to="/all-recipes" search={{ q: "", page: 1, labels: [], authors: [] }} className="text-link">
-                            {t("ui.view-all")}
+                            All recipes
                             <ArrowRight className="size-4"/>
                         </Link>
                     </div>
@@ -98,16 +98,16 @@ function DashboardPage() {
                                     <BookOpen/>
                                 </EmptyMedia>
                                 <EmptyTitle>
-                                    {t("no-last-recipes")}
+                                    No recipes yet
                                 </EmptyTitle>
                                 <EmptyDescription>
-                                    {t("ui.no-recipes-note")}
+                                    Add the first recipe to get started.
                                 </EmptyDescription>
                             </EmptyHeader>
                             <EmptyContent>
                                 <Button nativeButton={false} render={<Link to="/add-recipe"/>}>
                                     <Plus data-icon="inline-start"/>
-                                    {t("add-recipe-nav")}
+                                    Add a recipe
                                 </Button>
                             </EmptyContent>
                         </Empty>
@@ -118,13 +118,13 @@ function DashboardPage() {
                     <div className="section-top">
                         <div>
                             <p className="eyebrow mb-2">
-                                {t("ui.saved-recipes")}
+                                Saved recipes
                             </p>
                             <h2 className="section-heading">
-                                {t("fav-recipes")}
+                                Your favorites
                             </h2>
                             <p className="mt-2 text-sm text-muted-foreground">
-                                {t("ui.favorites-note")}
+                                Recipes you’ve saved for later.
                             </p>
                         </div>
 
@@ -149,10 +149,10 @@ function DashboardPage() {
                                     <Heart/>
                                 </EmptyMedia>
                                 <EmptyTitle>
-                                    {t("no-fav-recipes")}
+                                    No favorites yet
                                 </EmptyTitle>
                                 <EmptyDescription>
-                                    {t("ui.no-favorites-note")}
+                                    Use the heart button to save a recipe here.
                                 </EmptyDescription>
                             </EmptyHeader>
                         </Empty>

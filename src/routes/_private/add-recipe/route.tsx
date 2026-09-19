@@ -1,4 +1,4 @@
-import {useTranslation} from "react-i18next";
+import {useGT} from "gt-react";
 import {RecipeFormValues} from "~/lib/utils/schemas";
 import {useAddRecipe} from "~/lib/client/react-query";
 import {toast} from "~/lib/client/components/ui/toast";
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_private/add-recipe")({
 
 function AddRecipePage() {
     const navigate = useNavigate();
-    const { t } = useTranslation();
+    const gt = useGT();
     const addRecipe = useAddRecipe();
     const queryClient = useQueryClient();
     const { addRecipeOptions } = Route.useRouteContext();
@@ -56,14 +56,14 @@ function AddRecipePage() {
 
         toast.add({
             type: "success",
-            title: t("ui.recipe-created"),
+            title: gt("Recipe added"),
         });
 
         return navigate({ to: "/dashboard" });
     };
 
     return (
-        <PageTitle title={t("add-recipe")} subtitle={t("ar-subtitle")}>
+        <PageTitle title={gt("Add a recipe")} subtitle={<>Enter the ingredients and steps, or import a recipe.</>}>
             <RecipeForm
                 labels={labels}
                 type="Creation"

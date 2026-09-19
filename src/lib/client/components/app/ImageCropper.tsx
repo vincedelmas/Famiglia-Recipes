@@ -1,5 +1,4 @@
 import Cropper from "react-easy-crop";
-import {useTranslation} from "react-i18next";
 import {Input} from "~/lib/client/components/ui/input";
 import {Button} from "~/lib/client/components/ui/button";
 import {MutedText} from "~/lib/client/components/app/MutedText";
@@ -35,7 +34,6 @@ interface CropState {
 
 
 export const ImageCropper = ({ onCropApplied, fileName, cropShape, aspect, resultClassName = "", ...inputProps }: ImageCropperProps) => {
-    const { t } = useTranslation();
     const [state, setState] = useState<CropState>({
         zoom: 1,
         open: true,
@@ -135,10 +133,10 @@ export const ImageCropper = ({ onCropApplied, fileName, cropShape, aspect, resul
                 <div className="mt-5 flex flex-col gap-4 rounded-xl bg-muted p-4">
                     <div>
                         <div>
-                            {t("crop-title")}
+                            Crop Recipe Image
                         </div>
                         <MutedText className="not-italic">
-                            {t("crop-subtitle")}
+                            Resize the recipe image to fit the crop area.
                         </MutedText>
                     </div>
 
@@ -156,14 +154,14 @@ export const ImageCropper = ({ onCropApplied, fileName, cropShape, aspect, resul
                     </div>
 
                     <Button onClick={handleApplyCrop}>
-                        {t("save")}
+                        Save
                     </Button>
                 </div>
             }
             {state.showResult && state.croppedImage &&
                 <div className="mt-4 flex flex-col gap-4 rounded-xl bg-muted p-4">
                     <MutedText className="not-italic">
-                        {t("crop-selected")}
+                        Selected Image
                     </MutedText>
                     <img
                         alt={fileName}
@@ -171,7 +169,7 @@ export const ImageCropper = ({ onCropApplied, fileName, cropShape, aspect, resul
                         className={resultClassName}
                     />
                     <Button onClick={handleEditCrop}>
-                        {t("edit")}
+                        Edit
                     </Button>
                 </div>
             }

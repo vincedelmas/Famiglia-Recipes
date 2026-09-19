@@ -1,7 +1,6 @@
 import {useState} from "react";
 import {Utensils} from "lucide-react";
 import {cn} from "~/lib/utils/helpers";
-import {useTranslation} from "react-i18next";
 
 
 interface RecipeImageProps {
@@ -13,7 +12,6 @@ interface RecipeImageProps {
 
 
 export function RecipeImage({ src, alt, priority = false, className }: RecipeImageProps) {
-    const { t } = useTranslation();
     const [failedSource, setFailedSource] = useState<string | null>(null);
 
     return (
@@ -25,7 +23,7 @@ export function RecipeImage({ src, alt, priority = false, className }: RecipeIma
             />
 
             <span className="font-heading text-lg italic">
-                {t("ui.made-at-home")}
+                No photo
             </span>
 
             {src && src !== failedSource &&

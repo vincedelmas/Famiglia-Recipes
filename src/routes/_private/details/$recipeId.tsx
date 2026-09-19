@@ -1,6 +1,6 @@
 import {useState} from "react";
-import {cn} from "~/lib/utils/helpers";
-import {useTranslation} from "react-i18next";
+import {cn, formatDateTime} from "~/lib/utils/helpers";
+import {useGT, useLocale} from "gt-react";
 import {useAuth} from "~/lib/client/hooks/use-auth";
 import {toast} from "~/lib/client/components/ui/toast";
 import {Badge} from "~/lib/client/components/ui/badge";
@@ -35,7 +35,8 @@ export const Route = createFileRoute("/_private/details/$recipeId")({
 
 
 function RecipeDetailsPage() {
-    const { t } = useTranslation();
+    const gt = useGT();
+    const locale = useLocale();
     const navigate = useNavigate();
     const { currentUser } = useAuth();
     const queryClient = useQueryClient();
@@ -50,7 +51,7 @@ function RecipeDetailsPage() {
     const recipe = useSuspenseQuery(recipeDetailsOptions).data;
 
     const onDeleteRecipe = async () => {
-        if (!window.confirm(t("ui.delete-confirm"))) return;
+        if (!window.confirm(gt("Delete this recipe? This cannot be undone."))) return;
 
         deleteRecipeMutation.mutate({ recipeId }, {
             onSuccess: async () => {
@@ -59,7 +60,7 @@ function RecipeDetailsPage() {
                     queryClient.invalidateQueries({ queryKey: ["allRecipes"] }),
                 ]);
 
-                toast.add({ type: "success", title: t("success-recipe-deleted") });
+                toast.add({ type: "success", title: gt("Recipe deleted") });
                 return navigate({ to: "/dashboard" });
             }
         });
@@ -73,7 +74,7 @@ function RecipeDetailsPage() {
 
                     toast.add({
                         type: "success",
-                        title: oldData.isFavorited ? t("removed-recipe-favorite") : t("added-recipe-favorite"),
+                        title: oldData.isFavorited ? gt("Removed from your favorites") : gt("Added to your favorites"),
                     });
 
                     return {
@@ -104,7 +105,7 @@ function RecipeDetailsPage() {
             <div className="page-enter pb-5 pt-8 sm:pt-10">
                 <Link to="/all-recipes" search={{ q: "", page: 1, labels: [], authors: [] }} className="text-link mb-7">
                     <ArrowLeft className="size-4"/>
-                    {t("ui.back-recipes")}
+                    Back to the cookbook
                 </Link>
 
                 <div className="grid gap-8 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-14">
@@ -131,10 +132,10 @@ function RecipeDetailsPage() {
                             </Avatar>
                             <div>
                                 <Link className="text-link" to="/all-recipes" search={{ q: "", page: 1, labels: [], authors: [recipe.submitterId] }}>
-                                    {t("ui.from-kitchen", { name: recipe.submitterName })}
+                                    Added by {recipe.submitterName}
                                 </Link>
                                 <p className="mt-0.5 text-xs text-muted-foreground">
-                                    {t("submit-date", { date: recipe.submittedDate })}
+                                    {formatDateTime(recipe.submittedDate, locale)}
                                 </p>
                             </div>
                         </div>
@@ -143,16 +144,16 @@ function RecipeDetailsPage() {
                                 {
                                     icon: Clock,
                                     value: recipe.prepTime,
-                                    label: t("ui.prep"),
+                                    label: gt("Preparation"),
                                 },
                                 {
                                     icon: CookingPot,
                                     value: recipe.cookingTime,
-                                    label: t("cook-details"),
+                                    label: gt("Cooking"),
                                 },
                                 {
                                     icon: Timer,
-                                    label: t("ui.total"),
+                                    label: gt("Total time"),
                                     value: recipe.prepTime + recipe.cookingTime
                                 }
                             ].map(item =>
@@ -165,7 +166,7 @@ function RecipeDetailsPage() {
                                         {item.label}
                                     </span>
                                     <span className="text-sm font-medium">
-                                        {item.value} {t("ui.min")}
+                                        {item.value} min
                                     </span>
                                 </div>
                             )}
@@ -178,7 +179,7 @@ function RecipeDetailsPage() {
                                 variant={recipe.isFavorited ? "secondary" : "outline"}
                             >
                                 <Heart data-icon="inline-start" className={cn(recipe.isFavorited && "fill-current")}/>
-                                {t(recipe.isFavorited ? "ui.unfavorite" : "ui.favorite")}
+                                {recipe.isFavorited ? <>Remove from favorites</> : <>Save to favorites</>}
                             </Button>
 
                             <Button
@@ -187,7 +188,7 @@ function RecipeDetailsPage() {
                                 render={<Link to="/edit-recipe/$recipeId" params={{ recipeId }}/>}
                             >
                                 <Pen data-icon="inline-start"/>
-                                {t("edit")}
+                                Edit
                             </Button>
 
                             {currentUser?.role === "manager" &&
@@ -195,7 +196,7 @@ function RecipeDetailsPage() {
                                     size="icon"
                                     variant="ghost"
                                     onClick={onDeleteRecipe}
-                                    aria-label={t("ui.delete")}
+                                    aria-label={gt("Delete")}
                                     disabled={deleteRecipeMutation.isPending}
                                 >
                                     <Trash2/>
@@ -215,17 +216,17 @@ function RecipeDetailsPage() {
                         <Card>
                             <CardHeader>
                                 <CardTitle>
-                                    {t("ingredients")}
+                                    Ingredients
                                 </CardTitle>
                                 <CardDescription>
-                                    {t("ui.servings-note")}
+                                    Change the servings to adjust ingredient quantities.
                                 </CardDescription>
                             </CardHeader>
 
                             <CardContent>
                                 <div className="mb-5 flex items-center justify-between gap-3 border-b pb-5">
                                     <span className="text-sm">
-                                        {t("servings")}
+                                        Servings
                                     </span>
                                     <Servings
                                         servings={Math.round(recipe.servings * multi)}
@@ -267,10 +268,10 @@ function RecipeDetailsPage() {
                     </aside>
                     <div>
                         <p className="eyebrow mb-3">
-                            {t("r-steps")}
+                            Steps
                         </p>
                         <h2 className="section-heading mb-8">
-                            {t("ui.instructions")}
+                            Instructions
                         </h2>
 
                         <ol className="flex flex-col gap-8">

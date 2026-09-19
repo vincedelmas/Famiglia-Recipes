@@ -1,8 +1,8 @@
 import {useRef} from "react";
+import {useGT} from "gt-react";
 import {useForm} from "react-hook-form";
 import {RATIO} from "~/lib/utils/constants";
 import {LabelType} from "~/lib/types/types";
-import {useTranslation} from "react-i18next";
 import {useBlocker} from "@tanstack/react-router";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Input} from "~/lib/client/components/ui/input";
@@ -29,7 +29,7 @@ interface RecipeFormProps {
 
 
 export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }: RecipeFormProps) => {
-    const { t } = useTranslation();
+    const gt = useGT();
     const submitting = useRef(false);
     const form = useForm<RecipeFormValues>({
         defaultValues: initValues,
@@ -42,7 +42,7 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
         shouldBlockFn: () => {
             if (submitting.current) return false;
             if (!isDirty) return false;
-            return !confirm(t("block-confirm"));
+            return !confirm(gt("Are you sure you want to leave? All your changes will be lost."));
         },
     });
 
@@ -53,7 +53,7 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
             await onSubmit(submittedData);
         }
         catch {
-            form.setError("root", { message: t("unexpected-error") });
+            form.setError("root", { message: gt("An unexpected error occurred. Please try again later.") });
         }
         finally {
             submitting.current = false;
@@ -68,14 +68,14 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                     className="flex min-w-0 flex-col gap-6"
                 >
                     <FieldSet className="recipe-form-section">
-                        <FieldLegend>{t("ui.basics")}</FieldLegend>
+                        <FieldLegend>Recipe details</FieldLegend>
                         <FieldGroup>
                             <FormField
                                 name="image"
                                 control={form.control}
                                 render={({ field }) =>
                                     <FormItem>
-                                        <FormLabel>{t("r-image")}</FormLabel>
+                                        <FormLabel>Recipe Image</FormLabel>
                                         <FormControl>
                                             <ImageCropper
                                                 aspect={RATIO}
@@ -94,11 +94,11 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                                 control={form.control}
                                 render={({ field }) =>
                                     <FormItem>
-                                        <FormLabel>{t("r-title")}</FormLabel>
+                                        <FormLabel>Recipe Title</FormLabel>
                                         <FormControl>
                                             <Input
                                                 {...field}
-                                                placeholder={t("r-title")}
+                                                placeholder={gt("Recipe Title")}
                                             />
                                         </FormControl>
                                         <FormMessage/>
@@ -112,7 +112,7 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                                     render={({ field }) =>
                                         <FormItem>
                                             <FormLabel>
-                                                {t("ui.prep-minutes")}
+                                                Prep (min)
                                             </FormLabel>
                                             <FormControl>
                                                 <Input
@@ -134,7 +134,7 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                                     render={({ field }) =>
                                         <FormItem>
                                             <FormLabel>
-                                                {t("ui.cooking-minutes")}
+                                                Cooking (min)
                                             </FormLabel>
                                             <FormControl>
                                                 <Input
@@ -155,7 +155,7 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                                     control={form.control}
                                     render={({ field }) =>
                                         <FormItem>
-                                            <FormLabel>{t("r-servings")}</FormLabel>
+                                            <FormLabel>Servings</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     {...field}
@@ -174,15 +174,15 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                         </FieldGroup>
                     </FieldSet>
                     <FieldSet className="recipe-form-section">
-                        <FieldLegend>{t("ingredients")}</FieldLegend>
-                        <p className="mb-5 text-sm text-muted-foreground">{t("ui.ingredients-note")}</p>
+                        <FieldLegend>Ingredients</FieldLegend>
+                        <p className="mb-5 text-sm text-muted-foreground">List the ingredients and quantities.</p>
                         <FieldGroup>
                             <FormField
                                 name="ingredients"
                                 control={form.control}
                                 render={() =>
                                     <FormItem>
-                                        <FormLabel className="sr-only">{t("ingredients")}</FormLabel>
+                                        <FormLabel className="sr-only">Ingredients</FormLabel>
                                         <FormControl>
                                             <DynamicIngredientList
                                                 control={form.control}
@@ -195,15 +195,15 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                         </FieldGroup>
                     </FieldSet>
                     <FieldSet className="recipe-form-section">
-                        <FieldLegend>{t("ui.instructions")}</FieldLegend>
-                        <p className="mb-5 text-sm text-muted-foreground">{t("ui.steps-note")}</p>
+                        <FieldLegend>Instructions</FieldLegend>
+                        <p className="mb-5 text-sm text-muted-foreground">Describe each step in order.</p>
                         <FieldGroup>
                             <FormField
                                 name="steps"
                                 control={form.control}
                                 render={() =>
                                     <FormItem>
-                                        <FormLabel className="sr-only">{t("r-steps")}</FormLabel>
+                                        <FormLabel className="sr-only">Steps</FormLabel>
                                         <FormControl>
                                             <DynamicStepList
                                                 control={form.control}
@@ -216,14 +216,14 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                         </FieldGroup>
                     </FieldSet>
                     <FieldSet className="recipe-form-section">
-                        <FieldLegend>{t("ui.finishing-touches")}</FieldLegend>
+                        <FieldLegend>Additional information</FieldLegend>
                         <FieldGroup>
                             <FormField
                                 name="labels"
                                 control={form.control}
                                 render={({ field }) =>
                                     <FormItem>
-                                        <FormLabel>{t("ui.labels")}</FormLabel>
+                                        <FormLabel>Recipe categories</FormLabel>
                                         <FormControl>
                                             <LabelSelector
                                                 labelsList={labels}
@@ -241,7 +241,7 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                                     control={form.control}
                                     render={({ field }) =>
                                         <FormItem>
-                                            <FormLabel>{t("comment")}</FormLabel>
+                                            <FormLabel>Notes</FormLabel>
                                             <FormControl>
                                                 <Textarea {...field}/>
                                             </FormControl>
@@ -260,19 +260,19 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                         disabled={pendingState || form.formState.isSubmitting}
                     >
                         {pendingState ? <LoaderCircle data-icon="inline-start" className="animate-spin"/> : <BookOpen data-icon="inline-start"/>}
-                        {type === "Creation" ? t("r-add") : t("r-edit")}
+                        {type === "Creation" ? <>Save the recipe</> : <>Save changes</>}
                     </Button>
                 </form>
             </Form>
             <aside className="order-first flex flex-col gap-6 lg:sticky lg:top-28 lg:order-last">
                 {type === "Creation" && <div className="rounded-2xl border border-primary/15 bg-accent/50 p-6">
                     <BookOpen className="mb-4 size-6 text-primary" strokeWidth={1.5}/>
-                    <h2 className="font-heading text-xl tracking-tight">{t("ui.import-title")}</h2>
-                    <p className="mb-5 mt-2 text-sm leading-6 text-muted-foreground">{t("ui.import-note")}</p>
+                    <h2 className="font-heading text-xl tracking-tight">Import a recipe</h2>
+                    <p className="mb-5 mt-2 text-sm leading-6 text-muted-foreground">Import from a photo, document, or text.</p>
                     <UploadDialog form={form}/>
                 </div>}
                 <div className="hidden px-3 lg:block"><Leaf className="mb-3 size-5 text-primary" strokeWidth={1.5}/><p
-                    className="font-heading text-xl leading-relaxed text-muted-foreground italic">{t("ui.recipe-tip")}</p></div>
+                    className="font-heading text-xl leading-relaxed text-muted-foreground italic">Check the ingredients and quantities before saving.</p></div>
             </aside>
         </div>
     );

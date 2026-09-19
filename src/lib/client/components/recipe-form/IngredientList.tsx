@@ -1,6 +1,6 @@
 import React from "react";
+import {useGT} from "gt-react";
 import {Minus, Plus} from "lucide-react";
-import {useTranslation} from "react-i18next";
 import {RecipeFormValues} from "~/lib/utils/schemas";
 import {Input} from "~/lib/client/components/ui/input";
 import {Control, useFieldArray} from "react-hook-form";
@@ -15,7 +15,7 @@ interface DynIngListProps {
 
 
 export const DynamicIngredientList = ({ control }: DynIngListProps) => {
-    const { t } = useTranslation();
+    const gt = useGT();
     const { fields, append, remove, move } = useFieldArray({ control, name: "ingredients" });
 
     const addIngredient = (ev: React.MouseEvent | React.KeyboardEvent) => {
@@ -44,7 +44,7 @@ export const DynamicIngredientList = ({ control }: DynIngListProps) => {
                         index={idx}
                         onMove={move}
                         count={fields.length}
-                        item={`${t("ingredient")} ${idx + 1}`}
+                        item={`${gt("Ingredient")} ${idx + 1}`}
                     />
 
                     <FormField
@@ -58,8 +58,8 @@ export const DynamicIngredientList = ({ control }: DynIngListProps) => {
                                         type="number"
                                         className="w-16 sm:w-24"
                                         onKeyDown={handleOnEnter}
-                                        aria-label={`${t("quantity")} ${idx + 1}`}
-                                        placeholder={t("quantity")}
+                                        aria-label={`${gt("Quantity")} ${idx + 1}`}
+                                        placeholder={gt("Quantity")}
                                         min={0}
                                         step="any"
                                         onChange={(ev) => {
@@ -82,8 +82,8 @@ export const DynamicIngredientList = ({ control }: DynIngListProps) => {
                                         {...field}
                                         className="min-w-0 flex-1"
                                         onKeyDown={handleOnEnter}
-                                        aria-label={`${t("ingredient")} ${idx + 1}`}
-                                        placeholder={t("ingredient")}
+                                        aria-label={`${gt("Ingredient")} ${idx + 1}`}
+                                        placeholder={gt("Ingredient")}
                                     />
                                 </FormControl>
                                 <FormMessage/>
@@ -95,7 +95,7 @@ export const DynamicIngredientList = ({ control }: DynIngListProps) => {
                         type="button"
                         variant="ghost"
                         className="shrink-0"
-                        aria-label={t("ui.remove-ingredient", { number: idx + 1 })}
+                        aria-label={gt("Remove ingredient {number}", { number: idx + 1 })}
                         disabled={fields.length === 1}
                         onClick={(ev) => removeIngredient(ev, idx)}
                     >
@@ -104,7 +104,7 @@ export const DynamicIngredientList = ({ control }: DynIngListProps) => {
                 </div>
             )}
             <Button type="button" onClick={addIngredient} variant="outline" className="self-start">
-                <Plus data-icon="inline-start"/> {t("ui.add-ingredient")}
+                <Plus data-icon="inline-start"/> Add an ingredient
             </Button>
         </div>
     );

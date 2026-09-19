@@ -1,6 +1,6 @@
+import {useGT} from "gt-react";
 import {useState} from "react";
 import {useForm} from "react-hook-form";
-import {useTranslation} from "react-i18next";
 import {getRouteApi} from "@tanstack/react-router";
 import {useQueryClient} from "@tanstack/react-query";
 import {Button} from "~/lib/client/components/ui/button";
@@ -20,7 +20,7 @@ interface CommentDialogProps {
 
 
 export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: CommentDialogProps) => {
-    const { t } = useTranslation();
+    const gt = useGT();
     const isEditing = !!commentToEdit;
     const addComment = useAddComment();
     const editComment = useEditComment();
@@ -57,8 +57,8 @@ export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: Commen
         }
     }
 
-    const title = isEditing ? t("edit-comment") : t("add-comment");
-    const subtitle = isEditing ? t("ec-subtitle") : t("ac-subtitle");
+    const title = isEditing ? <>Edit comment</> : <>Add a comment</>;
+    const subtitle = isEditing ? <>Edit your comment for this recipe</> : <>Add a new comment to this recipe</>;
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -79,11 +79,11 @@ export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: Commen
                                         <Textarea
                                             {...field}
                                             className="h-37.5"
-                                            placeholder={t("c-placeholder")}
+                                            placeholder={gt("Add your comment here")}
                                         />
                                     </FormControl>
                                     <FormDescription>
-                                        {warning ? <span className="text-destructive">{t("c-error")}</span> : t("c-info")}
+                                        {warning ? <span className="text-destructive">The comment cannot be empty</span> : <>Add a tip or feedback about this recipe.</>}
                                     </FormDescription>
                                     <FormMessage/>
                                 </FormItem>
@@ -92,8 +92,8 @@ export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: Commen
                         <DialogFooter>
                             <Button type="submit" disabled={addComment.isPending || editComment.isPending}>
                                 {(addComment.isPending || editComment.isPending)
-                                    ? t("submitting")
-                                    : t("save")
+                                    ? <>Submitting...</>
+                                    : <>Save</>
                                 }
                             </Button>
                         </DialogFooter>

@@ -1,19 +1,21 @@
 import {Globe2} from "lucide-react";
-import {useTranslation} from "react-i18next";
+import {useGT, useLocale, useSetLocale} from "gt-react";
 import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "~/lib/client/components/ui/select";
 
 
 export const LanguageSwitcher = ({ className }: { className?: string }) => {
-    const { i18n, t } = useTranslation();
+    const gt = useGT();
+    const locale = useLocale();
+    const setLocale = useSetLocale();
 
     return (
         <Select
-            value={i18n.resolvedLanguage || "en"}
+            value={locale}
             onValueChange={value => {
-                if (value) void i18n.changeLanguage(value);
+                if (value) setLocale(value);
             }}
         >
-            <SelectTrigger aria-label={t("ui.language")} className={className}>
+            <SelectTrigger aria-label={gt("Language")} className={className}>
                 <Globe2 aria-hidden="true"/>
                 <SelectValue>
                     {value => String(value).toUpperCase()}

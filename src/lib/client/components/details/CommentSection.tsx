@@ -1,6 +1,7 @@
 import {useState} from "react";
-import {useTranslation} from "react-i18next";
+import {useGT, useLocale} from "gt-react";
 import {getRouteApi} from "@tanstack/react-router";
+import {formatDateTime} from "~/lib/utils/helpers";
 import {toast} from "~/lib/client/components/ui/toast";
 import {Button} from "~/lib/client/components/ui/button";
 import {Alert, AlertDescription} from "~/lib/client/components/ui/alert";
@@ -26,7 +27,8 @@ export type Comment = Awaited<ReturnType<NonNullable<ReturnType<typeof recipeCom
 export const CommentSection = ({ recipeId, currentUserId, recipeSubmitterId }: CommentSectionProps) => {
     const { recipeCommentsOptions: commentsOptions } = getRouteApi("/_private/details/$recipeId").useRouteContext();
 
-    const { t } = useTranslation();
+    const gt = useGT();
+    const locale = useLocale();
     const isMutating = useIsMutating();
     const queryClient = useQueryClient();
     const deleteCommentMutation = useDeleteComment();
@@ -48,7 +50,7 @@ export const CommentSection = ({ recipeId, currentUserId, recipeSubmitterId }: C
         deleteCommentMutation.mutate({ commentId: comment.id }, {
             onSuccess: async () => {
                 await queryClient.invalidateQueries({ queryKey: commentsOptions.queryKey });
-                toast.add({ type: "success", title: t("success-comment-deleted") });
+                toast.add({ type: "success", title: gt("Comment deleted") });
             },
         });
     };
@@ -61,27 +63,27 @@ export const CommentSection = ({ recipeId, currentUserId, recipeSubmitterId }: C
         <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
             <div>
                 <h2 className="section-heading">
-                    {t("ui.recipe-notes")}
+                    Comments
                     <span className="font-sans text-sm text-muted-foreground">
                         ({comments?.length || 0})
                     </span>
                 </h2>
 
                 <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">
-                    {t("ui.notes-subtitle")}
+                    Tips and feedback about this recipe.
                 </p>
             </div>
 
             <Button variant="outline" onClick={onAddComment}>
                 <Plus data-icon="inline-start"/>
-                {t("add-comment")}
+                Add a comment
             </Button>
         </div>
 
         {isError ?
             <Alert variant="destructive">
                 <AlertDescription>
-                    {t("ui.comments-error")}
+                    Couldn’t load the comments. Please try again.
                 </AlertDescription>
             </Alert>
             : comments?.length ?
@@ -102,7 +104,7 @@ export const CommentSection = ({ recipeId, currentUserId, recipeSubmitterId }: C
                                         }
                                     </p>
                                     <time className="text-xs text-muted-foreground">
-                                        {t("submit-date", { date: comment.updatedAt || comment.createdAt, includeTime: true })}
+                                        {formatDateTime(comment.updatedAt || comment.createdAt, locale, { includeTime: true })}
                                     </time>
                                 </div>
 
@@ -110,7 +112,7 @@ export const CommentSection = ({ recipeId, currentUserId, recipeSubmitterId }: C
                                     <div className="flex shrink-0">
                                         <Button
                                             variant="ghost" size="icon-sm"
-                                            aria-label={t("edit-comment")}
+                                            aria-label={gt("Edit comment")}
                                             disabled={!!isMutating || isFetching}
                                             onClick={() => onEditComment(comment)}
                                         >
@@ -119,7 +121,7 @@ export const CommentSection = ({ recipeId, currentUserId, recipeSubmitterId }: C
                                         <Button
                                             size="icon-sm"
                                             variant="ghost"
-                                            aria-label={t("ui.delete")}
+                                            aria-label={gt("Delete")}
                                             disabled={!!isMutating || isFetching}
                                             onClick={() => onDeleteComment(comment)}
                                         >
@@ -140,7 +142,7 @@ export const CommentSection = ({ recipeId, currentUserId, recipeSubmitterId }: C
                 <Empty className="border py-8">
                     <EmptyHeader>
                         <EmptyDescription>
-                            {t("ui.no-comments")}
+                            No comments yet.
                         </EmptyDescription>
                     </EmptyHeader>
                 </Empty>

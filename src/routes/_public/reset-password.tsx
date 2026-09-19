@@ -1,13 +1,13 @@
-import {ArrowLeft, LoaderCircle} from "lucide-react";
+import {useGT} from "gt-react";
 import {useForm} from "react-hook-form";
-import {createFileRoute, Link, useNavigate} from "@tanstack/react-router";
-import {useTranslation} from "react-i18next";
 import authClient from "~/lib/utils/auth-client";
+import {ArrowLeft, LoaderCircle} from "lucide-react";
 import {toast} from "~/lib/client/components/ui/toast";
 import {Input} from "~/lib/client/components/ui/input";
 import {Button} from "~/lib/client/components/ui/button";
 import {FieldGroup} from "~/lib/client/components/ui/field";
 import {PageTitle} from "~/lib/client/components/app/PageTitle";
+import {createFileRoute, Link, useNavigate} from "@tanstack/react-router";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "~/lib/client/components/ui/form";
 
 
@@ -25,7 +25,7 @@ type FormValues = {
 
 
 function ResetPasswordPage() {
-    const { t } = useTranslation();
+    const gt = useGT();
     const navigate = useNavigate();
     const { token } = Route.useSearch();
     const form = useForm<FormValues>({
@@ -37,17 +37,17 @@ function ResetPasswordPage() {
 
     const onSubmit = async (submitted: FormValues) => {
         if (!token) {
-            toast.add({ type: "error", title: t("invalid-token") });
+            toast.add({ type: "error", title: gt("The provided token is invalid or expired.") });
             return navigate({ to: "/", replace: true });
         }
 
         await authClient.resetPassword({ token: token, newPassword: submitted.newPassword }, {
             onError: () => {
-                toast.add({ type: "error", title: t("unexpected-error") });
+                toast.add({ type: "error", title: gt("An unexpected error occurred. Please try again later.") });
             },
             onSuccess: async () => {
                 form.reset();
-                toast.add({ type: "success", title: t("success-pass-modified") });
+                toast.add({ type: "success", title: gt("Your password has been updated.") });
 
                 await navigate({ to: "/", replace: true });
             }
@@ -55,7 +55,7 @@ function ResetPasswordPage() {
     };
 
     return (
-        <PageTitle title={t("rp-title")} subtitle={t("rp-subtitle")}>
+        <PageTitle title={gt("Reset password")} subtitle={<>Choose a new password for your account.</>}>
             <div className="max-w-lg rounded-2xl border bg-card p-6 sm:p-8">
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -71,7 +71,7 @@ function ResetPasswordPage() {
                                         }}
                                         render={({ field }) =>
                                             <FormItem>
-                                                <FormLabel>{t("password")}</FormLabel>
+                                                <FormLabel>Password</FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         {...field}
@@ -94,7 +94,7 @@ function ResetPasswordPage() {
                                         }}
                                         render={({ field }) =>
                                             <FormItem>
-                                                <FormLabel>{t("confirm-password")}</FormLabel>
+                                                <FormLabel>Confirm Password</FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         {...field}
@@ -110,7 +110,7 @@ function ResetPasswordPage() {
                             </fieldset>
                             <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
                                 {form.formState.isSubmitting && <LoaderCircle className="size-4 animate-spin"/>}{" "}
-                                {t("submit")}
+                                Submit
                             </Button>
                         </FieldGroup></form>
                 </Form>
@@ -118,7 +118,7 @@ function ResetPasswordPage() {
 
             <Link to="/" className="text-link mt-6">
                 <ArrowLeft className="size-4"/>
-                {t("take-me-home")}
+                Back to home
             </Link>
         </PageTitle>
     );

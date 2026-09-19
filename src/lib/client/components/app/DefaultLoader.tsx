@@ -1,14 +1,14 @@
-import {useTranslation} from "react-i18next";
+import {useGT} from "gt-react";
 import {Skeleton} from "~/lib/client/components/ui/skeleton";
 
 
 export const DefaultLoader = () => {
-    const { t } = useTranslation();
+    const gt = useGT();
 
     return (
-        <div className="py-12" role="status" aria-label={t("ui.loading")}>
+        <div className="py-12" role="status" aria-label={gt("Loading…")}>
             <span className="sr-only">
-                {t("ui.loading")}
+                Loading…
             </span>
 
             <Skeleton className="mb-4 h-3 w-32"/>

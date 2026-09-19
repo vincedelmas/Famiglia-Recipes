@@ -1,6 +1,6 @@
 import {useState} from "react";
+import {useGT} from "gt-react";
 import {cn} from "~/lib/utils/helpers";
-import {useTranslation} from "react-i18next";
 import authClient from "~/lib/utils/auth-client";
 import {useAuth} from "~/lib/client/hooks/use-auth";
 import {useQueryClient} from "@tanstack/react-query";
@@ -13,8 +13,8 @@ import {getRouteApi, Link, useLocation, useNavigate, useRouter} from "@tanstack/
 
 
 export const Navbar = () => {
+    const gt = useGT();
     const router = useRouter();
-    const { t } = useTranslation();
     const navigate = useNavigate();
     const { currentUser } = useAuth();
     const { pathname } = useLocation();
@@ -29,7 +29,7 @@ export const Navbar = () => {
         try {
             const { error } = await authClient.signOut();
             if (error) {
-                toast.add({ type: "error", title: t("ui.signout-error") });
+                toast.add({ type: "error", title: gt("Couldn’t sign out. Please try again.") });
                 return;
             }
 
@@ -41,7 +41,7 @@ export const Navbar = () => {
             queryClient.removeQueries();
         }
         catch {
-            toast.add({ type: "error", title: t("ui.signout-error") });
+            toast.add({ type: "error", title: gt("Couldn’t sign out. Please try again.") });
         }
         finally {
             setSigningOut(false);
@@ -52,18 +52,18 @@ export const Navbar = () => {
         {
             icon: Leaf,
             to: "/dashboard",
-            name: t("dashboard-nav"),
+            name: gt("Home"),
         },
         {
             icon: BookOpen,
             to: "/all-recipes",
-            name: t("all-recipes-nav"),
+            name: gt("The cookbook"),
         },
     ] as const;
 
     return (
         <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur-xl">
-            <nav aria-label={t("ui.navigation")} className="mx-auto flex h-20 max-w-330 items-center justify-between gap-5 px-5 sm:px-8 lg:px-12">
+            <nav aria-label={gt("Main navigation")} className="mx-auto flex h-20 max-w-330 items-center justify-between gap-5 px-5 sm:px-8 lg:px-12">
 
                 <Link to={currentUser ? "/dashboard" : "/"} className="flex shrink-0 items-center gap-2.5" aria-label="Famiglia">
                     <span className="flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
@@ -96,7 +96,7 @@ export const Navbar = () => {
                         <>
                             <Button className="hidden md:inline-flex" nativeButton={false} render={<Link to="/add-recipe"/>}>
                                 <Plus data-icon="inline-start"/>
-                                {t("add-recipe-nav")}
+                                Add a recipe
                             </Button>
                             <div className="flex items-center gap-2 lg:border-l lg:pl-4">
                                 <LanguageSwitcher/>
@@ -111,8 +111,8 @@ export const Navbar = () => {
                                         variant="ghost"
                                         onClick={logoutUser}
                                         disabled={signingOut}
-                                        title={t("ui.logout")}
-                                        aria-label={t("ui.logout")}
+                                        title={gt("Sign out")}
+                                        aria-label={gt("Sign out")}
                                     >
                                         <LogOut/>
                                     </Button>
@@ -124,7 +124,7 @@ export const Navbar = () => {
                                 className="lg:hidden"
                                 aria-expanded={menuOpen}
                                 aria-controls="family-menu"
-                                aria-label={t("ui.menu")}
+                                aria-label={gt("Open menu")}
                                 onClick={() => setMenuOpen(!menuOpen)}
                             >
                                 {menuOpen ? <X/> : <Menu/>}
@@ -134,7 +134,7 @@ export const Navbar = () => {
                         <>
                             <LanguageSwitcher/>
                             <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex">
-                                {t("ui.family-cookbook")}
+                                Family recipes
                                 <ArrowUpRight className="size-3.5"/>
                             </span>
                         </>
@@ -145,7 +145,7 @@ export const Navbar = () => {
             {currentUser && menuOpen &&
                 <div id="family-menu" className="border-t px-5 py-5 lg:hidden">
                     <div className="mx-auto flex max-w-xl flex-col gap-2">
-                        {[...navItems, { icon: Plus, to: "/add-recipe" as const, name: t("add-recipe-nav") }].map(item =>
+                        {[...navItems, { icon: Plus, to: "/add-recipe" as const, name: gt("Add a recipe") }].map(item =>
                             <Link
                                 to={item.to}
                                 key={item.to}
@@ -163,7 +163,7 @@ export const Navbar = () => {
                             </span>
                             <Button variant="ghost" disabled={signingOut} onClick={logoutUser}>
                                 <LogOut data-icon="inline-start"/>
-                                {t("ui.logout")}
+                                Sign out
                             </Button>
                         </div>
                     </div>

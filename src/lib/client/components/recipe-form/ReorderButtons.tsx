@@ -1,4 +1,4 @@
-import {useTranslation} from "react-i18next";
+import {useGT} from "gt-react";
 import {ArrowDown, ArrowUp} from "lucide-react";
 import {Button} from "~/lib/client/components/ui/button";
 
@@ -12,7 +12,7 @@ interface ReorderButtonsProps {
 
 
 export function ReorderButtons({ index, count, item, onMove }: ReorderButtonsProps) {
-    const { t } = useTranslation();
+    const gt = useGT();
 
     return (
         <div className="flex shrink-0 flex-col gap-1">
@@ -21,8 +21,8 @@ export function ReorderButtons({ index, count, item, onMove }: ReorderButtonsPro
                 size="icon-sm"
                 variant="ghost"
                 disabled={index === 0}
-                title={t("ui.move-up", { item })}
-                aria-label={t("ui.move-up", { item })}
+                title={gt("Move {item} up", { item })}
+                aria-label={gt("Move {item} up", { item })}
                 onClick={() => onMove(index, index - 1)}
             >
                 <ArrowUp/>
@@ -33,9 +33,9 @@ export function ReorderButtons({ index, count, item, onMove }: ReorderButtonsPro
                 size="icon-sm"
                 variant="ghost"
                 disabled={index === count - 1}
-                title={t("ui.move-down", { item })}
+                title={gt("Move {item} down", { item })}
                 onClick={() => onMove(index, index + 1)}
-                aria-label={t("ui.move-down", { item })}
+                aria-label={gt("Move {item} down", { item })}
             >
                 <ArrowDown/>
             </Button>

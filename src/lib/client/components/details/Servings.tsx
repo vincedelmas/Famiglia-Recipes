@@ -1,5 +1,5 @@
+import {useGT} from "gt-react";
 import {Minus, Plus} from "lucide-react";
-import {useTranslation} from "react-i18next";
 import {Button} from "~/lib/client/components/ui/button";
 
 
@@ -10,7 +10,7 @@ interface ServingsProps {
 
 
 export const Servings = ({ servings, onChange }: ServingsProps) => {
-    const { t } = useTranslation();
+    const gt = useGT();
 
     return (
         <div className="flex items-center gap-3 rounded-xl border bg-background p-1">
@@ -19,7 +19,7 @@ export const Servings = ({ servings, onChange }: ServingsProps) => {
                 size="icon-sm"
                 variant="ghost"
                 disabled={servings <= 1}
-                aria-label={t("ui.less-servings")}
+                aria-label={gt("Fewer servings")}
                 onClick={() => onChange(servings - 1)}
             >
                 <Minus/>
@@ -33,7 +33,7 @@ export const Servings = ({ servings, onChange }: ServingsProps) => {
                 type="button"
                 size="icon-sm"
                 variant="ghost"
-                aria-label={t("ui.more-servings")}
+                aria-label={gt("More servings")}
                 onClick={() => onChange(servings + 1)}
             >
                 <Plus/>

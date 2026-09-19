@@ -1,12 +1,11 @@
 import {useForm} from "react-hook-form";
 import {LoaderCircle} from "lucide-react";
-import {useTranslation} from "react-i18next";
 import authClient from "~/lib/utils/auth-client";
-import {getRouteApi, Link, useNavigate, useRouter} from "@tanstack/react-router";
 import {useQueryClient} from "@tanstack/react-query";
 import {Input} from "~/lib/client/components/ui/input";
 import {FieldGroup} from "~/lib/client/components/ui/field";
 import {FormButton} from "~/lib/client/components/app/FormButton";
+import {getRouteApi, Link, useNavigate, useRouter} from "@tanstack/react-router";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "~/lib/client/components/ui/form";
 
 
@@ -18,7 +17,6 @@ interface FormValues {
 
 export const LoginForm = () => {
     const router = useRouter();
-    const { t } = useTranslation();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const { authOptions } = getRouteApi("__root__").useRouteContext();
@@ -61,7 +59,7 @@ export const LoginForm = () => {
         <div>
             <header className="mb-7">
                 <h2 className="font-heading text-3xl tracking-tight">
-                    {t("welcome-back")}
+                    Sign in
                 </h2>
             </header>
             <div>
@@ -95,9 +93,9 @@ export const LoginForm = () => {
                                     render={({ field }) =>
                                         <FormItem>
                                             <div className="flex items-center justify-between">
-                                                <FormLabel>{t("password")}</FormLabel>
+                                                <FormLabel>Password</FormLabel>
                                                 <Link to="/forgot-password" className="text-sm underline">
-                                                    {t("forgot-password")}
+                                                    Forgot password?
                                                 </Link>
                                             </div>
                                             <FormControl>
@@ -121,7 +119,7 @@ export const LoginForm = () => {
                         }
                         <FormButton disabled={form.formState.isSubmitting}>
                             {form.formState.isSubmitting && <LoaderCircle className="size-4 animate-spin"/>}{" "}
-                            {t("login")}
+                            Sign in
                         </FormButton>
                     </form>
                 </Form>
