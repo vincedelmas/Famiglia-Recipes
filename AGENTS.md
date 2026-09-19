@@ -1,0 +1,11 @@
+# Repository Guidelines
+
+- Generic and shared helpers live in `/src/lib/utils`.
+- Keep tests beside their modules and use direct imports when moving code; do not leave forwarding modules at the old paths.
+- Do not build the project unless explicitly asked.
+- Create tests only when they are necessary.
+- Avoid creating functions that are used only once when possible. First look for an existing function that already works or can be lightly
+  modified to support the use case.
+- Do not use overly defensive programming. Add checks where necessary; otherwise, trust the types.
+- Prefer the smallest change that fixes the root cause. Do not add fallback logic when an enforced data invariant is enough.
+- After creating the feature, fix, refactor, etc. give me the name of the commit using a conventional commit message.
