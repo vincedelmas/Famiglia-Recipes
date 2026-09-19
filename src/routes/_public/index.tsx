@@ -1,96 +1,40 @@
 import {useTranslation} from "react-i18next";
-import {CookingPot, Search, Star} from "lucide-react";
+import {Leaf, LockKeyhole} from "lucide-react";
 import {createFileRoute} from "@tanstack/react-router";
-import {Separator} from "~/lib/client/components/ui/separator";
 import {LoginForm} from "~/lib/client/components/app/LoginForm";
 import {PageTitle} from "~/lib/client/components/app/PageTitle";
-import {Card, CardContent} from "~/lib/client/components/ui/card";
 import {RegisterForm} from "~/lib/client/components/app/RegisterForm";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "~/lib/client/components/ui/tabs";
 
-
-export const Route = createFileRoute("/_public/")({
-    component: HomePage,
-});
-
+export const Route = createFileRoute("/_public/")({component: HomePage});
 
 function HomePage() {
-    const { t } = useTranslation();
-
-    return (
-        <PageTitle title="Home" onlyHelmet>
-            <div className="flex flex-col items-center min-h-screen">
-                <div className="w-full max-w-7xl px-4 mx-auto mt-10 mb-16 text-center">
-                    <div className="flex justify-center mb-6">
-                        <img src="/logo192.png" alt="Famiglia Recipes Logo" className="h-24 w-24"/>
-                    </div>
-                    <h1 className="text-4xl md:text-6xl font-bold mb-4">
-                        {t("welcome")}
-                    </h1>
-                    <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-8">
-                        {t("hero-title")}
-                    </p>
-                    <Separator className="max-w-md mx-auto"/>
+    const {t} = useTranslation();
+    return <PageTitle title={t("ui.family-cookbook")} onlyHelmet>
+        <div className="page-enter grid gap-10 py-7 sm:py-10 lg:min-h-[760px] lg:grid-cols-[1.1fr_1fr] lg:gap-20">
+            <section className="relative isolate flex min-h-[340px] flex-col justify-end overflow-hidden rounded-[24px] p-7 text-white sm:p-10 lg:min-h-[650px]">
+                <img src="/images/family-table.png" alt="" fetchPriority="high" className="absolute inset-0 -z-20 size-full object-cover object-[65%_center]"/>
+                <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/75 via-black/10 to-transparent"/>
+                <div className="absolute left-7 top-7 flex items-center gap-2 rounded-full border border-white/40 px-3 py-2 text-[10px] uppercase tracking-[0.16em] sm:left-10 sm:top-10"><Leaf className="size-3.5"/>{t("ui.family-cookbook")}</div>
+                <h1 className="max-w-sm font-heading text-5xl leading-[1.06] tracking-[-0.045em] sm:text-6xl">{t("ui.home-title")}</h1>
+                <p className="mt-5 max-w-xs text-sm leading-7 text-white/85">{t("ui.home-note")}</p>
+                <span className="mt-8 text-[11px] tracking-[0.15em] text-white/70">{t("ui.cover-signature")}</span>
+            </section>
+            <section className="flex flex-col justify-center py-3 lg:py-10">
+                <div className="auth-panel">
+                    <p className="eyebrow mb-3">{t("ui.pull-up-chair")}</p>
+                    <p className="mb-8 text-sm leading-relaxed text-muted-foreground">{t("ui.login-note")}</p>
+                    <Tabs defaultValue="login">
+                        <TabsList className="mb-7 w-full">
+                            <TabsTrigger value="login">{t("login")}</TabsTrigger>
+                            <TabsTrigger value="register">{t("register")}</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="login"><LoginForm/></TabsContent>
+                        <TabsContent value="register"><RegisterForm/></TabsContent>
+                    </Tabs>
+                    <p className="mt-8 flex items-center justify-center gap-2 text-xs text-muted-foreground"><LockKeyhole className="size-3.5"/>{t("ui.private-note")}</p>
                 </div>
-
-                <div className="w-full max-w-7xl px-4 mx-auto mb-16">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                        <Card className="bg-card/60 backdrop-blur border border-muted">
-                            <CardContent className="p-6 flex flex-col items-center text-center">
-                                <div className="text-3xl font-bold mb-3">
-                                    <CookingPot className="h-8 w-8 text-cyan-600"/>
-                                </div>
-                                <h3 className="text-xl font-semibold mb-2">{t("add-recipes")}</h3>
-                                <p className="text-muted-foreground">
-                                    {t("feature-1-title")}
-                                </p>
-                            </CardContent>
-                        </Card>
-                        <Card className="bg-card/60 backdrop-blur border border-muted">
-                            <CardContent className="p-6 flex flex-col items-center text-center">
-                                <div className="text-3xl font-bold mb-3">
-                                    <Star className="h-8 w-8 text-amber-500"/>
-                                </div>
-                                <h3 className="text-xl font-semibold mb-2">{t("fav-recipes")}</h3>
-                                <p className="text-muted-foreground">
-                                    {t("feature-2-title")}
-                                </p>
-                            </CardContent>
-                        </Card>
-                        <Card className="bg-card/60 backdrop-blur border border-muted">
-                            <CardContent className="p-6 flex flex-col items-center text-center">
-                                <div className="text-3xl font-bold mb-3">
-                                    <Search className="h-8 w-8 text-teal-600"/>
-                                </div>
-                                <h3 className="text-xl font-semibold mb-2">{t("search-recipes")}</h3>
-                                <p className="text-muted-foreground">
-                                    {t("feature-3-title")}
-                                </p>
-                            </CardContent>
-                        </Card>
-                    </div>
-                </div>
-
-                <div className="w-full max-w-2xl px-4 mx-auto mb-20">
-                    <Card className="max-w-sm mx-auto bg-card/60 backdrop-blur border border-muted">
-                        <CardContent className="p-6">
-                            <h2 className="text-2xl font-semibold text-center mb-6">{t("welcome-back")}</h2>
-                            <Tabs defaultValue="login" className="w-full">
-                                <TabsList className="grid w-full grid-cols-2 h-full mb-4">
-                                    <TabsTrigger value="login" className="text-lg">{t("login")}</TabsTrigger>
-                                    <TabsTrigger value="register" className="text-lg">{t("register")}</TabsTrigger>
-                                </TabsList>
-                                <TabsContent value="login">
-                                    <LoginForm/>
-                                </TabsContent>
-                                <TabsContent value="register">
-                                    <RegisterForm/>
-                                </TabsContent>
-                            </Tabs>
-                        </CardContent>
-                    </Card>
-                </div>
-            </div>
-        </PageTitle>
-    );
+            </section>
+        </div>
+    </PageTitle>;
 }

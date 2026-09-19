@@ -27,18 +27,19 @@ export const DynamicStepList = ({ control }: DynamicStepListProps) => {
     };
 
     return (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-3">
             {fields.map((field, idx) =>
-                <div key={field.id} className="flex items-start space-x-2">
+                <div key={field.id} className="flex items-start gap-3">
                     <FormField
                         control={control}
                         name={`steps.${idx}.content`}
                         render={({ field }) =>
-                            <FormItem className="flex-grow">
+                            <FormItem className="min-w-0 flex-1">
                                 <FormControl>
                                     <Textarea
                                         {...field}
-                                        className="flex-grow"
+                                        className="min-w-0 flex-1"
+                                        aria-label={`${t("step")} ${idx + 1}`}
                                         placeholder={`${t("step")} ${idx + 1}`}
                                     />
                                 </FormControl>
@@ -48,18 +49,19 @@ export const DynamicStepList = ({ control }: DynamicStepListProps) => {
                     />
                     <Button
                         size="icon"
-                        tabIndex={-1}
-                        variant="outline"
-                        className="w-[40px]"
+                        type="button"
+                        variant="ghost"
+                        className="shrink-0"
+                        aria-label={t("ui.remove-step", {number:idx + 1})}
                         disabled={fields.length === 1}
                         onClick={() => removeStep(idx)}
                     >
-                        <Minus className="h-4 w-4"/>
+                        <Minus/>
                     </Button>
                 </div>
             )}
-            <Button onClick={addStep} size="sm">
-                <Plus className="h-4 w-4 mr-2"/> {t("add")}
+            <Button type="button" onClick={addStep} variant="outline" className="self-start">
+                <Plus data-icon="inline-start"/> {t("ui.add-step")}
             </Button>
         </div>
     );

@@ -7,7 +7,7 @@ import {useQueryClient} from "@tanstack/react-query";
 import {Input} from "~/lib/client/components/ui/input";
 import {FormButton} from "~/lib/client/components/app/FormButton";
 import {Link, useNavigate, useRouter} from "@tanstack/react-router";
-import {Card, CardContent, CardHeader, CardTitle} from "~/lib/client/components/ui/card";
+import {FieldGroup} from "~/lib/client/components/ui/field";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "~/lib/client/components/ui/form";
 
 
@@ -58,17 +58,17 @@ export const LoginForm = () => {
 
 
     return (
-        <Card className="pt-4 pb-6">
-            <CardHeader>
-                <CardTitle className="flex justify-center text-lg mb-4">
+        <div>
+            <header className="mb-7">
+                <h2 className="font-heading text-3xl tracking-tight">
                     {t("welcome-back")}
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
+                </h2>
+            </header>
+            <div>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        <fieldset disabled={form.formState.isSubmitting}>
-                            <div className="space-y-4">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
+                        <fieldset disabled={form.formState.isSubmitting} className="min-w-0">
+                            <FieldGroup>
                                 <FormField
                                     control={form.control}
                                     name="email"
@@ -80,6 +80,7 @@ export const LoginForm = () => {
                                                 <Input
                                                     {...field}
                                                     type="email"
+                                                    autoComplete="email"
                                                     placeholder="Email"
                                                 />
                                             </FormControl>
@@ -103,6 +104,7 @@ export const LoginForm = () => {
                                                 <Input
                                                     {...field}
                                                     type="password"
+                                                    autoComplete="current-password"
                                                     placeholder="********"
                                                 />
                                             </FormControl>
@@ -110,19 +112,19 @@ export const LoginForm = () => {
                                         </FormItem>
                                     }
                                 />
-                            </div>
+                            </FieldGroup>
                         </fieldset>
                         {form.formState.errors.root &&
-                            <FormMessage className="text-center">
+                            <p role="alert" className="text-sm text-destructive">
                                 {form.formState.errors.root.message}
-                            </FormMessage>
+                            </p>
                         }
                         <FormButton disabled={form.formState.isSubmitting}>
                             {form.formState.isSubmitting && <LoaderCircle className="size-4 animate-spin"/>} {t("login")}
                         </FormButton>
                     </form>
                 </Form>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 };

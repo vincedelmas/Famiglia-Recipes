@@ -4,6 +4,9 @@ import {useTranslation} from "react-i18next";
 import authClient from "~/lib/utils/auth-client";
 import {toast} from "~/lib/client/components/ui/toast";
 import {Input} from "~/lib/client/components/ui/input";
+import {FieldGroup} from "~/lib/client/components/ui/field";
+import {ArrowLeft} from "lucide-react";
+import {Link} from "@tanstack/react-router";
 import {PageTitle} from "~/lib/client/components/app/PageTitle";
 import {FormButton} from "~/lib/client/components/app/FormButton";
 import {createFileRoute, useNavigate} from "@tanstack/react-router";
@@ -41,9 +44,9 @@ function ForgotPasswordPage() {
 
     return (
         <PageTitle title={t("fp-title")} subtitle={t("fp-subtitle")}>
-            <div className="mt-4 max-w-75">
+            <div className="max-w-lg rounded-2xl border bg-card p-6 sm:p-8">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <form onSubmit={form.handleSubmit(onSubmit)}><FieldGroup>
                         <FormField
                             name="email"
                             control={form.control}
@@ -66,9 +69,10 @@ function ForgotPasswordPage() {
                         <FormButton disabled={form.formState.isSubmitting}>
                             {form.formState.isSubmitting && <LoaderCircle className="size-4 animate-spin"/>} {t("submit")}
                         </FormButton>
-                    </form>
+                    </FieldGroup></form>
                 </Form>
             </div>
+            <Link to="/" className="text-link mt-6"><ArrowLeft className="size-4"/>{t("take-me-home")}</Link>
         </PageTitle>
     );
 }

@@ -6,7 +6,7 @@ import {Input} from "~/lib/client/components/ui/input";
 import authClient from "~/lib/utils/auth-client";
 import {validateKey} from "~/lib/server/functions/user";
 import {FormButton} from "~/lib/client/components/app/FormButton";
-import {Card, CardContent, CardHeader, CardTitle} from "~/lib/client/components/ui/card";
+import {FieldGroup} from "~/lib/client/components/ui/field";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "~/lib/client/components/ui/form";
 
 
@@ -56,17 +56,17 @@ export const RegisterForm = () => {
     };
 
     return (
-        <Card className="pt-4 pb-6">
-            <CardHeader>
-                <CardTitle className="flex justify-center text-lg mb-4">
+        <div>
+            <header className="mb-7">
+                <h2 className="font-heading text-3xl tracking-tight">
                     {t("create-account")}
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
+                </h2>
+            </header>
+            <div>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                        <fieldset disabled={form.formState.isSubmitting}>
-                            <div className="space-y-4">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
+                        <fieldset disabled={form.formState.isSubmitting} className="min-w-0">
+                            <FieldGroup>
                                 <FormField
                                     control={form.control}
                                     name="username"
@@ -81,7 +81,8 @@ export const RegisterForm = () => {
                                             <FormControl>
                                                 <Input
                                                     {...field}
-                                                    placeholder="Username"
+                                                    autoComplete="name"
+                                                    placeholder={t("username")}
                                                 />
                                             </FormControl>
                                             <FormMessage/>
@@ -99,6 +100,7 @@ export const RegisterForm = () => {
                                                 <Input
                                                     {...field}
                                                     type="email"
+                                                    autoComplete="email"
                                                     placeholder="john.doe@example.com"
                                                 />
                                             </FormControl>
@@ -120,6 +122,7 @@ export const RegisterForm = () => {
                                                 <Input
                                                     {...field}
                                                     type="password"
+                                                    autoComplete="new-password"
                                                     placeholder="********"
                                                 />
                                             </FormControl>
@@ -144,6 +147,7 @@ export const RegisterForm = () => {
                                                 <Input
                                                     {...field}
                                                     type="password"
+                                                    autoComplete="new-password"
                                                     placeholder="********"
                                                 />
                                             </FormControl>
@@ -162,6 +166,7 @@ export const RegisterForm = () => {
                                                 <Input
                                                     {...field}
                                                     type="password"
+                                                    autoComplete="new-password"
                                                     placeholder="********"
                                                 />
                                             </FormControl>
@@ -169,19 +174,19 @@ export const RegisterForm = () => {
                                         </FormItem>
                                     }
                                 />
-                            </div>
+                            </FieldGroup>
                         </fieldset>
                         {form.formState.errors.root &&
-                            <FormMessage className="text-center -mt-1.5">
+                            <p role="alert" className="text-center -mt-1.5">
                                 {form.formState.errors.root.message}
-                            </FormMessage>
+                            </p>
                         }
                         <FormButton disabled={form.formState.isSubmitting}>
                             {form.formState.isSubmitting && <LoaderCircle className="size-4 animate-spin"/>} {t("register")}
                         </FormButton>
                     </form>
                 </Form>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 };

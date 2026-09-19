@@ -2,11 +2,11 @@ import Cropper from "react-easy-crop";
 import {useTranslation} from "react-i18next";
 import {Input} from "~/lib/client/components/ui/input";
 import {Button} from "~/lib/client/components/ui/button";
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {MutedText} from "~/lib/client/components/app/MutedText";
 
 
-interface ImageCropperProps {
+interface ImageCropperProps extends Pick<React.ComponentProps<"input">, "id" | "aria-describedby" | "aria-invalid"> {
     aspect: number;
     fileName: string;
     resultClassName?: string;
@@ -34,7 +34,7 @@ interface CropState {
 }
 
 
-export const ImageCropper = ({ onCropApplied, fileName, cropShape, aspect, resultClassName = "" }: ImageCropperProps) => {
+export const ImageCropper = ({ onCropApplied, fileName, cropShape, aspect, resultClassName = "", ...inputProps }: ImageCropperProps) => {
     const { t } = useTranslation();
     const [state, setState] = useState<CropState>({
         zoom: 1,
@@ -45,6 +45,9 @@ export const ImageCropper = ({ onCropApplied, fileName, cropShape, aspect, resul
         crop: { x: 0, y: 0 },
         croppedAreaPixels: null,
     });
+
+    const previewUrl = useMemo(() => state.croppedImage ? URL.createObjectURL(state.croppedImage) : undefined, [state.croppedImage]);
+    useEffect(() => () => { if (previewUrl) URL.revokeObjectURL(previewUrl); }, [previewUrl]);
 
     const getCroppedImg = async (imageSrc: string, crop: CropArea): Promise<Blob> => {
         const image = await createImage(imageSrc);
@@ -115,13 +118,14 @@ export const ImageCropper = ({ onCropApplied, fileName, cropShape, aspect, resul
     return (
         <div>
             <Input
+                {...inputProps}
                 type="file"
                 accept="image/*"
                 onChange={onFileChange}
-                className="file:text-muted-foreground cursor-pointer"
+                className="cursor-pointer"
             />
             {(state.imageSrc && state.open) &&
-                <div className="space-y-4 mt-6 bg-card rounded-lg p-3">
+                <div className="mt-5 flex flex-col gap-4 rounded-xl bg-muted p-4">
                     <div>
                         <div>{t("crop-title")}</div>
                         <MutedText className="not-italic">{t("crop-subtitle")}</MutedText>
@@ -144,12 +148,12 @@ export const ImageCropper = ({ onCropApplied, fileName, cropShape, aspect, resul
                 </div>
             }
             {state.showResult && state.croppedImage &&
-                <div className="space-y-4 mt-4 bg-card rounded-lg p-3 h-min-[250px]">
+                <div className="mt-4 flex flex-col gap-4 rounded-xl bg-muted p-4">
                     <MutedText className="not-italic">{t("crop-selected")}</MutedText>
                     <img
                         alt={fileName}
                         className={resultClassName}
-                        src={URL.createObjectURL(state.croppedImage)}
+                        src={previewUrl}
                     />
                     <Button onClick={handleEditCrop}>{t("edit")}</Button>
                 </div>

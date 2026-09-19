@@ -5,7 +5,7 @@ import {useForm} from "react-hook-form";
 import {useTranslation} from "react-i18next";
 import {RecipeFormValues} from "~/lib/utils/schemas";
 import {Input} from "~/lib/client/components/ui/input";
-import {Label} from "~/lib/client/components/ui/label";
+import {Field, FieldGroup, FieldLabel} from "~/lib/client/components/ui/field";
 import {Button} from "~/lib/client/components/ui/button";
 import {useUploadMutation} from "~/lib/client/react-query";
 import {Textarea} from "~/lib/client/components/ui/textarea";
@@ -141,7 +141,7 @@ export default function UploadDialog({ form }: UploadDialogProps) {
                 <Upload data-icon="inline-start"/> {t("upload-button")}
             </DialogTrigger>
             <DialogContent
-                className="sm:max-w-[500px] space-y-3"
+                className="max-h-[90dvh] overflow-y-auto sm:max-w-xl"
             >
                 <DialogHeader>
                     <DialogTitle>{t("upload-dialog-title")}</DialogTitle>
@@ -158,9 +158,9 @@ export default function UploadDialog({ form }: UploadDialogProps) {
                             <FileText className="h-4 w-4"/> {t("tab-text-input")}
                         </TabsTrigger>
                     </TabsList>
-                    <TabsContent value="upload" className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="file-upload">{t("label-choose-file")}</Label>
+                    <TabsContent value="upload" className="flex flex-col gap-4">
+                        <FieldGroup><Field>
+                            <FieldLabel htmlFor="file-upload">{t("label-choose-file")}</FieldLabel>
                             <Input
                                 type="file"
                                 id="file-upload"
@@ -172,18 +172,18 @@ export default function UploadDialog({ form }: UploadDialogProps) {
                                 {t("supported-formats")}
                             </p>
                             {selectedFile &&
-                                <div className="text-sm text-green-600">
+                                <div className="text-sm text-primary">
                                     {t("file-selected-with-size", {
                                         fileName: selectedFile.name,
                                         size: (selectedFile.size / 1024 / 1024).toFixed(2)
                                     })}
                                 </div>
                             }
-                        </div>
+                        </Field></FieldGroup>
                     </TabsContent>
-                    <TabsContent value="text" className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="text-content">{t("label-text-content")}</Label>
+                    <TabsContent value="text" className="flex flex-col gap-4">
+                        <FieldGroup><Field>
+                            <FieldLabel htmlFor="text-content">{t("label-text-content")}</FieldLabel>
                             <Textarea
                                 id="text-content"
                                 value={textContent}
@@ -194,18 +194,18 @@ export default function UploadDialog({ form }: UploadDialogProps) {
                             />
                             <div className="flex justify-between text-sm text-muted-foreground">
                                 <span>{t("max-char-info")}</span>
-                                <span className={textContent.length > MAX_TEXT_LENGTH ? "text-red-700" : ""}>
+                                <span className={textContent.length > MAX_TEXT_LENGTH ? "text-destructive" : ""}>
                                     {textContent.length.toLocaleString()} / {MAX_TEXT_LENGTH.toLocaleString()}
                                 </span>
                             </div>
-                        </div>
+                        </Field></FieldGroup>
                     </TabsContent>
                 </Tabs>
                 {errors.length > 0 &&
                     <Alert variant="destructive">
                         <AlertCircle className="h-4 w-4"/>
                         <AlertDescription>
-                            <ul className="list-disc list-inside space-y-1">
+                            <ul className="flex list-inside list-disc flex-col gap-1">
                                 {errors.map((error, idx) =>
                                     <li key={idx}>{error}</li>
                                 )}

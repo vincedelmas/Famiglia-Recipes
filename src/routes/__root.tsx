@@ -40,18 +40,19 @@ function RootComponent() {
     useNProgress();
 
     return (
-        <html lang="en" className="dark" suppressHydrationWarning>
+        <html lang="en" suppressHydrationWarning>
         <head>
             <HeadContent/>
         </head>
         <body>
 
         <div id="root">
-            <div className="flex flex-col min-h-[calc(100vh-64px)] mt-16">
+            <div className="flex min-h-dvh flex-col">
                 <I18nextProvider i18n={i18nInstance}>
                     <Toaster/>
+                    <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-card focus:p-3">Skip to content</a>
                     <Navbar/>
-                    <main className="flex-1 w-full max-w-330 px-2 mx-auto">
+                    <main id="main-content" className="mx-auto w-full max-w-[1320px] flex-1 px-5 pb-12 sm:px-8 lg:px-12">
                         <Outlet/>
                     </main>
                     <Footer/>

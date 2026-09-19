@@ -62,13 +62,13 @@ export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: Commen
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="max-sm:w-full w-112.5">
+            <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
                     <DialogDescription>{subtitle}</DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
                         <FormField
                             name="content"
                             control={form.control}
@@ -83,7 +83,7 @@ export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: Commen
                                         />
                                     </FormControl>
                                     <FormDescription>
-                                        {warning ? <div className="text-red-500">{t("c-error")}</div> : t("c-info")}
+                                        {warning ? <span className="text-destructive">{t("c-error")}</span> : t("c-info")}
                                     </FormDescription>
                                     <FormMessage/>
                                 </FormItem>

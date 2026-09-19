@@ -5,6 +5,9 @@ import {useTranslation} from "react-i18next";
 import authClient from "~/lib/utils/auth-client";
 import {Input} from "~/lib/client/components/ui/input";
 import {Button} from "~/lib/client/components/ui/button";
+import {FieldGroup} from "~/lib/client/components/ui/field";
+import {ArrowLeft} from "lucide-react";
+import {Link} from "@tanstack/react-router";
 import {PageTitle} from "~/lib/client/components/app/PageTitle";
 import {createFileRoute, useNavigate} from "@tanstack/react-router";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "~/lib/client/components/ui/form";
@@ -57,11 +60,11 @@ function ResetPasswordPage() {
 
     return (
         <PageTitle title={t("rp-title")} subtitle={t("rp-subtitle")}>
-            <div className="mt-4 w-[300px] max-sm:w-full">
+            <div className="max-w-lg rounded-2xl border bg-card p-6 sm:p-8">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <form onSubmit={form.handleSubmit(onSubmit)}><FieldGroup>
                         <fieldset disabled={form.formState.isSubmitting}>
-                            <div className="space-y-4">
+                            <div className="flex flex-col gap-5">
                                 <FormField
                                     control={form.control}
                                     name="newPassword"
@@ -111,9 +114,10 @@ function ResetPasswordPage() {
                         <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
                             {form.formState.isSubmitting && <LoaderCircle className="size-4 animate-spin"/>} {t("submit")}
                         </Button>
-                    </form>
+                    </FieldGroup></form>
                 </Form>
             </div>
+            <Link to="/" className="text-link mt-6"><ArrowLeft className="size-4"/>{t("take-me-home")}</Link>
         </PageTitle>
     );
 }

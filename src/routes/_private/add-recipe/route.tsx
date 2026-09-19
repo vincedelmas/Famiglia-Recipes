@@ -2,7 +2,7 @@ import {toast} from "~/lib/client/components/ui/toast";
 import {useTranslation} from "react-i18next";
 import {RecipeFormValues} from "~/lib/utils/schemas";
 import {useAddRecipe} from "~/lib/client/react-query";
-import {useSuspenseQuery} from "@tanstack/react-query";
+import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
 import {PageTitle} from "~/lib/client/components/app/PageTitle";
 import {createFileRoute, useNavigate} from "@tanstack/react-router";
 import {addRecipeOptions} from "~/lib/client/react-query/queryOptions";
@@ -16,6 +16,7 @@ export const Route = createFileRoute("/_private/add-recipe")({
 
 function AddRecipePage() {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const { t } = useTranslation();
     const addRecipe = useAddRecipe();
     const { data: labels } = useSuspenseQuery(Route.useRouteContext().addRecipeOptions);
@@ -39,8 +40,12 @@ function AddRecipePage() {
         }
 
         addRecipe.mutate({ data: formData }, {
-            onSuccess: () => {
-                toast.add({ type: "success", title: "Recipe Successfully edited" });
+            onSuccess: async () => {
+                await Promise.all([
+                    queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
+                    queryClient.invalidateQueries({ queryKey: ["allRecipes"] }),
+                ]);
+                toast.add({ type: "success", title: t("ui.recipe-created") });
                 return navigate({ to: "/dashboard" });
             }
         });

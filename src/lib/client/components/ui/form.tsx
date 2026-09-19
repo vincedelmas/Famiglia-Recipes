@@ -2,6 +2,7 @@ import * as React from "react";
 import {cn} from "~/lib/utils/helpers";
 import {useRender} from "@base-ui/react/use-render";
 import {Label} from "~/lib/client/components/ui/label";
+import {Field} from "~/lib/client/components/ui/field";
 import {Controller, ControllerProps, FieldPath, FieldValues, FormProvider, useFormContext, useFormState} from "react-hook-form";
 
 
@@ -68,14 +69,16 @@ const FormItemContext = React.createContext<FormItemContextValue>({} as FormItem
 
 function FormItem({ className, ...props }: React.ComponentProps<"div">) {
     const id = React.useId();
+    const {error} = useFormField();
 
     const idMemo = React.useMemo(() => ({ id }), [id]);
 
     return (
         <FormItemContext value={idMemo}>
-            <div
+            <Field
+                data-invalid={!!error}
                 data-slot="form-item"
-                className={cn("grid gap-2", className)}
+                className={cn("min-w-0", className)}
                 {...props}
             />
         </FormItemContext>

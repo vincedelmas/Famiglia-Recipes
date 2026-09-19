@@ -1,38 +1,18 @@
-import {Badge} from "~/lib/client/components/ui/badge";
-import {MutedText} from "~/lib/client/components/app/MutedText";
-
+import {ToggleGroup, ToggleGroupItem} from "~/lib/client/components/ui/toggle-group";
 
 interface FilterGroupProps {
     title: string;
-    emptyText: string;
-    onToggle: (id: number) => void;
-    items: {
-        id: number;
-        name: string;
-        color?: string;
-    }[];
+    selected: number[];
+    onChange: (selected: number[]) => void;
+    items: {id: number; name: string}[];
 }
 
-
-export function FilterGroup({ title, emptyText, items, onToggle }: FilterGroupProps) {
-    return (
-        <div>
-            <div className="text-lg font-semibold mb-1">{title}</div>
-            <div className="flex flex-wrap items-center gap-2">
-                {items.length === 0 ?
-                    <MutedText>{emptyText}</MutedText>
-                    :
-                    items.map((item) =>
-                        <Badge
-                            key={item.id}
-                            color={item.color}
-                            onClick={() => onToggle(item.id)}
-                            className={"cursor-pointer rounded-full"}
-                        >
-                            {item.name}
-                        </Badge>
-                    )}
-            </div>
-        </div>
-    );
+export function FilterGroup({title, selected, items, onChange}: FilterGroupProps) {
+    if (!items.length) return null;
+    return <div className="flex flex-col gap-3">
+        <h2 className="eyebrow">{title}</h2>
+        <ToggleGroup multiple value={selected.map(String)} onValueChange={values => onChange(values.map(Number))} variant="outline" spacing={2} className="flex flex-wrap justify-start" aria-label={title}>
+            {items.map(item => <ToggleGroupItem key={item.id} value={String(item.id)}>{item.name}</ToggleGroupItem>)}
+        </ToggleGroup>
+    </div>;
 }

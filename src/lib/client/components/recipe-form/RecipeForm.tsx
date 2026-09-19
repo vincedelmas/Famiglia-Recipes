@@ -1,5 +1,6 @@
 import {useState} from "react";
-import {cn} from "~/lib/utils/helpers";
+import {BookOpen, Leaf, LoaderCircle} from "lucide-react";
+import {FieldGroup, FieldSet, FieldLegend} from "~/lib/client/components/ui/field";
 import {useForm} from "react-hook-form";
 import {RATIO} from "~/lib/utils/constants";
 import {LabelType} from "~/lib/types/types";
@@ -44,20 +45,15 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
     });
 
     return (
-        <div>
-            {type === "Creation" &&
-                <div className="mt-8 mb-7">
-                    <div className="font-medium text-sm">
-                        {t("ai-parsing")}
-                    </div>
-                    <UploadDialog form={form}/>
-                </div>
-            }
+        <div className="grid items-start gap-8 lg:grid-cols-[1fr_280px] lg:gap-10">
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className={cn("space-y-7 w-[750px] max-sm:w-full", type === "Edition" && "mt-8")}
+                    className="flex min-w-0 flex-col gap-6"
                 >
+                    <FieldSet className="recipe-form-section">
+                    <FieldLegend>{t("ui.basics")}</FieldLegend>
+                    <FieldGroup>
                     <FormField
                         name="image"
                         control={form.control}
@@ -69,7 +65,7 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                                         aspect={RATIO}
                                         cropShape="rect"
                                         fileName={field.name}
-                                        resultClassName="h-[150px]"
+                                        resultClassName="max-h-64 w-full rounded-xl object-cover"
                                         onCropApplied={field.onChange}
                                     />
                                 </FormControl>
@@ -99,8 +95,8 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                             control={form.control}
                             render={({ field }) =>
                                 <FormItem>
-                                    <FormLabel className="line-clamp-1">
-                                        {t("r-preparation")}
+                                    <FormLabel >
+                                        {t("ui.prep-minutes")}
                                     </FormLabel>
                                     <FormControl>
                                         <Input
@@ -121,8 +117,8 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                             control={form.control}
                             render={({ field }) =>
                                 <FormItem>
-                                    <FormLabel className="line-clamp-1">
-                                        {t("r-cooking")}
+                                    <FormLabel >
+                                        {t("ui.cooking-minutes")}
                                     </FormLabel>
                                     <FormControl>
                                         <Input
@@ -159,12 +155,18 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                             }
                         />
                     </div>
+                    </FieldGroup>
+                    </FieldSet>
+                    <FieldSet className="recipe-form-section">
+                    <FieldLegend>{t("ingredients")}</FieldLegend>
+                    <p className="mb-5 text-sm text-muted-foreground">{t("ui.ingredients-note")}</p>
+                    <FieldGroup>
                     <FormField
                         name="ingredients"
                         control={form.control}
                         render={() =>
                             <FormItem>
-                                <FormLabel>{t("ingredients")}</FormLabel>
+                                <FormLabel className="sr-only">{t("ingredients")}</FormLabel>
                                 <FormControl>
                                     <DynamicIngredientList
                                         control={form.control}
@@ -174,12 +176,18 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                             </FormItem>
                         }
                     />
+                    </FieldGroup>
+                    </FieldSet>
+                    <FieldSet className="recipe-form-section">
+                    <FieldLegend>{t("ui.instructions")}</FieldLegend>
+                    <p className="mb-5 text-sm text-muted-foreground">{t("ui.steps-note")}</p>
+                    <FieldGroup>
                     <FormField
                         name="steps"
                         control={form.control}
                         render={() =>
                             <FormItem>
-                                <FormLabel>{t("r-steps")}</FormLabel>
+                                <FormLabel className="sr-only">{t("r-steps")}</FormLabel>
                                 <FormControl>
                                     <DynamicStepList
                                         control={form.control}
@@ -189,12 +197,17 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                             </FormItem>
                         }
                     />
+                    </FieldGroup>
+                    </FieldSet>
+                    <FieldSet className="recipe-form-section">
+                    <FieldLegend>{t("ui.finishing-touches")}</FieldLegend>
+                    <FieldGroup>
                     <FormField
                         name="labels"
                         control={form.control}
                         render={({ field }) =>
                             <FormItem>
-                                <FormLabel>Labels</FormLabel>
+                                <FormLabel>{t("ui.labels")}</FormLabel>
                                 <FormControl>
                                     <LabelSelector
                                         labelsList={labels}
@@ -221,16 +234,29 @@ export const RecipeForm = ({ initValues, onSubmit, labels, pendingState, type }:
                             }
                         />
                     }
+                    </FieldGroup>
+                    </FieldSet>
                     <Button
                         type="submit"
-                        className="w-52"
+                        className="w-full sm:w-fit"
+                        size="lg"
                         onClick={() => setBlockerActive(false)}
                         disabled={pendingState || form.formState.isSubmitting}
                     >
+                        {pendingState ? <LoaderCircle data-icon="inline-start" className="animate-spin"/> : <BookOpen data-icon="inline-start"/>}
                         {type === "Creation" ? t("r-add") : t("r-edit")}
                     </Button>
                 </form>
             </Form>
+            <aside className="order-first flex flex-col gap-6 lg:sticky lg:top-28 lg:order-last">
+                {type === "Creation" && <div className="rounded-2xl border border-primary/15 bg-accent/50 p-6">
+                    <BookOpen className="mb-4 size-6 text-primary" strokeWidth={1.5}/>
+                    <h2 className="font-heading text-xl tracking-tight">{t("ui.import-title")}</h2>
+                    <p className="mb-5 mt-2 text-sm leading-6 text-muted-foreground">{t("ui.import-note")}</p>
+                    <UploadDialog form={form}/>
+                </div>}
+                <div className="hidden px-3 lg:block"><Leaf className="mb-3 size-5 text-primary" strokeWidth={1.5}/><p className="font-heading text-xl leading-relaxed text-muted-foreground italic">{t("ui.recipe-tip")}</p></div>
+            </aside>
         </div>
     );
 };

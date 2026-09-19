@@ -1,7 +1,7 @@
 import {useTranslation} from "react-i18next";
 import {RecipeFormValues} from "~/lib/utils/schemas";
 import {toast} from "~/lib/client/components/ui/toast";
-import {useSuspenseQuery} from "@tanstack/react-query";
+import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
 import {PageTitle} from "~/lib/client/components/app/PageTitle";
 import {createFileRoute, useNavigate} from "@tanstack/react-router";
 import {RecipeForm} from "~/lib/client/components/recipe-form/RecipeForm";
@@ -18,6 +18,7 @@ export const Route = createFileRoute("/_private/edit-recipe/$recipeId")({
 
 function EditRecipePage() {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const { t } = useTranslation();
     const { recipeId } = Route.useParams();
     const updateRecipeMutation = useUpdateRecipe();
@@ -46,8 +47,14 @@ function EditRecipePage() {
         }
 
         updateRecipeMutation.mutate({ formData: formData }, {
-            onSuccess: () => {
-                toast.add({ type: "success", title: "Recipe Successfully edited" });
+            onSuccess: async () => {
+                await Promise.all([
+                    queryClient.invalidateQueries({ queryKey: ["recipeDetails", recipeId] }),
+                    queryClient.invalidateQueries({ queryKey: ["editRecipe", recipeId] }),
+                    queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
+                    queryClient.invalidateQueries({ queryKey: ["allRecipes"] }),
+                ]);
+                toast.add({ type: "success", title: t("ui.recipe-updated") });
                 return navigate({ to: "/details/$recipeId", params: { recipeId }, replace: true });
             }
         });
