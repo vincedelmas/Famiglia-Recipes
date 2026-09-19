@@ -20,9 +20,10 @@ This app is built with a focus on simplicity and ease of use.
 
 - **Backend:** [Bun](https://bun.com/)
 - **Framework:** [TanStack Start](https://tanstack.com/start/v0)
-- **Frontend:** [React](https://react.dev/), [TanStack Router](https://tanstack.com/router/latest), [TanStack Query](https://tanstack.com/query/latest)
+-
+**Frontend:** [React](https://react.dev/), [TanStack Router](https://tanstack.com/router/latest), [TanStack Query](https://tanstack.com/query/latest)
 - **Database:** [Drizzle ORM](https://orm.drizzle.team/) with [Turso](https://turso.tech/) (libSQL)
-- **UI:** [Tailwind CSS](https://tailwindcss.com/) & [shadcn/ui](https://ui.shadcn.com/)
+- **UI:** [Tailwind CSS](https://tailwindcss.com/) & [shadcn/ui](https://ui.shadcn.com/) (Base UI, Nova preset)
 - **Authentication:** [Better-Auth](https://github.com/GentikSolm/better-auth)
 - **Validation:** [Zod 4](https://zod.dev/)
 - **i18n:** [i18next](https://www.i18next.com/)

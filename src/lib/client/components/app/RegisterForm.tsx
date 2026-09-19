@@ -1,4 +1,4 @@
-import {toast} from "sonner";
+import {toast} from "~/lib/client/components/ui/toast";
 import {useForm} from "react-hook-form";
 import {LoaderCircle} from "lucide-react";
 import {useTranslation} from "react-i18next";
@@ -50,7 +50,7 @@ export const RegisterForm = () => {
             },
             onSuccess: () => {
                 form.reset();
-                toast.success(t("email-sent"));
+                toast.add({ type: "success", title: t("email-sent") });
             },
         });
     };

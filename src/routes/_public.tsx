@@ -1,10 +1,9 @@
-import {authOptions} from "~/lib/client/react-query";
 import {createFileRoute, redirect} from "@tanstack/react-router";
 
 
 export const Route = createFileRoute("/_public")({
     validateSearch: ({ search }) => search as { authExpired?: boolean },
-    beforeLoad: async ({ context: { queryClient }, search }) => {
+    beforeLoad: async ({ context: { queryClient, authOptions }, search }) => {
         const currentUser = queryClient.getQueryData(authOptions.queryKey);
         
         if (search.authExpired) {

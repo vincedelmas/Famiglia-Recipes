@@ -3,10 +3,9 @@ import {useState} from "react";
 import {cn} from "~/lib/utils/helpers";
 import {LoaderCircle} from "lucide-react";
 import {Button} from "~/lib/client/components/ui/button";
-import {type VariantProps} from "class-variance-authority";
 
 
-interface FormButtonProps extends React.ComponentProps<"button">, VariantProps<typeof Button> {
+interface FormButtonProps extends React.ComponentProps<typeof Button> {
     disabled?: boolean;
     className?: string;
     children: React.ReactNode;

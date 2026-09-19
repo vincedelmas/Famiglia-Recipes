@@ -1,8 +1,8 @@
-import {toast} from "sonner";
 import {useForm} from "react-hook-form";
 import {LoaderCircle} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import authClient from "~/lib/utils/auth-client";
+import {toast} from "~/lib/client/components/ui/toast";
 import {Input} from "~/lib/client/components/ui/input";
 import {PageTitle} from "~/lib/client/components/app/PageTitle";
 import {FormButton} from "~/lib/client/components/app/FormButton";
@@ -30,10 +30,10 @@ function ForgotPasswordPage() {
             redirectTo: "/reset-password",
         }, {
             onError: (ctx) => {
-                toast.error(ctx.error.message);
+                toast.add({ type: "error", title: ctx.error.message });
             },
             onSuccess: async () => {
-                toast.success("An email was send to reset your password.")
+                toast.add({ type: "success", title: "An email was sent to reset your password." });
                 await navigate({ to: "/", replace: true })
             }
         });

@@ -6,25 +6,6 @@ import frTranslations from "./translations/fr.json";
 import LanguageDetector from "i18next-browser-languagedetector";
 
 
-interface Formatters {
-    datetime: (
-        value: string | number | Date,
-        lang: string | undefined,
-        options?: DateTimeFormatOptions
-    ) => string;
-}
-
-
-interface DateTimeFormatOptions {
-    includeTime?: boolean;
-}
-
-
-const formatters: Formatters = {
-    datetime: (value, lang, options) => formatDateTime(value, lang, options),
-};
-
-
 const detectionOptions = {
     lookupCookie: "i18next",
     lookupQuerystring: "lng",
@@ -47,24 +28,13 @@ i18next
         },
         interpolation: {
             escapeValue: false,
-            format: (value: unknown, format?: string, lang?: string, options?: unknown) => {
-                if (format === "datetime") {
-                    const opts: DateTimeFormatOptions | undefined = typeof options === "object" && options !== null
-                        ? (options as DateTimeFormatOptions) : undefined;
-
-                    if (typeof value === "string" || typeof value === "number" || value instanceof Date) {
-                        return formatters.datetime(value, lang, opts);
-                    }
-                }
-                return String(value);
-            },
         },
         react: {
             useSuspense: true,
         },
     })
     .then(() => {
-        console.log("i18n initialized");
+        i18next.services.formatter?.add("datetime", (value, lang, options) => formatDateTime(value, lang, options));
     }).catch((err) => {
     console.error("i18n init failed", err);
 });

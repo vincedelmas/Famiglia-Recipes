@@ -1,4 +1,4 @@
-import {toast} from "sonner";
+import {toast} from "~/lib/client/components/ui/toast";
 import {useTranslation} from "react-i18next";
 import {RecipeFormValues} from "~/lib/utils/schemas";
 import {useAddRecipe} from "~/lib/client/react-query";
@@ -10,7 +10,7 @@ import {RecipeForm} from "~/lib/client/components/recipe-form/RecipeForm";
 
 
 export const Route = createFileRoute("/_private/add-recipe")({
-    loader: ({ context: { queryClient } }) => queryClient.ensureQueryData(addRecipeOptions),
+    context: () => ({ addRecipeOptions }),
     component: AddRecipePage,
 });
 
@@ -18,7 +18,7 @@ function AddRecipePage() {
     const navigate = useNavigate();
     const { t } = useTranslation();
     const addRecipe = useAddRecipe();
-    const { data: labels } = useSuspenseQuery(addRecipeOptions);
+    const { data: labels } = useSuspenseQuery(Route.useRouteContext().addRecipeOptions);
     const initValues: RecipeFormValues = {
         title: "",
         labels: [],
@@ -40,7 +40,7 @@ function AddRecipePage() {
 
         addRecipe.mutate({ data: formData }, {
             onSuccess: () => {
-                toast.success("Recipe Successfully edited");
+                toast.add({ type: "success", title: "Recipe Successfully edited" });
                 return navigate({ to: "/dashboard" });
             }
         });

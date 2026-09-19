@@ -1,11 +1,12 @@
 import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {useTranslation} from "react-i18next";
+import {getRouteApi} from "@tanstack/react-router";
 import {useQueryClient} from "@tanstack/react-query";
 import {Button} from "~/lib/client/components/ui/button";
 import {Textarea} from "~/lib/client/components/ui/textarea";
 import {Comment} from "~/lib/client/components/details/CommentSection";
-import {recipeCommentsOptions, useAddComment, useEditComment} from "~/lib/client/react-query";
+import {useAddComment, useEditComment} from "~/lib/client/react-query";
 import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "~/lib/client/components/ui/form";
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "~/lib/client/components/ui/dialog";
 
@@ -25,6 +26,7 @@ export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: Commen
     const editComment = useEditComment();
     const queryClient = useQueryClient();
     const [warning, setWarning] = useState(false);
+    const { recipeCommentsOptions: commentsOptions } = getRouteApi("/_private/details/$recipeId").useRouteContext();
     const form = useForm<Comment>({
         defaultValues: {
             content: isEditing ? commentToEdit.content : "",
@@ -40,7 +42,7 @@ export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: Commen
                 onSuccess: async () => {
                     form.reset();
                     setOpen(false);
-                    await queryClient.invalidateQueries({ queryKey: recipeCommentsOptions(recipeId).queryKey });
+                    await queryClient.invalidateQueries({ queryKey: commentsOptions.queryKey });
                 },
             });
         }
@@ -49,7 +51,7 @@ export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: Commen
                 onSuccess: async () => {
                     form.reset();
                     setOpen(false);
-                    await queryClient.invalidateQueries({ queryKey: recipeCommentsOptions(recipeId).queryKey });
+                    await queryClient.invalidateQueries({ queryKey: commentsOptions.queryKey });
                 },
             });
         }
@@ -60,7 +62,7 @@ export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: Commen
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="max-sm:w-full w-[450px]">
+            <DialogContent className="max-sm:w-full w-112.5">
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
                     <DialogDescription>{subtitle}</DialogDescription>
@@ -76,7 +78,7 @@ export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: Commen
                                     <FormControl>
                                         <Textarea
                                             {...field}
-                                            className="h-[150px]"
+                                            className="h-37.5"
                                             placeholder={t("c-placeholder")}
                                         />
                                     </FormControl>
@@ -89,7 +91,10 @@ export const CommentDialog = ({ open, setOpen, commentToEdit, recipeId }: Commen
                         />
                         <DialogFooter>
                             <Button type="submit" disabled={addComment.isPending || editComment.isPending}>
-                                {(addComment.isPending || editComment.isPending) ? t("submitting") : t("save")}
+                                {(addComment.isPending || editComment.isPending)
+                                    ? t("submitting")
+                                    : t("save")
+                                }
                             </Button>
                         </DialogFooter>
                     </form>

@@ -37,17 +37,17 @@ export const ErrorComponent = ({ title, icon, text, footerText }: ErrorComponent
                                 >
                                     <ArrowLeft className="w-4 h-4"/> Go Back
                                 </Button>
-                                <Button asChild className="flex items-center gap-2">
-                                    <Link to="/">
-                                        <Home className="w-4 h-4"/> Home
-                                    </Link>
+                                <Button className="flex items-center gap-2" nativeButton={false} render={<Link to="/"/>}>
+                                    <Home className="w-4 h-4"/> Home
                                 </Button>
                             </div>
                         </div>
                         <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                             <p className="text-sm text-gray-400 dark:text-gray-400">
                                 {footerText}{" "}
-                                <a href={`mailto`} className="text-primary hover:underline">Contact us</a>
+                                <a href={`mailto`} className="text-primary hover:underline">
+                                    Contact us
+                                </a>
                             </p>
                         </div>
                     </div>

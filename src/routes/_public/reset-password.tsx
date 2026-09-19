@@ -1,4 +1,4 @@
-import {toast} from "sonner";
+import {toast} from "~/lib/client/components/ui/toast";
 import {useForm} from "react-hook-form";
 import {LoaderCircle} from "lucide-react";
 import {useTranslation} from "react-i18next";
@@ -36,7 +36,7 @@ function ResetPasswordPage() {
 
     const onSubmit = async (submitted: FormValues) => {
         if (!token) {
-            toast.error(t("invalid-token"));
+            toast.add({ type: "error", title: t("invalid-token") });
             return navigate({ to: "/", replace: true });
         }
 
@@ -45,11 +45,11 @@ function ResetPasswordPage() {
             newPassword: submitted.newPassword,
         }, {
             onError: () => {
-                toast.error(t("unexpected-error"));
+                toast.add({ type: "error", title: t("unexpected-error") });
             },
             onSuccess: async () => {
                 form.reset();
-                toast.success(t("success-pass-modified"));
+                toast.add({ type: "success", title: t("success-pass-modified") });
                 await navigate({ to: "/", replace: true });
             }
         });

@@ -1,8 +1,7 @@
 import * as React from "react";
 import {cn} from "~/lib/utils/helpers";
-import {Slot} from "@radix-ui/react-slot";
+import {useRender} from "@base-ui/react/use-render";
 import {Label} from "~/lib/client/components/ui/label";
-import * as LabelPrimitive from "@radix-ui/react-label";
 import {Controller, ControllerProps, FieldPath, FieldValues, FormProvider, useFormContext, useFormState} from "react-hook-form";
 
 
@@ -84,7 +83,7 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 
-function FormLabel({ className, ...props }: React.ComponentProps<typeof LabelPrimitive.Root>) {
+function FormLabel({ className, ...props }: React.ComponentProps<typeof Label>) {
     const { error, formItemId } = useFormField();
 
     return (
@@ -99,18 +98,19 @@ function FormLabel({ className, ...props }: React.ComponentProps<typeof LabelPri
 }
 
 
-function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
+function FormControl({ children, ...props }: React.HTMLAttributes<HTMLElement> & { children: React.ReactElement }) {
     const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
 
-    return (
-        <Slot
-            id={formItemId}
-            aria-invalid={!!error}
-            data-slot="form-control"
-            aria-describedby={error ? `${formDescriptionId} ${formMessageId}` : `${formDescriptionId}`}
-            {...props}
-        />
-    )
+    return useRender({
+        render: children,
+        props: {
+            id: formItemId,
+            "aria-invalid": !!error,
+            "aria-describedby": error ? `${formDescriptionId} ${formMessageId}` : formDescriptionId,
+            ...props,
+        },
+        state: { slot: "form-control" },
+    });
 }
 
 

@@ -1,4 +1,4 @@
-import {toast} from "sonner";
+import {toast} from "~/lib/client/components/ui/toast";
 import {routeTree} from "~/routeTree.gen";
 import {createRouter} from "@tanstack/react-router";
 import {NotFound} from "~/lib/client/components/app/NotFound";
@@ -13,22 +13,22 @@ export function getRouter() {
         queryCache: new QueryCache({
             onError: (error, query) => {
                 if (query?.meta?.displayErrorMsg) {
-                    toast.error(error.message);
+                    toast.add({ type: "error", title: error.message });
                 }
                 if (query?.meta?.errorMessage) {
-                    toast.error(query.meta.errorMessage.toString());
+                    toast.add({ type: "error", title: query.meta.errorMessage.toString() });
                 }
             },
         }),
         mutationCache: new MutationCache({
             onError: (_error, _variables, _context, mutation) => {
                 if (mutation?.meta?.errorMessage) {
-                    toast.error(mutation.meta.errorMessage.toString());
+                    toast.add({ type: "error", title: mutation.meta.errorMessage.toString() });
                 }
             },
             onSuccess: (_data, _variables, _context, mutation) => {
                 if (mutation?.meta?.successMessage) {
-                    toast.success(mutation.meta.successMessage.toString());
+                    toast.add({ type: "success", title: mutation.meta.successMessage.toString() });
                 }
             }
         }),

@@ -9,14 +9,14 @@ import {dashboardOptions} from "~/lib/client/react-query/queryOptions";
 
 
 export const Route = createFileRoute("/_private/dashboard")({
-    loader: ({ context: { queryClient } }) => queryClient.ensureQueryData(dashboardOptions),
+    context: () => ({ dashboardOptions }),
     component: DashboardPage,
 });
 
 
 function DashboardPage() {
     const { t } = useTranslation();
-    const apiData = useSuspenseQuery(dashboardOptions).data;
+    const apiData = useSuspenseQuery(Route.useRouteContext().dashboardOptions).data;
 
     return (
         <PageTitle title={t("da-title")} subtitle={t("da-subtitle")}>

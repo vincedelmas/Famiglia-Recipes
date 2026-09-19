@@ -2,7 +2,7 @@ import {useForm} from "react-hook-form";
 import {LoaderCircle} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import authClient from "~/lib/utils/auth-client";
-import {authOptions} from "~/lib/client/react-query";
+import {getRouteApi} from "@tanstack/react-router";
 import {useQueryClient} from "@tanstack/react-query";
 import {Input} from "~/lib/client/components/ui/input";
 import {FormButton} from "~/lib/client/components/app/FormButton";
@@ -21,6 +21,7 @@ export const LoginForm = () => {
     const router = useRouter();
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { authOptions } = getRouteApi("__root__").useRouteContext();
     const queryClient = useQueryClient();
     const form = useForm<FormValues>({
         shouldFocusError: false,

@@ -15,7 +15,7 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
 
     return (
         <Link to="/details/$recipeId" params={{ recipeId: recipe.id.toString() }}>
-            <Card className="w-full group overflow-hidden h-full">
+            <Card className="w-full group h-full pt-0">
                 <div className="relative aspect-[4/3] overflow-hidden rounded-t-lg">
                     <img
                         alt={recipe.title}
@@ -51,7 +51,7 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
                         </div>
                     </div>
                 </CardContent>
-                <CardFooter className="flex flex-wrap gap-2 mt-auto px-4 mb-4">
+                <CardFooter className="flex flex-wrap gap-2 mt-auto">
                     {recipe.labels.map((label) =>
                         <Badge key={label.id} variant="inactive" color={label.color}>
                             {label.name}

@@ -5,18 +5,19 @@ import {I18nextProvider} from "react-i18next";
 import i18nInstance from "~/lib/client/i18n/i18n";
 import {authOptions} from "~/lib/client/react-query";
 import {type QueryClient} from "@tanstack/react-query";
-import {Toaster} from "~/lib/client/components/ui/sonner";
+import {Toaster} from "~/lib/client/components/ui/toast";
 import {Navbar} from "~/lib/client/components/app/Navbar";
 import {Footer} from "~/lib/client/components/app/Footer";
 import {useNProgress} from "~/lib/client/hooks/use-nprogress";
-import {createRootRouteWithContext, HeadContent, Outlet, Scripts} from "@tanstack/react-router";
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
+import {createRootRouteWithContext, HeadContent, Outlet, Scripts} from "@tanstack/react-router";
 
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
     ssr: false,
-    beforeLoad: ({ context: { queryClient } }) => {
-        return queryClient.ensureQueryData(authOptions);
+    context: () => ({ authOptions }),
+    beforeLoad: async ({ context: { queryClient, authOptions } }) => {
+        return queryClient.query(authOptions);
     },
     head: () => ({
         meta: [

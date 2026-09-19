@@ -1,4 +1,4 @@
-import {toast} from "sonner";
+import {toast} from "~/lib/client/components/ui/toast";
 import type React from "react";
 import {useState} from "react";
 import {useForm} from "react-hook-form";
@@ -84,7 +84,11 @@ export default function UploadDialog({ form }: UploadDialogProps) {
         }
     }
 
-    const onOpenChange = (value: boolean) => {
+    const onOpenChange: React.ComponentProps<typeof Dialog>["onOpenChange"] = (value, details) => {
+        if (!value && uploadMutation.isPending) {
+            details.cancel();
+            return;
+        }
         setOpen(value);
         if (!value) resetForm();
     }
@@ -110,7 +114,7 @@ export default function UploadDialog({ form }: UploadDialogProps) {
                 setOpen(false);
                 setTextContent("");
                 setSelectedFile(null);
-                toast.success(t("toast-success"));
+                toast.add({ type: "success", title: t("toast-success") });
             },
         })
     }
@@ -133,15 +137,11 @@ export default function UploadDialog({ form }: UploadDialogProps) {
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogTrigger asChild>
-                <Button variant="outline">
-                    <Upload className="h-4 w-4"/> {t("upload-button")}
-                </Button>
+            <DialogTrigger render={<Button variant="outline" />}>
+                <Upload data-icon="inline-start"/> {t("upload-button")}
             </DialogTrigger>
             <DialogContent
                 className="sm:max-w-[500px] space-y-3"
-                onEscapeKeyDown={(ev) => uploadMutation.isPending && ev.preventDefault()}
-                onPointerDownOutside={(ev) => uploadMutation.isPending && ev.preventDefault()}
             >
                 <DialogHeader>
                     <DialogTitle>{t("upload-dialog-title")}</DialogTitle>

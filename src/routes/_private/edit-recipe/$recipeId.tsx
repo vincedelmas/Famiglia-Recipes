@@ -1,6 +1,6 @@
-import {toast} from "sonner";
 import {useTranslation} from "react-i18next";
 import {RecipeFormValues} from "~/lib/utils/schemas";
+import {toast} from "~/lib/client/components/ui/toast";
 import {useSuspenseQuery} from "@tanstack/react-query";
 import {PageTitle} from "~/lib/client/components/app/PageTitle";
 import {createFileRoute, useNavigate} from "@tanstack/react-router";
@@ -9,8 +9,9 @@ import {editRecipeOptions, useUpdateRecipe} from "~/lib/client/react-query";
 
 
 export const Route = createFileRoute("/_private/edit-recipe/$recipeId")({
-    loader: ({ context: { queryClient }, params: { recipeId } }) =>
-        queryClient.ensureQueryData(editRecipeOptions(Number(recipeId))),
+    context: ({ params: { recipeId } }) => {
+        return { editRecipeOptions: editRecipeOptions(Number(recipeId)) };
+    },
     component: EditRecipePage,
 })
 
@@ -20,7 +21,8 @@ function EditRecipePage() {
     const { t } = useTranslation();
     const { recipeId } = Route.useParams();
     const updateRecipeMutation = useUpdateRecipe();
-    const apiData = useSuspenseQuery(editRecipeOptions(Number(recipeId))).data;
+    const apiData = useSuspenseQuery(Route.useRouteContext().editRecipeOptions).data;
+
     const initValues: RecipeFormValues = {
         title: apiData.recipe.title,
         servings: apiData.recipe.servings,
@@ -29,11 +31,12 @@ function EditRecipePage() {
         comment: apiData.recipe.comment || "",
         labels: apiData.recipe.recipeLabels.map((ing) => ing.name),
         steps: apiData.recipe.steps.map((ing) => ({ content: ing.description })),
-        ingredients: apiData.recipe.ingredients.map(
-            (ing) => ({ quantity: Number(ing.proportion), description: ing.ingredient })
-        ),
+        ingredients: apiData.recipe.ingredients.map(ing => ({
+            description: ing.ingredient,
+            quantity: Number(ing.proportion),
+        })),
     };
-    
+
     const onSubmit = async (submittedData: RecipeFormValues) => {
         const formData = new FormData();
 
@@ -44,7 +47,7 @@ function EditRecipePage() {
 
         updateRecipeMutation.mutate({ formData: formData }, {
             onSuccess: () => {
-                toast.success("Recipe Successfully edited");
+                toast.add({ type: "success", title: "Recipe Successfully edited" });
                 return navigate({ to: "/details/$recipeId", params: { recipeId }, replace: true });
             }
         });

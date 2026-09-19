@@ -1,7 +1,7 @@
 import {z} from "zod";
 import {serverEnv} from "~/env/server";
 import {render} from "@react-email/render";
-import {Options} from "nodemailer/lib/mailer";
+import type {SendMailOptions} from "nodemailer";
 import {createServerOnlyFn} from "@tanstack/react-start";
 import ErrorEmail from "~/lib/client/components/emails/ErrorsEmail";
 import RegisterEmail from "~/lib/client/components/emails/RegisterEmail";
@@ -37,7 +37,7 @@ export const sendEmail = createServerOnlyFn(() => async (options: EmailOptions) 
         emailHtml = await render(PasswordResetEmail({ username: options.username, link: options.link }));
     }
 
-    const mailOptions: Options = {
+    const mailOptions: SendMailOptions = {
         to: options.to,
         html: emailHtml,
         subject: options.subject,
@@ -70,7 +70,7 @@ export const sendAdminErrorMail = createServerOnlyFn(() => async (error: Error |
 
     const emailHtml = await render(ErrorEmail({ ctx: errorData }));
 
-    const mailOptions: Options = {
+    const mailOptions: SendMailOptions = {
         html: emailHtml,
         to: serverEnv.ADMIN_MAIL_USERNAME,
         from: serverEnv.ADMIN_MAIL_USERNAME,

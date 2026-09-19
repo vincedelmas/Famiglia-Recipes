@@ -1,7 +1,8 @@
-import {toast} from "sonner";
 import {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {bgSelector} from "~/lib/utils/helpers";
+import {getRouteApi} from "@tanstack/react-router";
+import {toast} from "~/lib/client/components/ui/toast";
 import {Button} from "~/lib/client/components/ui/button";
 import {MutedText} from "~/lib/client/components/app/MutedText";
 import {Avatar, AvatarFallback} from "~/lib/client/components/ui/avatar";
@@ -9,7 +10,7 @@ import {ChefHat, LoaderCircle, Pencil, Plus, Trash2} from "lucide-react";
 import {CommentDialog} from "~/lib/client/components/details/CommentDialog";
 import {Card, CardContent, CardHeader} from "~/lib/client/components/ui/card";
 import {useIsMutating, useQuery, useQueryClient} from "@tanstack/react-query";
-import {recipeCommentsOptions, useDeleteComment} from "~/lib/client/react-query";
+import {type recipeCommentsOptions, useDeleteComment} from "~/lib/client/react-query";
 
 
 interface CommentSectionProps {
@@ -23,13 +24,15 @@ export type Comment = Awaited<ReturnType<NonNullable<ReturnType<typeof recipeCom
 
 
 export const CommentSection = ({ recipeId, currentUserId, recipeSubmitterId }: CommentSectionProps) => {
+    const { recipeCommentsOptions: commentsOptions } = getRouteApi("/_private/details/$recipeId").useRouteContext();
+
     const { t } = useTranslation();
     const isMutating = useIsMutating();
     const queryClient = useQueryClient();
     const deleteCommentMutation = useDeleteComment();
     const [isOpen, setIsOpen] = useState(false);
     const [commentToEdit, setCommentToEdit] = useState<Comment | null>(null);
-    const { data: comments, isLoading, isFetching, isError } = useQuery(recipeCommentsOptions(recipeId));
+    const { data: comments, isLoading, isFetching, isError } = useQuery(commentsOptions);
 
     const onEditComment = (comment: Comment) => {
         setIsOpen(true);
@@ -44,8 +47,8 @@ export const CommentSection = ({ recipeId, currentUserId, recipeSubmitterId }: C
     const onDeleteComment = (comment: Comment) => {
         deleteCommentMutation.mutate({ commentId: comment.id }, {
             onSuccess: async () => {
-                await queryClient.invalidateQueries({ queryKey: recipeCommentsOptions(recipeId).queryKey });
-                toast.success(t("success-comment-deleted"));
+                await queryClient.invalidateQueries({ queryKey: commentsOptions.queryKey });
+                toast.add({ type: "success", title: t("success-comment-deleted") });
             },
         });
     };
@@ -102,8 +105,12 @@ export const CommentSection = ({ recipeId, currentUserId, recipeSubmitterId }: C
                                             disabled={(!!isMutating || isFetching)}>
                                         <Pencil className="w-4 h-4 opacity-50"/>
                                     </Button>
-                                    <Button variant="ghost" size="icon" onClick={() => onDeleteComment(comment)}
-                                            disabled={(!!isMutating || isFetching)}>
+                                    <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        disabled={(!!isMutating || isFetching)}
+                                        onClick={() => onDeleteComment(comment)}
+                                    >
                                         <Trash2 className="w-4 h-4 opacity-50"/>
                                     </Button>
                                 </div>
@@ -112,7 +119,9 @@ export const CommentSection = ({ recipeId, currentUserId, recipeSubmitterId }: C
                     </div>
                 )
                 :
-                <MutedText className="text-base -mt-2">No comments added yet</MutedText>
+                <MutedText className="text-base -mt-2">
+                    No comments added yet
+                </MutedText>
             }
             {isOpen &&
                 <CommentDialog

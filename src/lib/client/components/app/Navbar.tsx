@@ -2,13 +2,12 @@ import {useState} from "react";
 import {cn} from "~/lib/utils/helpers";
 import {useTranslation} from "react-i18next";
 import authClient from "~/lib/utils/auth-client";
+import {getRouteApi, Link as NavLink, useLocation, useNavigate, useRouter} from "@tanstack/react-router";
 import {useAuth} from "~/lib/client/hooks/use-auth";
-import {authOptions} from "~/lib/client/react-query";
 import {useQueryClient} from "@tanstack/react-query";
 import {Button} from "~/lib/client/components/ui/button";
 import {Book, ChefHat, LogOut, Menu, Plus, X} from "lucide-react";
 import {LanguageSwitcher} from "~/lib/client/components/app/LanguageSwitcher";
-import {Link as NavLink, useLocation, useNavigate, useRouter} from "@tanstack/react-router";
 
 
 export const Navbar = () => {
@@ -17,6 +16,7 @@ export const Navbar = () => {
     const navigate = useNavigate();
     const { currentUser } = useAuth();
     const { pathname } = useLocation();
+    const { authOptions } = getRouteApi("__root__").useRouteContext();
     const queryClient = useQueryClient();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -41,9 +41,9 @@ export const Navbar = () => {
     if (!currentUser) {
         return (
             <nav className="w-screen z-50 flex items-center justify-center fixed top-0 h-16 bg-background border-b border-b-neutral-700">
-                <div className="md:max-w-screen-xl flex w-full justify-between items-center container">
+                <div className="md:max-w-7xl flex w-full justify-between items-center container">
                     <NavLink to="/" className="flex items-center gap-3 text-lg font-semibold">
-                        <img alt="Famiglia Recipes" src="/logo192.png" className="w-[28px] h-[28px]"/>
+                        <img alt="Famiglia Recipes" src="/logo192.png" className="size-7"/>
                         Famiglia Recipes
                     </NavLink>
                     {pathname === "/" ?
@@ -53,12 +53,8 @@ export const Navbar = () => {
                         :
                         <div className="flex items-center gap-3">
                             <LanguageSwitcher/>
-                            <Button size="sm" asChild>
-                                <NavLink to="/">{t("login")}</NavLink>
-                            </Button>
-                            <Button size="sm" variant="secondary" asChild>
-                                <NavLink to="/">{t("register")}</NavLink>
-                            </Button>
+                            <Button size="sm" nativeButton={false} render={<NavLink to="/"/>}>{t("login")}</Button>
+                            <Button size="sm" variant="secondary" nativeButton={false} render={<NavLink to="/"/>}>{t("register")}</Button>
                         </div>
                     }
                 </div>
@@ -68,11 +64,11 @@ export const Navbar = () => {
 
     return (
         <nav className="w-screen z-50 fixed top-0 border-b border-neutral-700 bg-background">
-            <div className="max-w-screen-xl mx-auto px-4">
+            <div className="max-w-7xl mx-auto px-4">
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center">
-                        <div className="flex-shrink-0">
-                            <img alt="logo" src="/logo192.png" className="w-[28px] h-[28px]"/>
+                        <div className="shrink-0">
+                            <img alt="logo" src="/logo192.png" className="size-7"/>
                         </div>
                         <div className="hidden md:block">
                             <div className="ml-8 flex items-baseline space-x-4">

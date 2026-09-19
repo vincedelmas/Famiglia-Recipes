@@ -18,9 +18,7 @@ import {AllRecipesParams, allRecipesParamsSchema} from "~/lib/schemas/recipes.sc
 export const Route = createFileRoute("/_private/all-recipes")({
     validateSearch: (search) => allRecipesParamsSchema.parse(search),
     loaderDeps: ({ search }) => ({ search }),
-    loader: ({ context: { queryClient }, deps: { search } }) => {
-        return queryClient.ensureQueryData(allRecipesOptions(search));
-    },
+    context: ({ deps: { search } }) => ({ allRecipesOptions: allRecipesOptions(search) }),
     component: AllRecipesPage,
 });
 
@@ -29,7 +27,7 @@ function AllRecipesPage() {
     const { t } = useTranslation();
     const search = Route.useSearch();
     const navigate = Route.useNavigate();
-    const apiData = useSuspenseQuery(allRecipesOptions(search)).data;
+    const apiData = useSuspenseQuery(Route.useRouteContext().allRecipesOptions).data;
 
     const selectedLabels = new Set(search.labels);
     const selectedAuthors = new Set(search.authors);

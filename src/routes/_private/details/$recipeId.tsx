@@ -1,9 +1,8 @@
-import {toast} from "sonner";
 import {useState} from "react";
 import {cn} from "~/lib/utils/helpers";
-import {addSeo} from "~/lib/utils/seo";
 import {useTranslation} from "react-i18next";
 import {useAuth} from "~/lib/client/hooks/use-auth";
+import {toast} from "~/lib/client/components/ui/toast";
 import {Badge} from "~/lib/client/components/ui/badge";
 import {Button} from "~/lib/client/components/ui/button";
 import {Separator} from "~/lib/client/components/ui/separator";
@@ -12,27 +11,17 @@ import {Card, CardContent} from "~/lib/client/components/ui/card";
 import {Servings} from "~/lib/client/components/details/Servings";
 import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
 import {createFileRoute, Link, useNavigate} from "@tanstack/react-router";
-import {recipeDetailsOptions} from "~/lib/client/react-query/queryOptions";
 import {CommentSection} from "~/lib/client/components/details/CommentSection";
 import {useDeleteRecipe, useFavoriteRecipe} from "~/lib/client/react-query/mutations";
 import {ChefHat, CircleCheck, Clock, Heart, History, Pen, Trash2, Users} from "lucide-react";
+import {recipeCommentsOptions, recipeDetailsOptions} from "~/lib/client/react-query/queryOptions";
 
 
 export const Route = createFileRoute("/_private/details/$recipeId")({
-    loader: ({ context: { queryClient }, params: { recipeId } }) => {
-        return queryClient.ensureQueryData(recipeDetailsOptions(Number(recipeId)));
-    },
-    head: ({ loaderData }) => {
-        return {
-            meta: [
-                ...addSeo({
-                    description: "View this delicious recipe",
-                    title: loaderData?.title || "Recipe Details",
-                    image: loaderData?.coverImage || "logo512.png",
-                }),
-            ],
-        }
-    },
+    context: ({ params: { recipeId } }) => ({
+        recipeDetailsOptions: recipeDetailsOptions(Number(recipeId)),
+        recipeCommentsOptions: recipeCommentsOptions(Number(recipeId)),
+    }),
     component: RecipeDetailsPage,
 })
 
@@ -46,14 +35,16 @@ function RecipeDetailsPage() {
     const updateFavorite = useFavoriteRecipe();
     const deleteRecipeMutation = useDeleteRecipe();
     const [multi, setMulti] = useState(1);
-    const recipe = useSuspenseQuery(recipeDetailsOptions(Number(recipeId))).data;
+
+    const options = Route.useRouteContext().recipeDetailsOptions;
+    const recipe = useSuspenseQuery(options).data;
 
     const onDeleteRecipe = async () => {
         if (!window.confirm("Do you really want to delete this recipe?")) return;
 
         deleteRecipeMutation.mutate({ recipeId }, {
             onSuccess: () => {
-                toast.success(t("success-recipe-deleted"));
+                toast.add({ type: "success", title: t("success-recipe-deleted") });
                 return navigate({ to: "/dashboard" });
             }
         });
@@ -62,17 +53,39 @@ function RecipeDetailsPage() {
     const handleUpdateFavorite = () => {
         updateFavorite.mutate({ recipeId }, {
             onSuccess: () => {
-                queryClient.setQueryData(recipeDetailsOptions(Number(recipeId)).queryKey, (oldData) => {
+                queryClient.setQueryData(options.queryKey, (oldData) => {
                     if (!oldData) return;
-                    toast.success((oldData.isFavorited ? t("removed-recipe-favorite") : t("added-recipe-favorite")));
-                    return { ...oldData, isFavorited: !oldData.isFavorited };
+
+                    toast.add({
+                        type: "success",
+                        title: (
+                            oldData.isFavorited
+                                ? t("removed-recipe-favorite")
+                                : t("added-recipe-favorite")
+                        )
+                    });
+
+                    return {
+                        ...oldData,
+                        isFavorited: !oldData.isFavorited,
+                    };
                 });
             },
         });
     };
 
     return (
-        <PageTitle title={`${recipe.title}`} onlyHelmet>
+        <PageTitle title={recipe.title} onlyHelmet>
+            <meta property="og:type" content="website"/>
+            <meta property="og:title" content={recipe.title}/>
+            <meta name="twitter:title" content={recipe.title}/>
+            <meta name="twitter:card" content="summary_large_image"/>
+            <meta name="description" content="View this delicious recipe"/>
+            <meta property="og:description" content="View this delicious recipe"/>
+            <meta name="twitter:description" content="View this delicious recipe"/>
+            <meta property="og:image" content={recipe.coverImage || "logo512.png"}/>
+            <meta name="twitter:image" content={recipe.coverImage || "logo512.png"}/>
+
             <div className="flex max-sm:flex-col max-w-6xl mx-auto mt-8 gap-8 max-lg:gap-5">
                 <div className="w-2/3 max-sm:w-full max-lg:w-[65%]">
                     <div className="space-y-6">
