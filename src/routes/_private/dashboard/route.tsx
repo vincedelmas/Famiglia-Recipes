@@ -58,8 +58,14 @@ function DashboardPage() {
                             <ArrowRight data-icon="inline-end"/>
                         </Button>
                     </div>
-                    <div className="relative h-52 sm:h-64 lg:h-full"><img src="/images/family-table.png" alt="" fetchPriority="high"
-                                                                          className="size-full object-cover object-[70%_center]"/></div>
+                    <div className="relative h-52 sm:h-64 lg:h-full">
+                        <img
+                            alt=""
+                            fetchPriority="high"
+                            src="/images/family-table.png"
+                            className="size-full object-cover object-[70%_center]"
+                        />
+                    </div>
                 </section>
 
                 <section className="recipe-section">

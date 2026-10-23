@@ -35,3 +35,4 @@ deploy.sh
 /tsconfig.tsbuildinfo
 **/routeTree.gen.ts
 .env.docker
+public/static/
