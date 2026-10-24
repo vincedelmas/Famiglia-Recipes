@@ -26,7 +26,9 @@ RUN mkdir -p /tmp/build-db && \
 FROM oven/bun:${BUN_VERSION} AS production-deps
 WORKDIR /app
 COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile --production --omit=peer
+# The Debian runtime uses glibc, so it does not need the musl variants.
+RUN bun install --frozen-lockfile --production --omit=peer \
+    && rm -rf node_modules/@libsql/linux-*-musl node_modules/lightningcss-linux-*-musl
 
 
 FROM oven/bun:${BUN_VERSION}-slim AS runtime
