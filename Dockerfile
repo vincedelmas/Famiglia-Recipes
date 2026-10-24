@@ -23,7 +23,13 @@ RUN mkdir -p /tmp/build-db && \
     bun run build
 
 
-FROM oven/bun:${BUN_VERSION} AS runtime
+FROM oven/bun:${BUN_VERSION} AS production-deps
+WORKDIR /app
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile --production --omit=peer
+
+
+FROM oven/bun:${BUN_VERSION}-slim AS runtime
 WORKDIR /app
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates \
@@ -35,7 +41,7 @@ ENV NODE_ENV=production \
     UPLOADS_DIR_NAME=images
 
 
-COPY --from=build --chown=bun:bun /app/node_modules ./node_modules
+COPY --from=production-deps --chown=bun:bun /app/node_modules ./node_modules
 COPY --from=build --chown=bun:bun /app/dist ./dist
 COPY --chown=bun:bun package.json bun.lock server.ts drizzle.config.ts tsconfig.json ./
 COPY --chown=bun:bun src ./src
