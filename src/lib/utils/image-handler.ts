@@ -39,21 +39,19 @@ export const saveUploadedImage = createServerOnlyFn(() => async ({ file, resize 
 
 
 const processAndSaveImage = createServerOnlyFn(() => async ({ buffer, resize }: ProcessAndSaveImageOptions) => {
-    const sharp = (await import("sharp")).default;
-    sharp.cache({ files: 0, memory: 0 });
-
     const randomHex = crypto.randomBytes(8).toString("hex");
     const fileName = `${randomHex}.jpg`;
 
     await fsPromises.mkdir(serverEnv.BASE_UPLOADS_LOCATION, { recursive: true });
     const filePath = path.join(serverEnv.BASE_UPLOADS_LOCATION, fileName);
 
-    const sharpInstance = sharp(buffer);
+    const image = new Bun.Image(buffer, { autoOrient: false });
     if (resize) {
-        sharpInstance.resize(resize.width, resize.height);
+        // ImageCropper already crops uploads to the target aspect ratio.
+        image.resize(resize.width, resize.height, { fit: "fill" });
     }
 
-    await sharpInstance.jpeg({ quality: 90 }).toFile(filePath);
+    await image.jpeg({ quality: 90 }).write(filePath);
 
     return fileName;
 })();
