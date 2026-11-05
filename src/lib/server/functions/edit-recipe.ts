@@ -5,10 +5,10 @@ import {notFound} from "@tanstack/react-router";
 import {HEIGHT, WIDTH} from "@/lib/utils/constants";
 import {createServerFn} from "@tanstack/react-start";
 import {FormattedError} from "@/lib/utils/error-classes";
-import {authMiddleware} from "@/lib/server/middleware/auth-guard";
 import {tryFormZodError, tryOrNotFound} from "@/lib/utils/zod-errors";
 import {editRecipeSchema, imageRecipeSchema} from "@/lib/utils/schemas";
 import {deleteImage, saveUploadedImage} from "@/lib/utils/image-handler";
+import {authMiddleware, recipeWriteMiddleware} from "@/lib/server/middleware/auth-guard";
 import {label, recipe as recipeTable, recipe, recipeLabel} from "@/lib/server/database/schema";
 
 
@@ -43,7 +43,7 @@ export const getEditRecipe = createServerFn({ method: "POST" })
 
 
 export const postEditRecipe = createServerFn({ method: "POST" })
-    .middleware([authMiddleware])
+    .middleware([recipeWriteMiddleware])
     .validator((data: FormData) => {
         if (!(data instanceof FormData)) throw new Error("Invalid FormData");
         return data;

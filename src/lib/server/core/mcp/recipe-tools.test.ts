@@ -13,7 +13,7 @@ const logError = mock(() => {});
 mock.module("@/lib/server/core/pino-logger", () => ({ default: { error: logError } }));
 
 const {createToolContext, mcpRequestContext} = await import("./tool-context");
-const details = { id: 1, title: "Pasta al pesto", ingredients: [{ proportion: 200, ingredient: "g pasta" }], steps: [{ description: "Cook the pasta." }] };
+const details = { servings: 2, prepTime: 10, cookingTime: 20, labels: [{ name: "Plat" }], id: 1, title: "Pasta al pesto", ingredients: [{ proportion: 200, ingredient: "g pasta" }], steps: [{ description: "Cook the pasta." }] };
 const getDetails = mock(async ({ data }: { data: string }) => {
     expect(mcpRequestContext.getStore()?.userId).toBe(1);
     if (data === "999") throw notFound();
@@ -29,6 +29,8 @@ mock.module("@/lib/server/functions/all-recipes", () => ({ getAllRecipes }));
 const getLabels = mock(async () => [{ id: 1, name: "Plat", color: "green", order: 0 }]);
 const postAddRecipe = mock(async (_options: { data: FormData }) => ({ id: 42, title: "Pasta al pesto" }));
 mock.module("@/lib/server/functions/add-recipe", () => ({ getLabels, postAddRecipe }));
+const postEditRecipe = mock(async (_options: { data: FormData }) => {});
+mock.module("@/lib/server/functions/edit-recipe", () => ({ postEditRecipe }));
 const {registerRecipeTools} = await import("./recipe-tools");
 
 
@@ -103,7 +105,7 @@ test("recipe tools call shared server functions with request identity and centra
 
 
 
-test("add_recipe uses the shared creation function and is available only with write consent", async () => {
+test("recipe writes share server functions, support images and preserve omitted fields", async () => {
     const access = { userId: 1, username: "User 1", scopes: new Set([MCP_READ_SCOPE, MCP_WRITE_SCOPE]) };
     const server = new McpServer({ name: "test", version: "1.0.0" });
     registerRecipeTools(createToolContext(server, access));
@@ -139,6 +141,30 @@ test("add_recipe uses the shared creation function and is available only with wr
             const formData = postAddRecipe.mock.calls.at(-1)![0].data;
             expect(JSON.parse(String(formData.get("recipe")))).toEqual(input);
             expect(formData.has("image")).toBe(false);
+
+            const image = { base64: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aX1sAAAAASUVORK5CYII=", mimeType: "image/png" };
+            await client.callTool({ name: "add_recipe", arguments: { ...input, image } });
+            const uploaded = postAddRecipe.mock.calls.at(-1)![0].data.get("image") as File;
+            expect(uploaded.type).toBe("image/png");
+            expect(Buffer.from(await uploaded.arrayBuffer()).toString("base64")).toBe(image.base64);
+
+            const edited = await client.callTool({ name: "edit_recipe", arguments: { recipeId: 1, title: "Nouveau titre" } });
+            expect(edited.structuredContent).toMatchObject({ result: { status: "updated", recipe: { id: 1, title: "Nouveau titre" } } });
+            const editForm = postEditRecipe.mock.calls.at(-1)![0].data;
+            expect(editForm.has("image")).toBe(false);
+            expect(JSON.parse(String(editForm.get("recipe")))).toEqual({
+                id: "1", title: "Nouveau titre", servings: 2, preparation: 10, cooking: 20,
+                ingredients: [{ quantity: 200, description: "g pasta" }],
+                steps: [{ content: "Cook the pasta." }], labels: ["Plat"],
+            });
+            await client.callTool({ name: "edit_recipe", arguments: { recipeId: 1, image } });
+            expect(Buffer.from(await (postEditRecipe.mock.calls.at(-1)![0].data.get("image") as File).arrayBuffer()).toString("base64")).toBe(image.base64);
+
+            postEditRecipe.mockClear();
+            for (const args of [{ recipeId: 1 }, { recipeId: 1, image: { ...image, base64: "invalid!" } }, { recipeId: 1, ingredients: [] }]) {
+                expect((await client.callTool({ name: "edit_recipe", arguments: args })).isError).toBe(true);
+            }
+            expect(postEditRecipe).not.toHaveBeenCalled();
 
             postAddRecipe.mockClear();
             for (const invalid of [
