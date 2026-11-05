@@ -1,5 +1,5 @@
 import {useGT} from "gt-react";
-import {Skeleton} from "~/lib/client/components/ui/skeleton";
+import {Skeleton} from "@/lib/client/components/ui/skeleton";
 
 
 export const DefaultLoader = () => {

@@ -1,17 +1,17 @@
 import {Plural, useGT} from "gt-react";
 import {createFileRoute} from "@tanstack/react-router";
 import {useSuspenseQuery} from "@tanstack/react-query";
-import {Button} from "~/lib/client/components/ui/button";
+import {Button} from "@/lib/client/components/ui/button";
 import React, {useEffect, useRef, useState} from "react";
-import {allRecipesOptions} from "~/lib/client/react-query";
-import {PageTitle} from "~/lib/client/components/app/PageTitle";
-import {Pagination} from "~/lib/client/components/app/Pagination";
-import {RecipeCard} from "~/lib/client/components/app/RecipeCard";
+import {allRecipesOptions} from "@/lib/client/react-query";
+import {PageTitle} from "@/lib/client/components/app/PageTitle";
+import {Pagination} from "@/lib/client/components/app/Pagination";
+import {RecipeCard} from "@/lib/client/components/app/RecipeCard";
 import {ChevronDown, Search, SlidersHorizontal, X} from "lucide-react";
-import {FilterGroup} from "~/lib/client/components/all-recipes/FilterGroup";
-import {AllRecipesParams, allRecipesParamsSchema} from "~/lib/schemas/recipes.schema";
-import {InputGroup, InputGroupAddon, InputGroupInput} from "~/lib/client/components/ui/input-group";
-import {Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle} from "~/lib/client/components/ui/empty";
+import {FilterGroup} from "@/lib/client/components/all-recipes/FilterGroup";
+import {AllRecipesParams, allRecipesParamsSchema} from "@/lib/schemas/recipes.schema";
+import {InputGroup, InputGroupAddon, InputGroupInput} from "@/lib/client/components/ui/input-group";
+import {Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle} from "@/lib/client/components/ui/empty";
 
 
 export const Route = createFileRoute("/_private/all-recipes")({

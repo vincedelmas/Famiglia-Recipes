@@ -1,5 +1,5 @@
 import {CookingPot} from "lucide-react";
-import {ErrorComponent} from "~/lib/client/components/app/ErrorComponent";
+import {ErrorComponent} from "@/lib/client/components/app/ErrorComponent";
 
 
 export function ErrorCatchBoundary() {

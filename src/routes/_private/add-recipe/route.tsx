@@ -1,12 +1,12 @@
 import {useGT} from "gt-react";
-import {RecipeFormValues} from "~/lib/utils/schemas";
-import {useAddRecipe} from "~/lib/client/react-query";
-import {toast} from "~/lib/client/components/ui/toast";
-import {PageTitle} from "~/lib/client/components/app/PageTitle";
+import {RecipeFormValues} from "@/lib/utils/schemas";
+import {useAddRecipe} from "@/lib/client/react-query";
+import {toast} from "@/lib/client/components/ui/toast";
+import {PageTitle} from "@/lib/client/components/app/PageTitle";
 import {createFileRoute, useNavigate} from "@tanstack/react-router";
-import {addRecipeOptions} from "~/lib/client/react-query/queryOptions";
+import {addRecipeOptions} from "@/lib/client/react-query/queryOptions";
 import {useQueryClient, useSuspenseQuery} from "@tanstack/react-query";
-import {RecipeForm} from "~/lib/client/components/recipe-form/RecipeForm";
+import {RecipeForm} from "@/lib/client/components/recipe-form/RecipeForm";
 
 
 export const Route = createFileRoute("/_private/add-recipe")({

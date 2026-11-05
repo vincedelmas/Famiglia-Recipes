@@ -1,17 +1,17 @@
 import {useState} from "react";
 import {useGT, useLocale} from "gt-react";
 import {getRouteApi} from "@tanstack/react-router";
-import {formatDateTime} from "~/lib/utils/helpers";
-import {toast} from "~/lib/client/components/ui/toast";
-import {Button} from "~/lib/client/components/ui/button";
-import {Alert, AlertDescription} from "~/lib/client/components/ui/alert";
-import {Avatar, AvatarFallback} from "~/lib/client/components/ui/avatar";
+import {formatDateTime} from "@/lib/utils/helpers";
+import {toast} from "@/lib/client/components/ui/toast";
+import {Button} from "@/lib/client/components/ui/button";
+import {Alert, AlertDescription} from "@/lib/client/components/ui/alert";
+import {Avatar, AvatarFallback} from "@/lib/client/components/ui/avatar";
 import {ChefHat, LoaderCircle, Pencil, Plus, Trash2} from "lucide-react";
-import {CommentDialog} from "~/lib/client/components/details/CommentDialog";
-import {Card, CardContent, CardHeader} from "~/lib/client/components/ui/card";
+import {CommentDialog} from "@/lib/client/components/details/CommentDialog";
+import {Card, CardContent, CardHeader} from "@/lib/client/components/ui/card";
 import {useIsMutating, useQuery, useQueryClient} from "@tanstack/react-query";
-import {Empty, EmptyDescription, EmptyHeader} from "~/lib/client/components/ui/empty";
-import {type recipeCommentsOptions, useDeleteComment} from "~/lib/client/react-query";
+import {Empty, EmptyDescription, EmptyHeader} from "@/lib/client/components/ui/empty";
+import {type recipeCommentsOptions, useDeleteComment} from "@/lib/client/react-query";
 
 
 interface CommentSectionProps {

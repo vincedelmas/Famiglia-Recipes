@@ -1,8 +1,8 @@
 import {Link} from "@tanstack/react-router";
-import {Badge} from "~/lib/client/components/ui/badge";
+import {Badge} from "@/lib/client/components/ui/badge";
 import {ArrowUpRight, Clock, Heart} from "lucide-react";
-import type {dashboardOptions} from "~/lib/client/react-query";
-import {RecipeImage} from "~/lib/client/components/app/RecipeImage";
+import type {dashboardOptions} from "@/lib/client/react-query";
+import {RecipeImage} from "@/lib/client/components/app/RecipeImage";
 
 
 type Recipe = Awaited<ReturnType<NonNullable<typeof dashboardOptions["queryFn"]>>>["favoriteRecipes"][0];

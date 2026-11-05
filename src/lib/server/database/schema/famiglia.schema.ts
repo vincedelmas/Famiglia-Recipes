@@ -1,7 +1,7 @@
 import {sql} from "drizzle-orm";
 import {relations} from "drizzle-orm/relations";
-import {user} from "~/lib/server/database/schema/auth.schema";
-import {customJson, imageUrl} from "~/lib/server/database/custom-types";
+import {user} from "@/lib/server/database/schema/auth.schema";
+import {customJson, imageUrl} from "@/lib/server/database/custom-types";
 import {integer, primaryKey, sqliteTable, text} from "drizzle-orm/sqlite-core"
 
 

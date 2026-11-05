@@ -1,11 +1,11 @@
-import {routeTree} from "~/routeTree.gen";
+import {routeTree} from "@/routeTree.gen";
 import {createRouter} from "@tanstack/react-router";
-import {toast} from "~/lib/client/components/ui/toast";
-import {NotFound} from "~/lib/client/components/app/NotFound";
-import {DefaultLoader} from "~/lib/client/components/app/DefaultLoader";
+import {toast} from "@/lib/client/components/ui/toast";
+import {NotFound} from "@/lib/client/components/app/NotFound";
+import {DefaultLoader} from "@/lib/client/components/app/DefaultLoader";
 import {MutationCache, QueryCache, QueryClient} from "@tanstack/react-query";
 import {setupRouterSsrQueryIntegration} from "@tanstack/react-router-ssr-query";
-import {ErrorCatchBoundary} from "~/lib/client/components/app/ErrorCatchBoundary";
+import {ErrorCatchBoundary} from "@/lib/client/components/app/ErrorCatchBoundary";
 
 
 export function getRouter() {

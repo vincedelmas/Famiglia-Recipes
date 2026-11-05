@@ -1,8 +1,8 @@
 import {z} from "zod";
-import {serverEnv} from "~/env/server";
-import {Message, Request} from "~/lib/types/types";
-import {recipeFormSchema} from "~/lib/utils/schemas";
-import {FormattedError} from "~/lib/utils/error-classes";
+import {serverEnv} from "@/env/server";
+import {Message, Request} from "@/lib/types/types";
+import {recipeFormSchema} from "@/lib/utils/schemas";
+import {FormattedError} from "@/lib/utils/error-classes";
 import {createServerOnlyFn} from "@tanstack/react-start";
 
 

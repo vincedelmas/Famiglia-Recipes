@@ -1,18 +1,18 @@
 import {asc, inArray} from "drizzle-orm";
-import {db} from "~/lib/server/database/db";
-import {HEIGHT, WIDTH} from "~/lib/utils/constants";
+import {db} from "@/lib/server/database/db";
+import {HEIGHT, WIDTH} from "@/lib/utils/constants";
 import {createServerFn} from "@tanstack/react-start";
-import {callGeminiModel} from "~/lib/utils/LLM-call";
-import {tryFormZodError} from "~/lib/utils/zod-errors";
-import {FormattedError} from "~/lib/utils/error-classes";
-import {authMiddleware} from "~/lib/server/middleware/auth-guard";
-import {deleteImage, saveUploadedImage} from "~/lib/utils/image-handler";
-import {comment, label, recipe, recipeLabel} from "~/lib/server/database/schema";
-import {imageRecipeSchema, recipeFormSchema, recipeImportTextSchema, uploadRecipeSchema} from "~/lib/utils/schemas";
+import {callGeminiModel} from "@/lib/utils/LLM-call";
+import {tryFormZodError} from "@/lib/utils/zod-errors";
+import {FormattedError} from "@/lib/utils/error-classes";
+import {deleteImage, saveUploadedImage} from "@/lib/utils/image-handler";
+import {comment, label, recipe, recipeLabel} from "@/lib/server/database/schema";
+import {authMiddleware, recipeReadMiddleware, recipeWriteMiddleware} from "@/lib/server/middleware/auth-guard";
+import {imageRecipeSchema, recipeFormSchema, recipeImportTextSchema, uploadRecipeSchema} from "@/lib/utils/schemas";
 
 
 export const getLabels = createServerFn({ method: "GET" })
-    .middleware([authMiddleware])
+    .middleware([recipeReadMiddleware])
     .handler(async () => {
         return db
             .select()
@@ -22,7 +22,7 @@ export const getLabels = createServerFn({ method: "GET" })
 
 
 export const postAddRecipe = createServerFn({ method: "POST" })
-    .middleware([authMiddleware])
+    .middleware([recipeWriteMiddleware])
     .validator((data: FormData) => {
         if (!(data instanceof FormData)) throw new Error("Invalid FormData");
         return data;
@@ -31,7 +31,10 @@ export const postAddRecipe = createServerFn({ method: "POST" })
         const formDataImage = data.get("image") as File;
         const formDataRecipe: string = data.get("recipe") as string;
 
-        if (formDataImage) tryFormZodError(() => imageRecipeSchema.parse(formDataImage))
+        if (formDataImage) {
+            tryFormZodError(() => imageRecipeSchema.parse(formDataImage));
+        }
+
         const recipeData = tryFormZodError(() => recipeFormSchema.parse(JSON.parse(formDataRecipe)));
 
         const matchingLabels = await db
@@ -58,14 +61,14 @@ export const postAddRecipe = createServerFn({ method: "POST" })
         }));
 
         try {
-            db.transaction((tx) => {
+            return db.transaction((tx) => {
                 const newRecipe = tx
                     .insert(recipe)
                     .values({
-                        steps: steps,
+                        steps,
                         image: coverName,
                         title: recipeData.title,
-                        ingredients: ingredients,
+                        ingredients,
                         submitterId: currentUser.id,
                         servings: recipeData.servings,
                         cookingTime: recipeData.cooking,
@@ -88,10 +91,17 @@ export const postAddRecipe = createServerFn({ method: "POST" })
                             content: recipeData.comment,
                         }).run();
                 }
+
+                return {
+                    id: newRecipe.id,
+                    title: newRecipe.title,
+                };
             });
         }
         catch (error) {
-            if (formDataImage) await deleteImage(coverName);
+            if (formDataImage) {
+                await deleteImage(coverName);
+            }
             throw error;
         }
     });

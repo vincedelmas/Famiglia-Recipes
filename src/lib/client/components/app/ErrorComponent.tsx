@@ -1,8 +1,8 @@
 import type {ReactNode} from "react";
 import {Link} from "@tanstack/react-router";
 import {ArrowLeft, BookOpen} from "lucide-react";
-import {Button} from "~/lib/client/components/ui/button";
-import {Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle} from "~/lib/client/components/ui/empty";
+import {Button} from "@/lib/client/components/ui/button";
+import {Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle} from "@/lib/client/components/ui/empty";
 
 
 interface ErrorComponentProps {

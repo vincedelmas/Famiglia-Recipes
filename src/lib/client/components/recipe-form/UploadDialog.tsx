@@ -1,18 +1,18 @@
 import React, {useState} from "react";
 import {useGT} from "gt-react";
 import {useForm} from "react-hook-form";
-import {Input} from "~/lib/client/components/ui/input";
-import {toast} from "~/lib/client/components/ui/toast";
-import {Button} from "~/lib/client/components/ui/button";
-import {useUploadMutation} from "~/lib/client/react-query";
-import {Textarea} from "~/lib/client/components/ui/textarea";
+import {Input} from "@/lib/client/components/ui/input";
+import {toast} from "@/lib/client/components/ui/toast";
+import {Button} from "@/lib/client/components/ui/button";
+import {useUploadMutation} from "@/lib/client/react-query";
+import {Textarea} from "@/lib/client/components/ui/textarea";
 import {AlertCircle, FileText, Loader2, Upload} from "lucide-react";
-import {Alert, AlertDescription} from "~/lib/client/components/ui/alert";
-import {RecipeFormValues, recipeImportFileSchema} from "~/lib/utils/schemas";
-import {Field, FieldGroup, FieldLabel} from "~/lib/client/components/ui/field";
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "~/lib/client/components/ui/tabs";
-import {MAX_IMPORT_TEXT_LENGTH as MAX_TEXT_LENGTH, RECIPE_IMPORT_FILE_TYPES} from "~/lib/utils/constants";
-import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "~/lib/client/components/ui/dialog";
+import {Alert, AlertDescription} from "@/lib/client/components/ui/alert";
+import {RecipeFormValues, recipeImportFileSchema} from "@/lib/utils/schemas";
+import {Field, FieldGroup, FieldLabel} from "@/lib/client/components/ui/field";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/lib/client/components/ui/tabs";
+import {MAX_IMPORT_TEXT_LENGTH as MAX_TEXT_LENGTH, RECIPE_IMPORT_FILE_TYPES} from "@/lib/utils/constants";
+import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/lib/client/components/ui/dialog";
 
 
 interface UploadDialogProps {

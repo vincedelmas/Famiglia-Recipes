@@ -1,6 +1,6 @@
 import {useGT} from "gt-react";
 import {ArrowDown, ArrowUp} from "lucide-react";
-import {Button} from "~/lib/client/components/ui/button";
+import {Button} from "@/lib/client/components/ui/button";
 
 
 interface ReorderButtonsProps {

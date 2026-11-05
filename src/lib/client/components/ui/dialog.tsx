@@ -1,7 +1,7 @@
 import * as React from "react";
 import {XIcon} from "lucide-react";
-import {cn} from "~/lib/utils/helpers";
-import {Button} from "~/lib/client/components/ui/button";
+import {cn} from "@/lib/utils/helpers";
+import {Button} from "@/lib/client/components/ui/button";
 import {Dialog as DialogPrimitive} from "@base-ui/react/dialog";
 
 

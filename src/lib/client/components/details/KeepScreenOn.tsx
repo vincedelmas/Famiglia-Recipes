@@ -1,6 +1,6 @@
 import {Sun} from "lucide-react";
 import {useEffect, useId, useState} from "react";
-import {Button} from "~/lib/client/components/ui/button";
+import {Button} from "@/lib/client/components/ui/button";
 
 
 export function KeepScreenOn() {

@@ -13,11 +13,11 @@
     "iconLibrary": "lucide",
     "rtl": false,
     "aliases": {
-        "lib": "~/lib",
-        "hooks": "~/lib/client/hooks",
-        "utils": "~/lib/utils/helpers",
-        "ui": "~/lib/client/components/ui",
-        "components": "~/lib/client/components"
+        "lib": "@/lib",
+        "hooks": "@/lib/client/hooks",
+        "utils": "@/lib/utils/helpers",
+        "ui": "@/lib/client/components/ui",
+        "components": "@/lib/client/components"
     },
     "menuColor": "default",
     "menuAccent": "subtle",

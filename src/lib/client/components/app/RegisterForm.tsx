@@ -1,12 +1,12 @@
 import {useGT} from "gt-react";
 import {useForm} from "react-hook-form";
 import {LoaderCircle} from "lucide-react";
-import authClient from "~/lib/utils/auth-client";
-import {toast} from "~/lib/client/components/ui/toast";
-import {Input} from "~/lib/client/components/ui/input";
-import {FieldGroup} from "~/lib/client/components/ui/field";
-import {FormButton} from "~/lib/client/components/app/FormButton";
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "~/lib/client/components/ui/form";
+import authClient from "@/lib/utils/auth-client";
+import {toast} from "@/lib/client/components/ui/toast";
+import {Input} from "@/lib/client/components/ui/input";
+import {FieldGroup} from "@/lib/client/components/ui/field";
+import {FormButton} from "@/lib/client/components/app/FormButton";
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/lib/client/components/ui/form";
 
 
 interface FormValues {

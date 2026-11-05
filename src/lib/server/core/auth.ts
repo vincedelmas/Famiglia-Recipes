@@ -1,14 +1,17 @@
-import {clientEnv} from "~/env/client";
-import {serverEnv} from "~/env/server";
-import {db} from "~/lib/server/database/db";
+import {mcp} from "@better-auth/mcp";
+import {clientEnv} from "@/env/client";
+import {serverEnv} from "@/env/server";
+import {jwt} from "better-auth/plugins";
+import {db} from "@/lib/server/database/db";
 import {betterAuth} from "better-auth/minimal";
-import {sendEmail} from "~/lib/utils/mail-sender";
+import {sendEmail} from "@/lib/utils/mail-sender";
 import {scryptSync, timingSafeEqual} from "node:crypto";
 import {createServerOnlyFn} from "@tanstack/react-start";
 import {drizzleAdapter} from "better-auth/adapters/drizzle";
 import {APIError, createAuthMiddleware} from "better-auth/api";
 import {tanstackStartCookies} from "better-auth/tanstack-start";
-import {checkWerkzeugPassword, generatePasswordHash} from "~/lib/server/core/security";
+import {MCP_RESOURCE, MCP_SCOPES} from "@/lib/utils/mcp";
+import {checkWerkzeugPassword, generatePasswordHash} from "@/lib/server/core/security";
 
 
 const getAuthConfig = createServerOnlyFn(() => betterAuth({
@@ -103,6 +106,20 @@ const getAuthConfig = createServerOnlyFn(() => betterAuth({
         },
     },
     plugins: [
+        jwt({ disableSettingJwtHeader: true }),
+        mcp({
+            scopes: MCP_SCOPES,
+            resource: MCP_RESOURCE,
+            loginPage: "/oauth/login",
+            consentPage: "/oauth/consent",
+            accessTokenExpiresIn: 15 * 60,
+            allowPublicClientPrelogin: true,
+            allowDynamicClientRegistration: true,
+            allowUnauthenticatedClientRegistration: true,
+            grantTypes: ["authorization_code", "refresh_token"],
+            clientPrivileges: () => false,
+            customAccessTokenClaims: () => ({ famigliaIssuedAt: Date.now() }),
+        }),
         tanstackStartCookies(),
     ]
 }));

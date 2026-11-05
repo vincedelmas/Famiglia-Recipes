@@ -1,6 +1,6 @@
 import {z} from "zod";
 import {notFound} from "@tanstack/react-router";
-import {FormZodError} from "~/lib/utils/error-classes";
+import {FormZodError} from "@/lib/utils/error-classes";
 
 
 export function tryFormZodError<T>(callback: () => T): T {

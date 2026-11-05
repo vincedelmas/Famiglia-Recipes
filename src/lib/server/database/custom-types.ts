@@ -1,14 +1,17 @@
-import {clientEnv} from "~/env/client";
-import {serverEnv} from "~/env/server";
+import {clientEnv} from "@/env/client";
+import {serverEnv} from "@/env/server";
 import {customType} from "drizzle-orm/sqlite-core";
 
 
-export const customJson = <TData>(name: string) =>
+export const customJson = <TData>(name: string, options?: { acceptSerialized?: boolean }) =>
     customType<{ data: TData; driverData: string }>({
         dataType() {
             return "text";
         },
-        toDriver(value: TData) {
+        toDriver(value: TData | string) {
+            if (options?.acceptSerialized && typeof value === "string") {
+                return value;
+            }
             return JSON.stringify(value);
         },
         fromDriver(value: string): TData {

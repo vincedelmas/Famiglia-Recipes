@@ -2,10 +2,10 @@
 
 import { useMemo } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "~/lib/utils/helpers"
+import { cn } from "@/lib/utils/helpers"
 
-import { Label } from "~/lib/client/components/ui/label"
-import { Separator } from "~/lib/client/components/ui/separator"
+import { Label } from "@/lib/client/components/ui/label"
+import { Separator } from "@/lib/client/components/ui/separator"
 
 function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
   return (

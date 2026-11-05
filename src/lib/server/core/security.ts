@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import {DEFAULT_SCRYPT_METHOD} from "~/lib/utils/constants";
+import {DEFAULT_SCRYPT_METHOD} from "@/lib/utils/constants";
 
 
 const derivePassword = (password: string, salt: string, method: string) => {

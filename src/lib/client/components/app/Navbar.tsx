@@ -1,15 +1,24 @@
 import {useState} from "react";
 import {useGT} from "gt-react";
-import {cn} from "~/lib/utils/helpers";
-import authClient from "~/lib/utils/auth-client";
-import {useAuth} from "~/lib/client/hooks/use-auth";
+import {cn} from "@/lib/utils/helpers";
+import authClient from "@/lib/utils/auth-client";
+import {useAuth} from "@/lib/client/hooks/use-auth";
 import {useQueryClient} from "@tanstack/react-query";
-import {toast} from "~/lib/client/components/ui/toast";
-import {Button} from "~/lib/client/components/ui/button";
-import {Avatar, AvatarFallback} from "~/lib/client/components/ui/avatar";
-import {LanguageSwitcher} from "~/lib/client/components/app/LanguageSwitcher";
-import {ArrowUpRight, BookOpen, Leaf, LogOut, Menu, Plus, X} from "lucide-react";
+import {toast} from "@/lib/client/components/ui/toast";
+import {Button} from "@/lib/client/components/ui/button";
+import {Avatar, AvatarFallback} from "@/lib/client/components/ui/avatar";
+import {LanguageSwitcher} from "@/lib/client/components/app/LanguageSwitcher";
+import {ArrowUpRight, BookOpen, Leaf, LogOut, Menu, Plus, Settings, X} from "lucide-react";
 import {getRouteApi, Link, useLocation, useNavigate, useRouter} from "@tanstack/react-router";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/lib/client/components/ui/dropdown-menu";
 
 
 export const Navbar = () => {
@@ -100,23 +109,39 @@ export const Navbar = () => {
                             </Button>
                             <div className="flex items-center gap-2 lg:border-l lg:pl-4">
                                 <LanguageSwitcher/>
-                                <div className="hidden items-center gap-2 lg:flex">
-                                    <Avatar>
-                                        <AvatarFallback>
-                                            {currentUser.name.charAt(0).toUpperCase()}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <Button
-                                        size="icon"
-                                        variant="ghost"
-                                        onClick={logoutUser}
-                                        disabled={signingOut}
-                                        title={gt("Sign out")}
-                                        aria-label={gt("Sign out")}
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger
+                                        aria-label={gt("Account menu")}
+                                        render={<Button size="icon" variant="ghost" className="rounded-full"/>}
                                     >
-                                        <LogOut/>
-                                    </Button>
-                                </div>
+                                        <Avatar>
+                                            <AvatarFallback>
+                                                {currentUser.name.charAt(0).toUpperCase()}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" className="min-w-48">
+                                        <DropdownMenuGroup>
+                                            <DropdownMenuLabel>
+                                                {currentUser.name}
+                                            </DropdownMenuLabel>
+                                            <DropdownMenuItem
+                                                render={<Link to="/settings/connected-apps"/>}
+                                                onClick={() => setMenuOpen(false)}
+                                            >
+                                                <Settings/>
+                                                Settings
+                                            </DropdownMenuItem>
+                                        </DropdownMenuGroup>
+                                        <DropdownMenuSeparator/>
+                                        <DropdownMenuGroup>
+                                            <DropdownMenuItem disabled={signingOut} onClick={logoutUser}>
+                                                <LogOut/>
+                                                Sign out
+                                            </DropdownMenuItem>
+                                        </DropdownMenuGroup>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </div>
                             <Button
                                 size="icon"
@@ -150,22 +175,13 @@ export const Navbar = () => {
                                 to={item.to}
                                 key={item.to}
                                 onClick={() => setMenuOpen(false)}
-                                className={cn("flex items-center gap-3 rounded-xl p-3 text-sm", pathname === item.to && "bg-accent text-accent-foreground")}
+                                className={cn("flex items-center gap-3 rounded-xl p-3 text-sm", pathname === item.to
+                                    && "bg-accent text-accent-foreground")}
                             >
                                 <item.icon className="size-4"/>
                                 {item.name}
                             </Link>
                         )}
-
-                        <div className="mt-2 flex items-center justify-between border-t pt-4">
-                            <span className="text-sm">
-                                {currentUser.name}
-                            </span>
-                            <Button variant="ghost" disabled={signingOut} onClick={logoutUser}>
-                                <LogOut data-icon="inline-start"/>
-                                Sign out
-                            </Button>
-                        </div>
                     </div>
                 </div>}
         </header>

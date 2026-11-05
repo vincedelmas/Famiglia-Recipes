@@ -1,11 +1,11 @@
 import {z} from "zod";
-import {serverEnv} from "~/env/server";
+import {serverEnv} from "@/env/server";
 import {render} from "@react-email/render";
 import type {SendMailOptions} from "nodemailer";
 import {createServerOnlyFn} from "@tanstack/react-start";
-import ErrorEmail from "~/lib/client/components/emails/ErrorsEmail";
-import RegisterEmail from "~/lib/client/components/emails/RegisterEmail";
-import PasswordResetEmail from "~/lib/client/components/emails/PasswordResetEmail";
+import ErrorEmail from "@/lib/client/components/emails/ErrorsEmail";
+import RegisterEmail from "@/lib/client/components/emails/RegisterEmail";
+import PasswordResetEmail from "@/lib/client/components/emails/PasswordResetEmail";
 
 
 interface EmailOptions {

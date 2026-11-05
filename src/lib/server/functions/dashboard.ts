@@ -1,8 +1,8 @@
-import {db} from "~/lib/server/database/db";
+import {db} from "@/lib/server/database/db";
 import {createServerFn} from "@tanstack/react-start";
 import {and, desc, eq, getTableColumns, sql} from "drizzle-orm";
-import {authMiddleware} from "~/lib/server/middleware/auth-guard";
-import {favorites, label, recipe, recipeLabel, user} from "~/lib/server/database/schema";
+import {authMiddleware} from "@/lib/server/middleware/auth-guard";
+import {favorites, label, recipe, recipeLabel, user} from "@/lib/server/database/schema";
 
 
 type Label = typeof label.$inferSelect;

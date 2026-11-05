@@ -1,11 +1,12 @@
 import {queryOptions} from "@tanstack/react-query";
-import {getCurrentUser} from "~/lib/server/functions/user";
-import {getLabels} from "~/lib/server/functions/add-recipe";
-import {getDashboard} from "~/lib/server/functions/dashboard";
-import {getEditRecipe} from "~/lib/server/functions/edit-recipe";
-import {getAllRecipes} from "~/lib/server/functions/all-recipes";
-import type {AllRecipesParams} from "~/lib/schemas/recipes.schema";
-import {getComments, getDetails} from "~/lib/server/functions/recipe-details";
+import {getCurrentUser} from "@/lib/server/functions/user";
+import {getLabels} from "@/lib/server/functions/add-recipe";
+import {getDashboard} from "@/lib/server/functions/dashboard";
+import {getEditRecipe} from "@/lib/server/functions/edit-recipe";
+import {getAllRecipes} from "@/lib/server/functions/all-recipes";
+import type {AllRecipesParams} from "@/lib/schemas/recipes.schema";
+import {getComments, getDetails} from "@/lib/server/functions/recipe-details";
+import {getConnectedApps, getMcpConsentRequest} from "@/lib/server/functions/mcp";
 
 
 export const authOptions = queryOptions({
@@ -50,4 +51,16 @@ export const addRecipeOptions = queryOptions({
 export const editRecipeOptions = (recipeId: number) => queryOptions({
     queryKey: ["editRecipe", recipeId.toString()],
     queryFn: () => getEditRecipe({ data: recipeId.toString() }),
+});
+
+
+export const connectedAppsOptions = queryOptions({
+    queryKey: ["connected-apps"],
+    queryFn: () => getConnectedApps(),
+});
+
+
+export const mcpConsentRequestOptions = (oauthQuery: string) => queryOptions({
+    queryKey: ["mcp-consent", oauthQuery],
+    queryFn: () => getMcpConsentRequest({ data: { oauthQuery } }),
 });

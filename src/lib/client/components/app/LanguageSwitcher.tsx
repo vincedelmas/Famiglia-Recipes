@@ -1,6 +1,6 @@
 import {Globe2} from "lucide-react";
 import {useGT, useLocale, useSetLocale} from "gt-react";
-import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "~/lib/client/components/ui/select";
+import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "@/lib/client/components/ui/select";
 
 
 export const LanguageSwitcher = ({ className }: { className?: string }) => {

@@ -1,10 +1,10 @@
 import {useGT} from "gt-react";
 import {Leaf, LockKeyhole} from "lucide-react";
 import {createFileRoute} from "@tanstack/react-router";
-import {LoginForm} from "~/lib/client/components/app/LoginForm";
-import {PageTitle} from "~/lib/client/components/app/PageTitle";
-import {RegisterForm} from "~/lib/client/components/app/RegisterForm";
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "~/lib/client/components/ui/tabs";
+import {LoginForm} from "@/lib/client/components/app/LoginForm";
+import {PageTitle} from "@/lib/client/components/app/PageTitle";
+import {RegisterForm} from "@/lib/client/components/app/RegisterForm";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/lib/client/components/ui/tabs";
 
 
 export const Route = createFileRoute("/_public/")({ component: HomePage });

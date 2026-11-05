@@ -1,15 +1,15 @@
 import {z} from "zod";
-import {db} from "~/lib/server/database/db";
+import {db} from "@/lib/server/database/db";
 import {asc, eq, inArray} from "drizzle-orm";
 import {notFound} from "@tanstack/react-router";
-import {HEIGHT, WIDTH} from "~/lib/utils/constants";
+import {HEIGHT, WIDTH} from "@/lib/utils/constants";
 import {createServerFn} from "@tanstack/react-start";
-import {FormattedError} from "~/lib/utils/error-classes";
-import {authMiddleware} from "~/lib/server/middleware/auth-guard";
-import {tryFormZodError, tryOrNotFound} from "~/lib/utils/zod-errors";
-import {editRecipeSchema, imageRecipeSchema} from "~/lib/utils/schemas";
-import {deleteImage, saveUploadedImage} from "~/lib/utils/image-handler";
-import {label, recipe as recipeTable, recipe, recipeLabel} from "~/lib/server/database/schema";
+import {FormattedError} from "@/lib/utils/error-classes";
+import {authMiddleware} from "@/lib/server/middleware/auth-guard";
+import {tryFormZodError, tryOrNotFound} from "@/lib/utils/zod-errors";
+import {editRecipeSchema, imageRecipeSchema} from "@/lib/utils/schemas";
+import {deleteImage, saveUploadedImage} from "@/lib/utils/image-handler";
+import {label, recipe as recipeTable, recipe, recipeLabel} from "@/lib/server/database/schema";
 
 
 export const getEditRecipe = createServerFn({ method: "POST" })

@@ -1,17 +1,17 @@
 import {z} from "zod";
-import {db} from "~/lib/server/database/db";
+import {db} from "@/lib/server/database/db";
 import {and, desc, eq, sql} from "drizzle-orm";
 import {notFound} from "@tanstack/react-router";
 import {createServerFn} from "@tanstack/react-start";
-import {tryOrNotFound} from "~/lib/utils/zod-errors";
-import {deleteImage} from "~/lib/utils/image-handler";
-import {FormattedError} from "~/lib/utils/error-classes";
-import {authMiddleware} from "~/lib/server/middleware/auth-guard";
-import {comment, favorites, recipe, recipe as recipeTable} from "~/lib/server/database/schema";
+import {tryOrNotFound} from "@/lib/utils/zod-errors";
+import {deleteImage} from "@/lib/utils/image-handler";
+import {FormattedError} from "@/lib/utils/error-classes";
+import {authMiddleware, recipeReadMiddleware} from "@/lib/server/middleware/auth-guard";
+import {comment, favorites, recipe, recipe as recipeTable} from "@/lib/server/database/schema";
 
 
 export const getDetails = createServerFn({ method: "GET" })
-    .middleware([authMiddleware])
+    .middleware([recipeReadMiddleware])
     .validator(data => tryOrNotFound(() => z.coerce.number().int().positive().parse(data)))
     .handler(async ({ data: recipeId, context: { currentUser } }) => {
         const recipeDetails = await db.query.recipe.findFirst({

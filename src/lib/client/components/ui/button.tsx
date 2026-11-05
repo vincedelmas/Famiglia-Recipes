@@ -1,4 +1,4 @@
-import {cn} from "~/lib/utils/helpers";
+import {cn} from "@/lib/utils/helpers";
 import {cva, type VariantProps} from "class-variance-authority";
 import {Button as ButtonPrimitive} from "@base-ui/react/button";
 

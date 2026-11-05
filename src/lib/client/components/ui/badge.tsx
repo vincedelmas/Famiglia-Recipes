@@ -1,4 +1,4 @@
-import {cn} from "~/lib/utils/helpers";
+import {cn} from "@/lib/utils/helpers";
 import {useRender} from "@base-ui/react/use-render";
 import {mergeProps} from "@base-ui/react/merge-props";
 import {cva, type VariantProps} from "class-variance-authority";

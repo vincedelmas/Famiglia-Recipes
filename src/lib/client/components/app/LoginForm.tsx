@@ -1,12 +1,12 @@
 import {useForm} from "react-hook-form";
 import {LoaderCircle} from "lucide-react";
-import authClient from "~/lib/utils/auth-client";
+import authClient from "@/lib/utils/auth-client";
 import {useQueryClient} from "@tanstack/react-query";
-import {Input} from "~/lib/client/components/ui/input";
-import {FieldGroup} from "~/lib/client/components/ui/field";
-import {FormButton} from "~/lib/client/components/app/FormButton";
+import {Input} from "@/lib/client/components/ui/input";
+import {FieldGroup} from "@/lib/client/components/ui/field";
+import {FormButton} from "@/lib/client/components/app/FormButton";
 import {getRouteApi, Link, useNavigate, useRouter} from "@tanstack/react-router";
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "~/lib/client/components/ui/form";
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/lib/client/components/ui/form";
 
 
 interface FormValues {
@@ -15,7 +15,7 @@ interface FormValues {
 }
 
 
-export const LoginForm = () => {
+export const LoginForm = ({ oauth = false }: { oauth?: boolean }) => {
     const router = useRouter();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
@@ -49,11 +49,13 @@ export const LoginForm = () => {
             onSuccess: async () => {
                 await queryClient.invalidateQueries({ queryKey: authOptions.queryKey });
                 await router.invalidate();
-                await navigate({ to: "/dashboard", replace: true });
+
+                if (!oauth) {
+                    await navigate({ to: "/dashboard", replace: true });
+                }
             }
         });
     };
-
 
     return (
         <div>

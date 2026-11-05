@@ -1,13 +1,13 @@
 import {useGT} from "gt-react";
-import {useAuth} from "~/lib/client/hooks/use-auth";
+import {useAuth} from "@/lib/client/hooks/use-auth";
 import {useSuspenseQuery} from "@tanstack/react-query";
-import {Button} from "~/lib/client/components/ui/button";
+import {Button} from "@/lib/client/components/ui/button";
 import {createFileRoute, Link} from "@tanstack/react-router";
 import {ArrowRight, BookOpen, Heart, Plus} from "lucide-react";
-import {PageTitle} from "~/lib/client/components/app/PageTitle";
-import {RecipeCard} from "~/lib/client/components/app/RecipeCard";
-import {dashboardOptions} from "~/lib/client/react-query/queryOptions";
-import {Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle} from "~/lib/client/components/ui/empty";
+import {PageTitle} from "@/lib/client/components/app/PageTitle";
+import {RecipeCard} from "@/lib/client/components/app/RecipeCard";
+import {dashboardOptions} from "@/lib/client/react-query/queryOptions";
+import {Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle} from "@/lib/client/components/ui/empty";
 
 
 export const Route = createFileRoute("/_private/dashboard")({
@@ -31,12 +31,9 @@ function DashboardPage() {
         <PageTitle title={gt("Home")} onlyHelmet>
             <div className="page-enter pb-4 pt-9 sm:pt-12">
                 <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-                    <p className="eyebrow">
+                    <p className="eyebrow text-lg">
                         Hello, {currentUser?.name.split(" ")[0]}.
                     </p>
-                    <span className="text-xs text-muted-foreground">
-                        Family recipes
-                    </span>
                 </div>
 
                 <section className="relative grid overflow-hidden rounded-[24px] bg-accent lg:grid-cols-[1.15fr_1fr]">

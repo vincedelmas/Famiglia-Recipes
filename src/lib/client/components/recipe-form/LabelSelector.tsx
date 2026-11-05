@@ -1,7 +1,7 @@
 import React from "react";
 import {useGT} from "gt-react";
-import {LabelType} from "~/lib/types/types";
-import {ToggleGroup, ToggleGroupItem} from "~/lib/client/components/ui/toggle-group";
+import {LabelType} from "@/lib/types/types";
+import {ToggleGroup, ToggleGroupItem} from "@/lib/client/components/ui/toggle-group";
 
 
 interface LabelSelectorProps {

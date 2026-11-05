@@ -1,6 +1,6 @@
 import Database from "bun:sqlite";
 import * as schema from "./schema";
-import {serverEnv} from "~/env/server";
+import {serverEnv} from "@/env/server";
 import {drizzle} from "drizzle-orm/bun-sqlite";
 import {createServerOnlyFn} from "@tanstack/react-start";
 

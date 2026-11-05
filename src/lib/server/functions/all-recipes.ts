@@ -1,9 +1,9 @@
-import {db} from "~/lib/server/database/db";
+import {db} from "@/lib/server/database/db";
 import {createServerFn} from "@tanstack/react-start";
-import {authMiddleware} from "~/lib/server/middleware/auth-guard";
-import {AllRecipesParams, allRecipesParamsSchema} from "~/lib/schemas/recipes.schema";
-import {favorites, label, recipe, recipeLabel, user} from "~/lib/server/database/schema";
-import {and, asc, count, eq, getTableColumns, inArray, like, sql, type SQL} from "drizzle-orm";
+import {recipeReadMiddleware} from "@/lib/server/middleware/auth-guard";
+import {AllRecipesParams, allRecipesParamsSchema} from "@/lib/schemas/recipes.schema";
+import {favorites, label, recipe, recipeLabel, user} from "@/lib/server/database/schema";
+import {and, asc, count, eq, getTableColumns, inArray, sql, type SQL} from "drizzle-orm";
 
 
 const PAGE_SIZE = 24;
@@ -12,7 +12,7 @@ type Author = Pick<typeof user.$inferSelect, "id" | "name">;
 
 
 export const getAllRecipes = createServerFn({ method: "GET" })
-    .middleware([authMiddleware])
+    .middleware([recipeReadMiddleware])
     .validator(allRecipesParamsSchema)
     .handler(async ({ data, context: { currentUser } }) => {
         const aggregatedLabels = db
@@ -31,7 +31,7 @@ export const getAllRecipes = createServerFn({ method: "GET" })
             .as("aggLabels");
 
         const conditions: SQL[] = [];
-        if (data.q) conditions.push(like(recipe.title, `%${data.q}%`));
+        if (data.q) conditions.push(sql`instr(lower(${recipe.title}), lower(${data.q})) > 0`);
         if (data.authors.length > 0) conditions.push(inArray(recipe.submitterId, data.authors));
 
         if (data.labels.length > 0) {
@@ -98,12 +98,12 @@ export const getAllRecipes = createServerFn({ method: "GET" })
             authors,
             labels: allLabels,
             recipes: allRecipes,
+            search: data satisfies AllRecipesParams,
             pagination: {
                 page,
                 total,
                 totalPages,
                 pageSize: PAGE_SIZE,
             },
-            search: data satisfies AllRecipesParams,
         };
     });

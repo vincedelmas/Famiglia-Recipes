@@ -1,16 +1,16 @@
 /// <reference types="vite/client"/>
 import {useLocale} from "gt-react";
 import type {ReactNode} from "react";
-import appCss from "~/styles.css?url";
-import {addSeo} from "~/lib/utils/seo";
-import {authOptions} from "~/lib/client/react-query";
+import appCss from "@/styles.css?url";
+import {addSeo} from "@/lib/utils/seo";
+import {authOptions} from "@/lib/client/react-query";
 import {type QueryClient} from "@tanstack/react-query";
-import {Toaster} from "~/lib/client/components/ui/toast";
-import {Navbar} from "~/lib/client/components/app/Navbar";
-import {Footer} from "~/lib/client/components/app/Footer";
-import {useNProgress} from "~/lib/client/hooks/use-nprogress";
+import {Toaster} from "@/lib/client/components/ui/toast";
+import {Navbar} from "@/lib/client/components/app/Navbar";
+import {Footer} from "@/lib/client/components/app/Footer";
+import {useNProgress} from "@/lib/client/hooks/use-nprogress";
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
-import {TranslationProvider} from "~/lib/client/i18n/TranslationProvider";
+import {TranslationProvider} from "@/lib/client/i18n/TranslationProvider";
 import {ClientOnly, createRootRouteWithContext, HeadContent, Outlet, Scripts} from "@tanstack/react-router";
 
 

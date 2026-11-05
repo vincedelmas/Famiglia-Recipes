@@ -1,4 +1,4 @@
-import {ToggleGroup, ToggleGroupItem} from "~/lib/client/components/ui/toggle-group";
+import {ToggleGroup, ToggleGroupItem} from "@/lib/client/components/ui/toggle-group";
 
 
 interface FilterGroupProps {

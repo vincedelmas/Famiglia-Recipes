@@ -1,4 +1,4 @@
-import {Button} from "~/lib/client/components/ui/button";
+import {Button} from "@/lib/client/components/ui/button";
 
 
 interface PaginationProps {

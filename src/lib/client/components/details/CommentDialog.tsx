@@ -3,12 +3,12 @@ import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {getRouteApi} from "@tanstack/react-router";
 import {useQueryClient} from "@tanstack/react-query";
-import {Button} from "~/lib/client/components/ui/button";
-import {Textarea} from "~/lib/client/components/ui/textarea";
-import {Comment} from "~/lib/client/components/details/CommentSection";
-import {useAddComment, useEditComment} from "~/lib/client/react-query";
-import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "~/lib/client/components/ui/form";
-import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "~/lib/client/components/ui/dialog";
+import {Button} from "@/lib/client/components/ui/button";
+import {Textarea} from "@/lib/client/components/ui/textarea";
+import {Comment} from "@/lib/client/components/details/CommentSection";
+import {useAddComment, useEditComment} from "@/lib/client/react-query";
+import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/lib/client/components/ui/form";
+import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/lib/client/components/ui/dialog";
 
 
 interface CommentDialogProps {

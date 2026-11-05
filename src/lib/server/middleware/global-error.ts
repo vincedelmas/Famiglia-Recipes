@@ -1,9 +1,9 @@
 import z from "zod";
 import {createMiddleware} from "@tanstack/react-start";
-import pinoLogger from "~/lib/server/core/pino-logger";
-import {sendAdminErrorMail} from "~/lib/utils/mail-sender";
+import pinoLogger from "@/lib/server/core/pino-logger";
+import {sendAdminErrorMail} from "@/lib/utils/mail-sender";
 import {isNotFound, isRedirect} from "@tanstack/react-router";
-import {FormattedError, FormZodError} from "~/lib/utils/error-classes";
+import {FormattedError, FormZodError} from "@/lib/utils/error-classes";
 
 
 const isProduction = process.env.NODE_ENV === "production";

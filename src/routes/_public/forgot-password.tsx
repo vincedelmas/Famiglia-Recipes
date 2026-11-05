@@ -1,14 +1,14 @@
 import {useGT} from "gt-react";
 import {useForm} from "react-hook-form";
-import authClient from "~/lib/utils/auth-client";
+import authClient from "@/lib/utils/auth-client";
 import {ArrowLeft, LoaderCircle} from "lucide-react";
-import {toast} from "~/lib/client/components/ui/toast";
-import {Input} from "~/lib/client/components/ui/input";
-import {FieldGroup} from "~/lib/client/components/ui/field";
-import {PageTitle} from "~/lib/client/components/app/PageTitle";
-import {FormButton} from "~/lib/client/components/app/FormButton";
+import {toast} from "@/lib/client/components/ui/toast";
+import {Input} from "@/lib/client/components/ui/input";
+import {FieldGroup} from "@/lib/client/components/ui/field";
+import {PageTitle} from "@/lib/client/components/app/PageTitle";
+import {FormButton} from "@/lib/client/components/app/FormButton";
 import {createFileRoute, Link, useNavigate} from "@tanstack/react-router";
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "~/lib/client/components/ui/form";
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/lib/client/components/ui/form";
 
 
 export const Route = createFileRoute("/_public/forgot-password")({

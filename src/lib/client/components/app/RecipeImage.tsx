@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {Utensils} from "lucide-react";
-import {cn} from "~/lib/utils/helpers";
+import {cn} from "@/lib/utils/helpers";
 
 
 interface RecipeImageProps {

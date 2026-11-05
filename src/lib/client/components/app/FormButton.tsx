@@ -1,8 +1,8 @@
 import * as React from "react";
 import {useState} from "react";
-import {cn} from "~/lib/utils/helpers";
+import {cn} from "@/lib/utils/helpers";
 import {LoaderCircle} from "lucide-react";
-import {Button} from "~/lib/client/components/ui/button";
+import {Button} from "@/lib/client/components/ui/button";
 
 
 interface FormButtonProps extends React.ComponentProps<typeof Button> {

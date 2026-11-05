@@ -1,4 +1,4 @@
-import {errorMiddleware} from "~/lib/server/middleware/global-error";
+import {errorMiddleware} from "@/lib/server/middleware/global-error";
 import {createCsrfMiddleware, createStart} from "@tanstack/react-start";
 
 

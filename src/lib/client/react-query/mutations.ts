@@ -1,7 +1,11 @@
-import {useMutation} from "@tanstack/react-query";
-import {postEditRecipe} from "~/lib/server/functions/edit-recipe";
-import {postAddRecipe, uploadRecipeForParsing} from "~/lib/server/functions/add-recipe";
-import {addComment, deleteComment, deleteRecipe, editComment, favoriteRecipe} from "~/lib/server/functions/recipe-details";
+import {MCP_WRITE_SCOPE} from "@/lib/utils/mcp";
+import authClient from "@/lib/utils/auth-client";
+import {disconnectApp} from "@/lib/server/functions/mcp";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {postEditRecipe} from "@/lib/server/functions/edit-recipe";
+import {connectedAppsOptions} from "@/lib/client/react-query/queryOptions";
+import {postAddRecipe, uploadRecipeForParsing} from "@/lib/server/functions/add-recipe";
+import {addComment, deleteComment, deleteRecipe, editComment, favoriteRecipe} from "@/lib/server/functions/recipe-details";
 
 
 export const useDeleteRecipe = () => {
@@ -58,3 +62,31 @@ export const useUploadMutation = () => {
         mutationFn: (formData: FormData) => uploadRecipeForParsing({ data: formData }),
     })
 }
+
+
+export const useDisconnectAppMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (clientId: string) => disconnectApp({ data: { clientId } }),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: connectedAppsOptions.queryKey }),
+    });
+};
+
+
+export const useMcpConsentMutation = ({ oauthQuery, scopes, readOnly }: { oauthQuery: string; scopes: string[]; readOnly: boolean }) => {
+    return useMutation({
+        mutationFn: async (accept: boolean) => {
+            const { data, error } = await authClient.oauth2.consent({
+                accept,
+                oauth_query: oauthQuery,
+                ...(readOnly ? { scope: scopes.filter(scope => scope !== MCP_WRITE_SCOPE).join(" ") } : {}),
+            });
+
+            if (error) throw error;
+
+            return data;
+        },
+        onSuccess: data => window.location.assign(data.url),
+    });
+};

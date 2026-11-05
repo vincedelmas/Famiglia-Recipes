@@ -1,4 +1,4 @@
-import {auth} from "~/lib/server/core/auth";
+import {auth} from "@/lib/server/core/auth";
 import {createFileRoute} from "@tanstack/react-router";
 
 

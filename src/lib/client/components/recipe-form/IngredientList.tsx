@@ -1,12 +1,12 @@
 import React from "react";
 import {useGT} from "gt-react";
 import {Minus, Plus} from "lucide-react";
-import {RecipeFormValues} from "~/lib/utils/schemas";
-import {Input} from "~/lib/client/components/ui/input";
+import {RecipeFormValues} from "@/lib/utils/schemas";
+import {Input} from "@/lib/client/components/ui/input";
 import {Control, useFieldArray} from "react-hook-form";
-import {Button} from "~/lib/client/components/ui/button";
-import {ReorderButtons} from "~/lib/client/components/recipe-form/ReorderButtons";
-import {FormControl, FormField, FormItem, FormMessage} from "~/lib/client/components/ui/form";
+import {Button} from "@/lib/client/components/ui/button";
+import {ReorderButtons} from "@/lib/client/components/recipe-form/ReorderButtons";
+import {FormControl, FormField, FormItem, FormMessage} from "@/lib/client/components/ui/form";
 
 
 interface DynIngListProps {

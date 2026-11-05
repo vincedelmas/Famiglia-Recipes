@@ -1,4 +1,4 @@
-import {serverEnv} from "~/env/server";
+import {serverEnv} from "@/env/server";
 import {defineConfig} from "drizzle-kit";
 
 

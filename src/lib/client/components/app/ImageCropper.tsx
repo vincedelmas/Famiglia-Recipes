@@ -1,7 +1,7 @@
 import Cropper from "react-easy-crop";
-import {Input} from "~/lib/client/components/ui/input";
-import {Button} from "~/lib/client/components/ui/button";
-import {MutedText} from "~/lib/client/components/app/MutedText";
+import {Input} from "@/lib/client/components/ui/input";
+import {Button} from "@/lib/client/components/ui/button";
+import {MutedText} from "@/lib/client/components/app/MutedText";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 
 
