@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/vincedelmas/Famiglia-Recipes/compare/v1.1.0...v1.2.0) (2026-11-05)
+
+
+### Features
+
+* **mcp:** support recipe editing and cover image uploads ([a92acca](https://github.com/vincedelmas/Famiglia-Recipes/commit/a92acca4748f5b266e48186e211c2ddc07240598))
+
 ## [1.1.0](https://github.com/vincedelmas/Famiglia-Recipes/compare/v1.0.2...v1.1.0) (2026-11-05)
 
 
