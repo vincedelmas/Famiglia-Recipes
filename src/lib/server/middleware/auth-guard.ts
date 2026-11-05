@@ -7,7 +7,7 @@ import {MCP_READ_SCOPE, MCP_WRITE_SCOPE} from "@/lib/utils/mcp";
 import {mcpRequestContext} from "@/lib/server/core/mcp/tool-context";
 
 
-export const publicAuthMiddleware = createMiddleware({ type: "function" }).server(async ({ next }) => {
+const publicAuthMiddleware = createMiddleware({ type: "function" }).server(async ({ next }) => {
     const { headers } = getRequest();
     const session = await auth.api.getSession({ headers, query: { disableCookieCache: true } });
 
