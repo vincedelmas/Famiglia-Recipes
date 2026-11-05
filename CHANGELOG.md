@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/vincedelmas/Famiglia-Recipes/compare/v1.0.2...v1.1.0) (2026-11-05)
+
+
+### Features
+
+* **mcp:** add mcp tools for recipes ([3bee454](https://github.com/vincedelmas/Famiglia-Recipes/commit/3bee454d6f0190dd96833d8005579db282fcfe37))
+
 ## [1.0.2](https://github.com/vincedelmas/Famiglia-Recipes/compare/v1.0.1...v1.0.2) (2026-10-24)
 
 
