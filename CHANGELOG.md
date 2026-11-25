@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/vincedelmas/Famiglia-Recipes/compare/v1.2.0...v1.2.1) (2026-11-25)
+
+
+### Bug Fixes
+
+* make recipe title search accent-insensitive ([804ef69](https://github.com/vincedelmas/Famiglia-Recipes/commit/804ef691c895f68b5cd90d52a5ca9a2886e0e292))
+
 ## [1.2.0](https://github.com/vincedelmas/Famiglia-Recipes/compare/v1.1.0...v1.2.0) (2026-11-05)
 
 
