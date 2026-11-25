@@ -11,6 +11,9 @@ const sqlite = new Database(serverEnv.DATABASE_URL, { create: true });
 sqlite.run("PRAGMA foreign_keys = ON");
 sqlite.run("PRAGMA synchronous = NORMAL");
 sqlite.run("PRAGMA busy_timeout = 10000");
+sqlite.function("normalize_search_text", { deterministic: true }, (value: string) =>
+    value.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "")
+);
 
 
 const getDbConnection = createServerOnlyFn(() => {

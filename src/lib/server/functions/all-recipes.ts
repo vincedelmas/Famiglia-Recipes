@@ -31,7 +31,9 @@ export const getAllRecipes = createServerFn({ method: "GET" })
             .as("aggLabels");
 
         const conditions: SQL[] = [];
-        if (data.q) conditions.push(sql`instr(lower(${recipe.title}), lower(${data.q})) > 0`);
+        if (data.q) {
+            conditions.push(sql`instr(normalize_search_text(${recipe.title}), normalize_search_text(${data.q})) > 0`);
+        }
         if (data.authors.length > 0) conditions.push(inArray(recipe.submitterId, data.authors));
 
         if (data.labels.length > 0) {
